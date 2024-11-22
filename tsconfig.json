@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/api/whatsapp/route.js", "src/api/chat/accept/route.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/pages/api/whatsapp/route.js", "src/pages/api/chat/route.js"],
   "exclude": ["node_modules"]
 }
