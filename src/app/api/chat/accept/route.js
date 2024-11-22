@@ -1,4 +1,4 @@
-export async function post(req) { // It should be POST or GET
+export async function POST(req) { // It should be POST or GET
   try {
     const data = await req.json(); // Parse the incoming JSON
     console.log("Received data:", data);

@@ -1,4 +1,4 @@
-export async function post(req) {
+export async function POST(req) {
    try {
      const data = await req.json();
  
