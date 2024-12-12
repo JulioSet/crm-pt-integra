@@ -11,13 +11,18 @@
   "dependencies": {
     "@prisma/client": "^5.21.1",
     "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "clsx": "^2.1.1",
     "express": "^4.21.1",
+    "jose": "^5.9.6",
     "nanoid": "^5.0.8",
     "next": "15.0.1",
     "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021"
+    "react-dom": "19.0.0-rc-69d4b800-20241021",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
