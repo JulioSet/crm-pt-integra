@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
 import { createSession } from "@/lib/session";
+import { setGlobalSession } from "@/utils/global-session";
 
 export async function POST(req: NextRequest) {
    const { name, password } = await req.json();
@@ -20,6 +21,9 @@ export async function POST(req: NextRequest) {
 
    // create session
    await createSession(employee.name, employee.role);
+
+   // set session globally
+   await setGlobalSession();
 
    return NextResponse.json({ status: 200, data: employee });
 }
