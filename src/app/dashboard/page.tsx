@@ -1,15 +1,12 @@
-import { getSession } from "@/lib/session";
+import { getGlobalSession } from "@/utils/global-session";
 
-export default async function Dashboard() {
+export default function Dashboard() {
    // fetching session
-   const session = await getSession();
-   if (session) {
-      const name = session.name;
-   } else {
-      console.error("There's something wrong with session!")
-   }
+   const session = getGlobalSession();
 
    return (
-      <h2>Berhasil masuk</h2>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-white">
+         <h2 className="text-black">Berhasil masuk</h2>
+      </div>
    );
 }
