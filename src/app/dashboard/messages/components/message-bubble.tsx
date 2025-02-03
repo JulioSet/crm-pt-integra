@@ -19,7 +19,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           "max-w-[70%] rounded-lg p-3",
           message.sender === "user"
             ? "bg-blue-600 text-white"
-            : "bg-slate-100"
+            : "bg-white"
         )}
       >
         <p className="text-sm">{message.content}</p>

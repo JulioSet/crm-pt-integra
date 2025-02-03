@@ -1,6 +1,6 @@
 import { cn } from "@/utils/class-merger"
 import { ScrollArea } from "@/lib/ui/scroll-area"
-import { Clock, DollarSign, Flame, MessageCircle, Plus, Search, Snowflake } from "lucide-react"
+import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake } from "lucide-react"
 import { Button } from "../../../../lib/ui/button"
 import { Input } from "@/lib/ui/input"
 import { Conversation, MessageStatus } from "@/lib/definitions"
@@ -13,11 +13,13 @@ interface MessagesSidebarProps {
    onSelectConversation: (conversation: Conversation) => void
 }
  
-const filters = [
+const filters: { label: string; value: MessageStatus; icon: LucideIcon }[] = [
+   { label: "New Case", value: "new", icon: MessageCircleWarning },
+   { label: "Ongoing", value: "ongoing", icon: Clock },
    { label: "Hot", value: "hot", icon: Flame },
    { label: "Cold", value: "cold", icon: Snowflake },
    { label: "Deal", value: "deal", icon: DollarSign },
-   { label: "Ongoing", value: "ongoing", icon: Clock },
+   { label: "Resolved", value: "resolved", icon: CheckCircle2 },
  ]
 
 export function MessagesSidebar({ 
@@ -40,14 +42,14 @@ export function MessagesSidebar({
             <div className="flex justify-between">
                <h2 className="text-xl font-semibold text-foreground">Messages</h2>
                <Button size="icon" variant="ghost">
-                  <Plus className="h-4 w-4" />
+                  <Plus className="h-4 w-4 m-1" />
                </Button>
             </div>
             <div className="relative">
                <Search className="absolute left-2 top-2.5 h-4 w-4" />
                <Input 
                   placeholder="Search messages..." 
-                  className="pl-8"
+                  className="rounded-md pl-8"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)} 
                />
@@ -61,7 +63,7 @@ export function MessagesSidebar({
                      key={filter.value}
                      variant={isSelected ? "default" : "outline"}
                      size="sm"
-                     className={"h-8 px-3 whitespace-nowrap"}
+                     className={"rounded-md flex h-8 px-3 whitespace-nowrap"}
                      onClick={() => setSelectedFilter(isSelected ? null : filter.value)}
                   >
                      <Icon className="h-4 w-4 mr-1.5" />
@@ -86,10 +88,12 @@ export function MessagesSidebar({
                   >
                      <StatusIcon className={cn(
                         "h-5 w-5",
+                        conversation.status === "new" && "text-purple-500",
+                        conversation.status === "ongoing" && "text-yellow-500",
                         conversation.status === "hot" && "text-red-500",
                         conversation.status === "cold" && "text-blue-500",
                         conversation.status === "deal" && "text-green-500",
-                        conversation.status === "ongoing" && "text-yellow-500"
+                        conversation.status === "resolved" && "text-emerald-500"
                      )} />
                      <div className="flex-1 overflow-hidden">
                         <div className="flex justify-between items-center">

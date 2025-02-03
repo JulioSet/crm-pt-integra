@@ -26,8 +26,8 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
           placeholder="Type a message..."
           className="flex-1"
         />
-        <Button type="submit" size="icon" className="bg-blue-600">
-          <Send className="h-4 w-4 text-white" />
+        <Button type="submit" size="icon" variant="default" className="hover:bg-blue-800">
+          <Send className="h-4 w-8 text-white" />
         </Button>
       </div>
     </form>

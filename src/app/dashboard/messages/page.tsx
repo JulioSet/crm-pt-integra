@@ -25,8 +25,8 @@ export default function Messages() {
             //    conversations={conversations}
             //    onSelectConversation={setSelectedConversation}
             // />
-            <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-white">
-               <p>Test</p>
+            <div className="flex flex-1 items-center justify-center space-y-4 p-4 md:p-8 pt-6 bg-white">
+               <p className="text-slate-400">Belum Ada Percakapan yang Terpilih</p>
             </div>
          )}
       </div>
