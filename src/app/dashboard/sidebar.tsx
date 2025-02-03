@@ -10,10 +10,12 @@ import {
    BarChart3,
    Settings,
    MessagesSquare,
+   LayoutDashboard,
 } from 'lucide-react'
 import Image from 'next/image'
 
 const sidebarItems = [
+   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
    { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
    { name: 'Messages', href: '/dashboard/messages', icon: MessagesSquare },
@@ -48,9 +50,10 @@ export default function Sidebar() {
                         <Button
                            variant={isActive ? "secondary" : "ghost"}
                            className={cn(
-                              "w-full justify-start",
+                              "w-full flex justify-start",
                               collapsed ? "px-2" : "px-4",
                               collapsed && "flex justify-center items-center",
+                              isActive && "text-blue-600"
                            )}
                         >
                            <Icon className={cn(
@@ -63,10 +66,10 @@ export default function Sidebar() {
                   )
                })}
             </nav>
-            <div className="p-4">
+            <div className="p-4 border-t">
                <Button
                   variant="ghost"
-                  className="w-full justify-center"
+                  className="w-full flex justify-center"
                   onClick={() => setCollapsed(!collapsed)}
                >
                   {collapsed ? "→" : "←"}
