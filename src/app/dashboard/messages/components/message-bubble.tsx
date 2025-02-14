@@ -7,7 +7,6 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
-  console.log(message.waktu)
   return (
     <div
       className={cn(
@@ -24,7 +23,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         )}
       >
         <p className="text-sm">{message.pesan}</p>
-        <span className="text-xs opacity-70">
+        <span className="pt-1 block text-right text-xs opacity-70">
           {formatMessageTime(message.waktu)}
         </span>
       </div>
