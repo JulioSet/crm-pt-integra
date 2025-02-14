@@ -8,7 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model employee {
   id         String    @id @db.VarChar(50)
   name       String    @unique(map: "UNIQUE") @db.VarChar(50)
@@ -17,4 +16,28 @@ model employee {
   created_at DateTime  @default(now()) @db.Timestamp(0)
   updated_at DateTime  @default(now()) @db.Timestamp(0)
   deteted_at DateTime? @db.Timestamp(0)
+}
+
+model message_header {
+  telepon         String            @id @db.VarChar(50)
+  nama            String?           @db.VarChar(50)
+  pesan_terbaru   String?           @db.Text
+  waktu_terbaru   String?           @db.VarChar(50)
+  label           String?           @db.VarChar(50)
+  prioritas       String?           @db.VarChar(50)
+  catatan         String?           @db.Text
+  akses           String            @db.VarChar(50)
+  baca            Boolean           @default(false)
+  message_content message_content[]
+}
+
+model message_content {
+  id                     Int            @id @default(autoincrement())
+  message_header_telepon String         @db.VarChar(50)
+  pesan                  String         @db.Text
+  waktu                  String         @db.VarChar(50)
+  responder              String         @db.VarChar(50)
+  message_header         message_header @relation(fields: [message_header_telepon], references: [telepon], onDelete: Cascade, map: "message_telepon")
+
+  @@index([message_header_telepon], map: "message_telepon")
 }
