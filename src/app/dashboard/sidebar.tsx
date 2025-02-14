@@ -11,11 +11,13 @@ import {
    Settings,
    MessagesSquare,
    LayoutDashboard,
+   Bell,
 } from 'lucide-react'
 import Image from 'next/image'
 
 const sidebarItems = [
    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
    { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
    { name: 'Messages', href: '/dashboard/messages', icon: MessagesSquare },
@@ -25,6 +27,7 @@ const sidebarItems = [
 export default function Sidebar() {
    const pathname = usePathname()
    const [collapsed, setCollapsed] = useState(false)
+   const [unreadCount, setUnreadCount] = useState(0)
 
    return (
       <div className={cn(
@@ -45,6 +48,8 @@ export default function Sidebar() {
                {sidebarItems.map((item) => {
                   const Icon = item.icon
                   const isActive = pathname === item.href
+                  const isNotifications = item.href === '/dashboard/notifications'
+
                   return (
                      <Link key={item.href} href={item.href}>
                         <Button
@@ -61,6 +66,13 @@ export default function Sidebar() {
                               collapsed ? "mr-0" : "mr-2",
                            )} />
                            {!collapsed && <span>{item.name}</span>}
+                           {isNotifications && unreadCount > 0 && (
+                              <div className='pl-1'>
+                                 <div className='inline-flex items-center rounded-full border border-transparent px-1.5 text-xs font-semibold bg-red-500 text-white'>
+                                    {unreadCount}
+                                 </div>
+                              </div>
+                           )}
                         </Button>
                      </Link>
                   )
