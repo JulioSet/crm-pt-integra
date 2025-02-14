@@ -3,7 +3,7 @@ import { ScrollArea } from "@/lib/ui/scroll-area"
 import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake } from "lucide-react"
 import { Button } from "../../../../lib/ui/button"
 import { Input } from "@/lib/ui/input"
-import { Conversation, MessageStatus } from "@/lib/definitions"
+import { Conversation, MessageLabel } from "@/lib/definitions"
 import { formatDateDistance } from "@/utils/date"
 import { useState } from "react"
 
@@ -13,7 +13,7 @@ interface MessagesSidebarProps {
    onSelectConversation: (conversation: Conversation) => void
 }
  
-const filters: { label: string; value: MessageStatus; icon: LucideIcon }[] = [
+const filters: { label: string; value: MessageLabel; icon: LucideIcon }[] = [
    { label: "New Case", value: "new", icon: MessageCircleWarning },
    { label: "Ongoing", value: "ongoing", icon: Clock },
    { label: "Hot", value: "hot", icon: Flame },
@@ -27,14 +27,14 @@ export function MessagesSidebar({
    selectedConversation,
    onSelectConversation 
 }: MessagesSidebarProps) {
-   const [selectedFilter, setSelectedFilter] = useState<MessageStatus | null>(null)
+   const [selectedFilter, setSelectedFilter] = useState<MessageLabel | null>(null)
    const [searchQuery, setSearchQuery] = useState("")
 
    const filteredConversations = conversations.filter(conversation => {
       const matchesFilter = selectedFilter ? conversation.label === selectedFilter : true
       const matchesSearchNama = conversation.nama?.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesSearchTelepon = conversation.telepon.includes(searchQuery)
-      return matchesFilter && matchesSearchNama && matchesSearchTelepon
+      return matchesFilter && (matchesSearchNama || matchesSearchTelepon)
    })
 
    return (
@@ -76,7 +76,7 @@ export function MessagesSidebar({
          </div>
          <ScrollArea className="flex-1">
             <div className="p-2 space-y-2">
-               {conversations.map((conversation) => {
+               {filteredConversations.map((conversation) => {
                   const identity = conversation.nama ?? `+${conversation.telepon}`
                   const StatusIcon = filters.find(f => f.value === conversation.label)?.icon || MessageCircle
                   return (

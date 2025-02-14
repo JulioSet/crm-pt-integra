@@ -1,4 +1,4 @@
-import { Conversation, MessagePriority, MessageStatus } from "@/lib/definitions"
+import { Conversation, MessageLabel, MessagePriority } from "@/lib/definitions"
 import { MessageHeader } from "./message-header"
 import { ScrollArea } from "@/lib/ui/scroll-area"
 import { MessageInput } from "./message-input"
@@ -18,7 +18,7 @@ interface MessageViewProps {
 }
 
 export function MessageView({ conversation }: MessageViewProps) {
-  const [status, setStatus] = useState(conversation.label)
+  const [label, setLabel] = useState(conversation.label)
   const [priority, setPriority] = useState(conversation.prioritas || "medium")
   const [note, setNote] = useState(conversation.catatan || "")
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
@@ -42,10 +42,10 @@ export function MessageView({ conversation }: MessageViewProps) {
     }
   }
   
-  const handleStatusChange = (newStatus: MessageStatus) => {
+  const handleLabelChange = (newLabel: MessageLabel) => {
     // Handle status change
-    setStatus(newStatus)
-    console.log("Status changed to:", newStatus)
+    setLabel(newLabel)
+    console.log("Status changed to:", newLabel)
   }
   
   const handlePriorityChange = (newPriority: MessagePriority) => {
@@ -105,39 +105,39 @@ export function MessageView({ conversation }: MessageViewProps) {
         >
           <div className="p-4 space-y-6">
             <div className="space-y-4">
-              <Label className="text-md font-bold">Status</Label>
+              <Label className="text-md font-bold">Label</Label>
               <div className="flex flex-col gap-2">
                 <Button
-                  variant={status === "hot" ? "default" : "outline"}
+                  variant={label === "hot" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => handleStatusChange("hot")}
+                  onClick={() => handleLabelChange("hot")}
                   className={cn(
                     "flex justify-start",
-                    status === "hot" && "bg-red-500 hover:bg-red-600"
+                    label === "hot" && "bg-red-500 hover:bg-red-600"
                   )}
                 >
                   <Flame className="w-4 h-4 m-2" />
                   Hot Lead
                 </Button>
                 <Button
-                  variant={status === "cold" ? "default" : "outline"}
+                  variant={label === "cold" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => handleStatusChange("cold")}
+                  onClick={() => handleLabelChange("cold")}
                   className={cn(
                     "flex justify-start",
-                    status === "cold" && "bg-blue-500 hover:bg-blue-600"
+                    label === "cold" && "bg-blue-500 hover:bg-blue-600"
                   )}
                 >
                   <Snowflake className="w-4 h-4 m-2" />
                   Cold Lead
                 </Button>
                 <Button
-                  variant={status === "deal" ? "default" : "outline"}
+                  variant={label === "deal" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => handleStatusChange("deal")}
+                  onClick={() => handleLabelChange("deal")}
                   className={cn(
                     "flex justify-start",
-                    status === "deal" && "bg-green-500 hover:bg-green-600"
+                    label === "deal" && "bg-green-500 hover:bg-green-600"
                   )}
                 >
                   <DollarSign className="w-4 h-4 m-2" />
@@ -147,7 +147,7 @@ export function MessageView({ conversation }: MessageViewProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="priority" className="text-sm font-medium">
+              <Label htmlFor="priority" className="text-md font-bold">
                 Priority Level
               </Label>
               <Select value={priority} onValueChange={handlePriorityChange}>
@@ -178,7 +178,7 @@ export function MessageView({ conversation }: MessageViewProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="note" className="text-sm font-medium">
+              <Label htmlFor="note" className="text-md font-bold">
                 Notes
               </Label>
               <Textarea

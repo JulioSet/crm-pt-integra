@@ -12,10 +12,10 @@ export default function Messages() {
 
    useEffect(() => {
       const fetchData = async () => {
-      const data = await getConversations()
-      if (data) {
-         setConversations(data)
-      }
+         const data = await getConversations()
+         if (data) {
+            setConversations(data)
+         }
       };
       fetchData();
 

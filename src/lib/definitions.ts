@@ -25,7 +25,7 @@ export interface Message {
   responder: string
 }
 
-export type MessageStatus = "new" | "hot" | "cold" | "deal" | "ongoing" | "resolved"
+export type MessageLabel = "new" | "hot" | "cold" | "deal" | "ongoing" | "resolved"
 export type MessagePriority = "high" | "medium" | "low"
 
 export interface Notification {
