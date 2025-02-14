@@ -1,5 +1,4 @@
 import { cn } from "@/utils/class-merger"
-import { ScrollArea } from "@/lib/ui/scroll-area"
 import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake } from "lucide-react"
 import { Button } from "../../../../lib/ui/button"
 import { Input } from "@/lib/ui/input"
@@ -74,7 +73,7 @@ export function MessagesSidebar({
                })}
             </div>
          </div>
-         <ScrollArea className="flex-1">
+         <div className="flex-1 overflow-y-auto">
             <div className="p-2 space-y-2">
                {filteredConversations.map((conversation) => {
                   const identity = conversation.nama ?? `+${conversation.telepon}`
@@ -112,7 +111,7 @@ export function MessagesSidebar({
                   )
                })}
             </div>
-         </ScrollArea>
+         </div>
       </div>
    )
 }

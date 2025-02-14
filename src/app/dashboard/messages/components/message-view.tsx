@@ -1,6 +1,5 @@
 import { Conversation, MessageLabel, MessagePriority } from "@/lib/definitions"
 import { MessageHeader } from "./message-header"
-import { ScrollArea } from "@/lib/ui/scroll-area"
 import { MessageInput } from "./message-input"
 import { MessageBubble } from "./message-bubble"
 import { Button } from "@/lib/ui/button"
@@ -18,6 +17,7 @@ interface MessageViewProps {
 }
 
 export function MessageView({ conversation }: MessageViewProps) {
+  const phone = conversation.telepon
   const [label, setLabel] = useState(conversation.label)
   const [priority, setPriority] = useState(conversation.prioritas || "medium")
   const [note, setNote] = useState(conversation.catatan || "")
@@ -36,7 +36,7 @@ export function MessageView({ conversation }: MessageViewProps) {
 
   const handleSendMessage = (message: string) => {
     // Handle sending message
-    const check = sendMessage('62895396081480', message)
+    const check = sendMessage(phone, message)
     if (!check) {
       setFailedMessage(true)
     }
@@ -65,7 +65,7 @@ export function MessageView({ conversation }: MessageViewProps) {
       {/* Chat */}
       <div className="flex-1 flex flex-col">
         <MessageHeader conversation={conversation} onAssign={handleAssign} onResolve={handleResolve} />
-        <ScrollArea className="flex-1 p-4 bg-zinc-300">
+        <div className="flex-1 p-4 bg-zinc-300 overflow-y-auto">
           <div className="space-y-4">
             {conversation.message_content?.map((message) => (
               <MessageBubble key={message.id} message={message} />
@@ -78,7 +78,7 @@ export function MessageView({ conversation }: MessageViewProps) {
               </div>
             }
           </div>
-        </ScrollArea>
+        </div>
         <MessageInput onSendMessage={handleSendMessage} />
       </div>
       
