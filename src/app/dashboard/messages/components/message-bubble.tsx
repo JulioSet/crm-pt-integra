@@ -7,24 +7,25 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
+  console.log(message.waktu)
   return (
     <div
       className={cn(
         "flex",
-        message.sender === "user" ? "justify-end" : "justify-start"
+        message.responder === "integra" ? "justify-end" : "justify-start"
       )}
     >
       <div
         className={cn(
           "max-w-[70%] rounded-lg p-3",
-          message.sender === "user"
+          message.responder === "integra"
             ? "bg-blue-600 text-white"
             : "bg-white"
         )}
       >
-        <p className="text-sm">{message.content}</p>
+        <p className="text-sm">{message.pesan}</p>
         <span className="text-xs opacity-70">
-          {formatMessageTime(message.timestamp)}
+          {formatMessageTime(message.waktu)}
         </span>
       </div>
     </div>

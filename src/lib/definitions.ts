@@ -4,24 +4,34 @@ export type SessionPayload = {
   expiresAt: Date;
 };
 
+export interface Conversation {
+  telepon: string
+  nama: string | null
+  pesan_terbaru: string | null
+  waktu_terbaru: string | null
+  label: string | null
+  prioritas: string | null
+  catatan: string | null
+  akses: string
+  baca: boolean | null
+  message_content: Message[]
+}
+
 export interface Message {
-  id: string
-  content: string
-  sender: "user" | "other"
-  timestamp: string
+  id: number
+  message_header_telepon: string
+  pesan: string
+  waktu: string
+  responder: string
 }
 
 export type MessageStatus = "new" | "hot" | "cold" | "deal" | "ongoing" | "resolved"
 export type MessagePriority = "high" | "medium" | "low"
 
-export interface Conversation {
+export interface Notification {
   id: string
-  name: string
-  lastMessage: string
-  lastMessageAt: string
-  status: MessageStatus
-  priority?: MessagePriority
-  labels?: string[]
-  note?: string
-  messages?: Message[]
+  sender: string
+  message: string
+  timestamp: string
+  read: boolean
 }

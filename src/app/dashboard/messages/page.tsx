@@ -1,15 +1,27 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Conversation } from "@/lib/definitions"
-import { useConversations } from "@/hooks/use-conversations"
 import { MessagesSidebar } from "./components/message-sidebar"
-import { MessagesList } from "./components/message-list"
 import { MessageView } from "./components/message-view"
+import { getConversations } from "@/lib/message"
 
 export default function Messages() {
-   const { conversations } = useConversations()
+   const [conversations, setConversations] = useState<Conversation[]>([])
    const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
+
+   useEffect(() => {
+      const fetchData = async () => {
+      const data = await getConversations()
+      if (data) {
+         setConversations(data)
+      }
+      };
+      fetchData();
+
+      const interval = setInterval(fetchData, 5000) // Fetch every 5 seconds
+      return () => clearInterval(interval); // Cleanup on unmount
+   }, []);
 
    return(
       <div className="flex h-full bg-background">
@@ -21,10 +33,6 @@ export default function Messages() {
          {selectedConversation ? (
             <MessageView conversation={selectedConversation} />
          ) : (
-            // <MessagesList 
-            //    conversations={conversations}
-            //    onSelectConversation={setSelectedConversation}
-            // />
             <div className="flex flex-1 items-center justify-center space-y-4 p-4 md:p-8 pt-6 bg-white">
                <p className="text-slate-400">Belum Ada Percakapan yang Terpilih</p>
             </div>

@@ -18,15 +18,28 @@ interface MessageViewProps {
 }
 
 export function MessageView({ conversation }: MessageViewProps) {
-  const [status, setStatus] = useState<MessageStatus>(conversation.status)
-  const [priority, setPriority] = useState<MessagePriority>(conversation.priority || "medium")
-  const [note, setNote] = useState<string>(conversation.note || "")
+  const [status, setStatus] = useState(conversation.label)
+  const [priority, setPriority] = useState(conversation.prioritas || "medium")
+  const [note, setNote] = useState(conversation.catatan || "")
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
+  const [failedMessage, setFailedMessage] = useState(false);
+
+  const handleAssign = () => {
+    // Handle assign to other agent
+    console.log("Assign")
+  }
+
+  const handleResolve = () => {
+    // Handle resolving conversation
+    console.log("Resolved")
+  }
 
   const handleSendMessage = (message: string) => {
     // Handle sending message
-    sendMessage('62895396081480', message)
-    console.log("Sending message:", message)
+    const check = sendMessage('62895396081480', message)
+    if (!check) {
+      setFailedMessage(true)
+    }
   }
   
   const handleStatusChange = (newStatus: MessageStatus) => {
@@ -51,12 +64,19 @@ export function MessageView({ conversation }: MessageViewProps) {
     <div className="flex-1 flex">
       {/* Chat */}
       <div className="flex-1 flex flex-col">
-        <MessageHeader conversation={conversation} />
+        <MessageHeader conversation={conversation} onAssign={handleAssign} onResolve={handleResolve} />
         <ScrollArea className="flex-1 p-4 bg-zinc-300">
           <div className="space-y-4">
-            {conversation.messages?.map((message) => (
+            {conversation.message_content?.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
+            {failedMessage && 
+              <div className="flex justify-center items-center">
+                <div className="bg-white bg-opacity-10 rounded-full">
+                  <p className="font-semibold text-sm px-1 py-1 pl-5 pr-5">Gagal Mengirim Pesan</p>
+                </div>
+              </div>
+            }
           </div>
         </ScrollArea>
         <MessageInput onSendMessage={handleSendMessage} />
@@ -135,19 +155,19 @@ export function MessageView({ conversation }: MessageViewProps) {
                   <SelectValue placeholder="Set priority" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="high" className="pt-2 pb-2 pr-32">
+                  <SelectItem value="high" className="pt-2 pb-2 mr-1 pr-32">
                     <span className="flex items-center">
                       <Flag className="w-4 h-4 mr-2 text-red-500" />
                       High Priority
                     </span>
                   </SelectItem>
-                  <SelectItem value="medium" className="pt-2 pb-2 pr-32">
+                  <SelectItem value="medium" className="pt-2 pb-2 mr-1 pr-32">
                     <span className="flex items-center">
                       <Flag className="w-4 h-4 mr-2 text-yellow-500" />
                       Medium Priority
                     </span>
                   </SelectItem>
-                  <SelectItem value="low" className="pt-2 pb-2 pr-32">
+                  <SelectItem value="low" className="pt-2 pb-2 mr-1 pr-32">
                     <span className="flex items-center">
                       <Flag className="w-4 h-4 mr-2 text-green-500" />
                       Low Priority

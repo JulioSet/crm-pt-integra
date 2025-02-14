@@ -31,9 +31,10 @@ export function MessagesSidebar({
    const [searchQuery, setSearchQuery] = useState("")
 
    const filteredConversations = conversations.filter(conversation => {
-      const matchesFilter = selectedFilter ? conversation.status === selectedFilter : true
-      const matchesSearch = conversation.name.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesFilter && matchesSearch
+      const matchesFilter = selectedFilter ? conversation.label === selectedFilter : true
+      const matchesSearchNama = conversation.nama?.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesSearchTelepon = conversation.telepon.includes(searchQuery)
+      return matchesFilter && matchesSearchNama && matchesSearchTelepon
    })
 
    return (
@@ -59,54 +60,55 @@ export function MessagesSidebar({
                   const Icon = filter.icon
                   const isSelected = selectedFilter === filter.value
                   return (
-                  <Button
-                     key={filter.value}
-                     variant={isSelected ? "default" : "outline"}
-                     size="sm"
-                     className={"rounded-md flex h-8 px-3 whitespace-nowrap"}
-                     onClick={() => setSelectedFilter(isSelected ? null : filter.value)}
-                  >
-                     <Icon className="h-4 w-4 mr-1.5" />
-                     <span className="text-xs font-medium">{filter.label}</span>
-                  </Button>
+                     <Button
+                        key={filter.value}
+                        variant={isSelected ? "default" : "outline"}
+                        size="sm"
+                        className={"rounded-md flex h-8 px-3 whitespace-nowrap"}
+                        onClick={() => setSelectedFilter(isSelected ? null : filter.value)}
+                     >
+                        <Icon className="h-4 w-4 mr-1.5" />
+                        <span className="text-xs font-medium">{filter.label}</span>
+                     </Button>
                   )
                })}
             </div>
          </div>
          <ScrollArea className="flex-1">
             <div className="p-2 space-y-2">
-               {filteredConversations.map((conversation) => {
-                  const StatusIcon = filters.find(f => f.value === conversation.status)?.icon || MessageCircle
+               {conversations.map((conversation) => {
+                  const identity = conversation.nama ?? `+${conversation.telepon}`
+                  const StatusIcon = filters.find(f => f.value === conversation.label)?.icon || MessageCircle
                   return (
-                  <button
-                     key={conversation.id}
-                     onClick={() => onSelectConversation(conversation)}
-                     className={cn(
-                        "w-full p-3 rounded-lg text-left flex items-center space-x-3 hover:bg-slate-100",
-                        selectedConversation?.id === conversation.id && "bg-slate-100"
-                     )}
-                  >
-                     <StatusIcon className={cn(
-                        "h-5 w-5",
-                        conversation.status === "new" && "text-purple-500",
-                        conversation.status === "ongoing" && "text-yellow-500",
-                        conversation.status === "hot" && "text-red-500",
-                        conversation.status === "cold" && "text-blue-500",
-                        conversation.status === "deal" && "text-green-500",
-                        conversation.status === "resolved" && "text-emerald-500"
-                     )} />
-                     <div className="flex-1 overflow-hidden">
-                        <div className="flex justify-between items-center">
-                           <span className="font-medium text-foreground">{conversation.name}</span>
-                           <span className="text-xs text-muted-foreground">
-                              {formatDateDistance(conversation.lastMessageAt)}
-                           </span>
+                     <button
+                        key={conversation.telepon}
+                        onClick={() => onSelectConversation(conversation)}
+                        className={cn(
+                           "w-full p-3 rounded-lg text-left flex items-center space-x-3 hover:bg-slate-100",
+                           selectedConversation?.telepon === conversation.telepon && "bg-slate-100"
+                        )}
+                     >
+                        <StatusIcon className={cn(
+                           "h-5 w-5",
+                           conversation.label === "new" && "text-purple-500",
+                           conversation.label === "ongoing" && "text-yellow-500",
+                           conversation.label === "hot" && "text-red-500",
+                           conversation.label === "cold" && "text-blue-500",
+                           conversation.label === "deal" && "text-green-500",
+                           conversation.label === "resolved" && "text-emerald-500"
+                        )} />
+                        <div className="flex-1 overflow-hidden">
+                           <div className="flex justify-between items-center">
+                              <span className="font-medium text-foreground">{identity}</span>
+                              <span className="text-xs text-muted-foreground">
+                                 {formatDateDistance(conversation.waktu_terbaru)}
+                              </span>
+                           </div>
+                           <div className="text-sm text-muted-foreground line-clamp-1">
+                              {conversation.pesan_terbaru}
+                           </div>
                         </div>
-                        <div className="text-sm text-muted-foreground line-clamp-1">
-                           {conversation.lastMessage}
-                        </div>
-                     </div>
-                  </button>
+                     </button>
                   )
                })}
             </div>
