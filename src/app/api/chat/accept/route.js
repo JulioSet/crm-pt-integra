@@ -6,8 +6,8 @@ export async function POST(req) { // It should be POST or GET
     console.log("Received data:", data);
 
     // saving message to database
-    const { messageId, from, text, timestamp } = data;
-    saveMessageToDatabase(messageId, from, text, timestamp, 'client');
+    const { from, text, timestamp } = data;
+    saveMessageToDatabase(from, text, timestamp, 'client');
 
     return new Response(JSON.stringify({ status: "Message processed successfully" }), {
       status: 200,
