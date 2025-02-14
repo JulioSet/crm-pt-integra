@@ -19,7 +19,7 @@ export default function Messages() {
       };
       fetchData();
 
-      const interval = setInterval(fetchData, 5000) // Fetch every 5 seconds
+      const interval = setInterval(fetchData, 3000) // Fetch every 3 seconds
       return () => clearInterval(interval); // Cleanup on unmount
    }, []);
 
