@@ -1,4 +1,4 @@
-import { saveMessageToDatabase } from "@/lib/message";
+import { saveMessageToDatabase, updateMessageHeader } from "@/lib/message";
 
 export async function POST(req) { // It should be POST or GET
   try {
@@ -17,6 +17,7 @@ export async function POST(req) { // It should be POST or GET
     const { to, text } = data;
     const timestamp = Math.floor(Date.now() / 1000).toString()
     saveMessageToDatabase(to, text, timestamp, 'integra')
+    updateMessageHeader(to, text, timestamp)
 
     return new Response({ status: response.status });
   } catch (error) {

@@ -14,7 +14,7 @@ export async function sendMessage(to: string, text: string) {
    }
 }
 
-export async function saveMessageToDatabase(messageId: string, from: string, text: string, timestamp: string, responder: string) { 
+export async function saveMessageToDatabase(from: string, text: string, timestamp: string, responder: string) { 
    // console.log(`From: ${from}`); # 6287732919
    // console.log(`Message: ${text}`); # this is message
    // console.log(`Timestamp: ${new Date(timestamp * 1000)}`); # Wed Nov 20 2024 16:53:39 GMT+0700 (Indochina Time)
@@ -41,6 +41,16 @@ export async function saveMessageToDatabase(messageId: string, from: string, tex
          pesan: text,
          waktu: timestamp,
          responder: responder
+      }
+   })
+}
+
+export async function updateMessageHeader(phone: string, text: string, timestamp: string) {
+   await prisma.message_header.update({
+      where: {telepon: phone},
+      data: {
+         pesan_terbaru: text,
+         waktu_terbaru: timestamp
       }
    })
 }
