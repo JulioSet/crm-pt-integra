@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight, DollarSign, Flag, Flame, Snowflake } from "lucide-react"
 import { Card } from "@/lib/ui/card"
 import { cn } from "@/utils/class-merger"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Textarea } from "@/lib/ui/textarea"
 import { sendMessage } from "@/lib/message"
 
@@ -17,12 +17,19 @@ interface MessageViewProps {
 }
 
 export function MessageView({ conversation }: MessageViewProps) {
+  const messageViewRef = useRef<HTMLDivElement | null>(null);
   const phone = conversation.telepon
   const [label, setLabel] = useState(conversation.label)
   const [priority, setPriority] = useState(conversation.prioritas || "medium")
   const [note, setNote] = useState(conversation.catatan || "")
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
   const [failedMessage, setFailedMessage] = useState(false);
+
+  useEffect(() => {
+    if (messageViewRef.current) {
+      messageViewRef.current.scrollTop = messageViewRef.current.scrollHeight; // Instantly scroll to bottom
+    }
+  }, [conversation, failedMessage]); // Re-run when message count changes
 
   const handleAssign = () => {
     // Handle assign to other agent
@@ -65,7 +72,7 @@ export function MessageView({ conversation }: MessageViewProps) {
       {/* Chat */}
       <div className="flex-1 flex flex-col">
         <MessageHeader conversation={conversation} onAssign={handleAssign} onResolve={handleResolve} />
-        <div className="flex-1 p-4 bg-zinc-300 overflow-y-auto">
+        <div ref={messageViewRef} className="flex-1 p-4 bg-zinc-300 overflow-y-auto">
           <div className="space-y-4">
             {conversation.message_content?.map((message) => (
               <MessageBubble key={message.id} message={message} />
