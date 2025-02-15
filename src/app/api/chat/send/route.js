@@ -12,19 +12,22 @@ export async function POST(req) { // It should be POST or GET
       },
       body: JSON.stringify(data),
     });
-
+    
     // saving message to database
-    const { to, text } = data;
-    const timestamp = Math.floor(Date.now() / 1000).toString()
-    saveMessageToDatabase(to, text, timestamp, 'integra')
-    updateMessageHeader(to, text, timestamp)
-
-    return new Response({ status: response.status });
+    if (response.status !== 500) {
+      const { to, text } = data;
+      const timestamp = Math.floor(Date.now() / 1000).toString()
+      saveMessageToDatabase(to, text, timestamp, 'integra')
+      updateMessageHeader(to, text, timestamp)
+    }
+    
+    return new Response(JSON.stringify({ status: response.status }));
   } catch (error) {
     console.error("Error sending message:", error);
     return new Response(
-      JSON.stringify({ error: "Failed to send message to Glitch server" }),
-      { status: 500 }
+      JSON.stringify(
+        { error: "Failed to send message to Glitch server" }, 
+        { status: 500 })
     );
   }
 }

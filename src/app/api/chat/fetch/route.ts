@@ -9,6 +9,9 @@ export async function GET() {
       return NextResponse.json(conversations);
    } catch (error) {
       console.error("Error fetching conversations:", error);
-      return NextResponse.json({ error: "Internal Server Error" });
+      return NextResponse.json(
+         { error: "Internal Server Error" },
+         { status: 500}
+      );
    }
 }
