@@ -5,13 +5,15 @@ import { Input } from "@/lib/ui/input"
 import { Conversation, MessageLabel } from "@/lib/definitions"
 import { formatDateDistance } from "@/utils/date"
 import { useState } from "react"
+import { Skeleton } from "@/lib/ui/skeleton"
 
 interface MessagesSidebarProps {
    conversations: Conversation[]
    selectedConversation: Conversation | null
    onSelectConversation: (conversation: Conversation) => void
+   loading: boolean
 }
- 
+
 const filters: { label: string; value: MessageLabel; icon: LucideIcon }[] = [
    { label: "New Case", value: "new", icon: MessageCircleWarning },
    { label: "Ongoing", value: "ongoing", icon: Clock },
@@ -19,12 +21,30 @@ const filters: { label: string; value: MessageLabel; icon: LucideIcon }[] = [
    { label: "Cold", value: "cold", icon: Snowflake },
    { label: "Deal", value: "deal", icon: DollarSign },
    { label: "Resolved", value: "resolved", icon: CheckCircle2 },
- ]
+]
+
+function ConversationSkeleton() {
+   return (
+      <div className="p-3 rounded-lg">
+         <div className="flex items-center space-x-3">
+         <Skeleton className="animate-pulse h-5 w-5 rounded-full bg-zinc-300" />
+         <div className="flex-1 space-y-2">
+            <div className="flex justify-between items-center">
+               <Skeleton className="animate-pulse h-4 w-24 bg-zinc-300" />
+               <Skeleton className="animate-pulse h-3 w-12 bg-zinc-300" />
+            </div>
+            <Skeleton className="animate-pulse h-3 w-full bg-zinc-300" />
+         </div>
+         </div>
+      </div>
+   )
+}
 
 export function MessagesSidebar({ 
    conversations, 
    selectedConversation,
-   onSelectConversation 
+   onSelectConversation,
+   loading
 }: MessagesSidebarProps) {
    const [selectedFilter, setSelectedFilter] = useState<MessageLabel | null>(null)
    const [searchQuery, setSearchQuery] = useState("")
@@ -75,6 +95,15 @@ export function MessagesSidebar({
          </div>
          <div className="flex-1 overflow-y-auto">
             <div className="p-2 space-y-2">
+               {loading && (
+                  <>
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                  </>
+               )}
                {filteredConversations.map((conversation) => {
                   const identity = conversation.nama ?? `+${conversation.telepon}`
                   const StatusIcon = filters.find(f => f.value === conversation.label)?.icon || MessageCircle

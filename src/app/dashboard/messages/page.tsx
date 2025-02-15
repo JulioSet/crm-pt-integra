@@ -9,17 +9,25 @@ import { getConversations } from "@/lib/message"
 export default function Messages() {
    const [conversations, setConversations] = useState<Conversation[]>([])
    const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
+   const [loading, setLoading] = useState(true)
 
    useEffect(() => {
       const fetchData = async () => {
+         // fetch conversations
          const data = await getConversations()
          if (data) {
             setConversations(data)
          }
+
+         // implement auto update on selected conversation
+         if (selectedConversation !== null) {
+            setSelectedConversation(conversations.find(conversation => conversation.telepon === selectedConversation.telepon) ?? null)
+         }
       };
       fetchData();
-
-      const interval = setInterval(fetchData, 3000) // Fetch every 3 seconds
+      setLoading(false)
+      
+      const interval = setInterval(fetchData, 10000) // Fetch every 1 seconds
       return () => clearInterval(interval); // Cleanup on unmount
    }, []);
 
@@ -29,6 +37,7 @@ export default function Messages() {
             conversations={conversations}
             selectedConversation={selectedConversation}
             onSelectConversation={setSelectedConversation}
+            loading={loading}
          />
          {selectedConversation ? (
             <MessageView conversation={selectedConversation} />
