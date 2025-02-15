@@ -34,9 +34,9 @@ export function MessageView({ conversation }: MessageViewProps) {
     console.log("Resolved")
   }
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
     // Handle sending message
-    const check = sendMessage(phone, message)
+    const check = await sendMessage(phone, message)
     if (!check) {
       setFailedMessage(true)
     }
@@ -72,7 +72,7 @@ export function MessageView({ conversation }: MessageViewProps) {
             ))}
             {failedMessage && 
               <div className="flex justify-center items-center">
-                <div className="bg-white bg-opacity-10 rounded-full">
+                <div className="bg-white bg-opacity-40 rounded-full">
                   <p className="font-semibold text-sm px-1 py-1 pl-5 pr-5">Gagal Mengirim Pesan</p>
                 </div>
               </div>
