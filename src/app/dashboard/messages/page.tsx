@@ -27,7 +27,7 @@ export default function Messages() {
       fetchData();
       setLoading(false)
       
-      const interval = setInterval(fetchData, 10000) // Fetch every 1 seconds
+      const interval = setInterval(fetchData, 1000) // Fetch every 1 seconds
       return () => clearInterval(interval); // Cleanup on unmount
    }, []);
 
