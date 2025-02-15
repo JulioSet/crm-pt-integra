@@ -8,8 +8,9 @@ export async function sendMessage(to: string, text: string) {
       },
       body: JSON.stringify({ to, text }), // Send data as JSON
    });
-
-   if (!response.ok) {
+   const data = await response.json()
+   
+   if (data.status === 500) {
       return false;
    }
 }
@@ -60,7 +61,7 @@ export async function getConversations() {
       method: 'GET',
    });
 
-   if (!response.ok) {
+   if (response.status === 500) {
       return false;
    }
 
