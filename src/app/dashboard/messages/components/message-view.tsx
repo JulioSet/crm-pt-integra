@@ -29,7 +29,7 @@ export function MessageView({ conversation }: MessageViewProps) {
     if (messageViewRef.current) {
       messageViewRef.current.scrollTop = messageViewRef.current.scrollHeight; // Instantly scroll to bottom
     }
-  }, [conversation, failedMessage]); // Re-run when message count changes
+  }, [conversation, failedMessage]); // Re-run when there are changes
 
   const handleAssign = () => {
     // Handle assign to other agent
