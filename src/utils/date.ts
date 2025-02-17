@@ -8,6 +8,10 @@ export function formatMessageTime(time: string) {
 }
 
 export function formatDateDistance(date: string | null) {
+  if (date === null) {
+    return 
+  }
+  
   const now = new Date()
   const timestamp = new Date(parseInt(date, 10) * 1000).toISOString() ?? ''
   const messageDate = new Date(timestamp)
