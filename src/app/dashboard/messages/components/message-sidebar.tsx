@@ -10,7 +10,7 @@ import { Skeleton } from "@/lib/ui/skeleton"
 interface MessagesSidebarProps {
    conversations: Conversation[]
    selectedConversation: Conversation | null
-   onSelectConversation: (conversation: Conversation) => void
+   onSelectConversation: (phone: string) => void
    loading: boolean
 }
 
@@ -110,7 +110,7 @@ export function MessagesSidebar({
                   return (
                      <button
                         key={conversation.telepon}
-                        onClick={() => onSelectConversation(conversation)}
+                        onClick={() => onSelectConversation(conversation.telepon)}
                         className={cn(
                            "w-full p-3 rounded-lg text-left flex items-center space-x-3 hover:bg-slate-100",
                            selectedConversation?.telepon === conversation.telepon && "bg-slate-100"

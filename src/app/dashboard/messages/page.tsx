@@ -8,39 +8,32 @@ import { getConversations } from "@/lib/message"
 
 export default function Messages() {
    const [conversations, setConversations] = useState<Conversation[]>([])
-   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
+   const [phone, setPhone] = useState("")
    const [loading, setLoading] = useState(true)
 
    useEffect(() => {
-      const fetchData = async () => {
-         // fetch conversations
+      // fetch conversations
+      setInterval(async () => {
          const data = await getConversations()
          if (data) {
             setConversations(data)
          }
-
-         // implement auto update on selected conversation
-         if (selectedConversation !== null) {
-            setSelectedConversation(conversations.find(conversation => conversation.telepon === selectedConversation.telepon) ?? null)
-         }
-      };
-      fetchData();
+      }, 1000)
       setLoading(false)
       
-      const interval = setInterval(fetchData, 1000) // Fetch every 1 seconds
-      return () => clearInterval(interval); // Cleanup on unmount
+      return () => clearInterval(1000); // Cleanup on unmount
    }, []);
 
    return(
       <div className="flex h-full bg-background">
          <MessagesSidebar
             conversations={conversations}
-            selectedConversation={selectedConversation}
-            onSelectConversation={setSelectedConversation}
+            selectedConversation={conversations.find(conversation => conversation.telepon === phone) ?? null}
+            onSelectConversation={setPhone}
             loading={loading}
          />
-         {selectedConversation ? (
-            <MessageView conversation={selectedConversation} />
+         {conversations.find(conversation => conversation.telepon === phone) ? (
+            <MessageView conversation={conversations.find(conversation => conversation.telepon === phone)} />
          ) : (
             <div className="flex flex-1 items-center justify-center space-y-4 p-4 md:p-8 pt-6 bg-white">
                <p className="text-slate-400">Belum Ada Percakapan yang Terpilih</p>
