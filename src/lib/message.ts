@@ -12,6 +12,8 @@ export async function sendMessage(to: string, text: string) {
    
    if (data.status === 500) {
       return false;
+   } else {
+      return true;
    }
 }
 

@@ -24,11 +24,27 @@ export function MessageView({ conversation }: MessageViewProps) {
   const [note, setNote] = useState(conversation.catatan || "")
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
   const [failedMessage, setFailedMessage] = useState(false);
+  const [opened, setOpened] = useState(false)
+  const [lastMessage, setLastMessage] = useState("")
 
   useEffect(() => {
-    if (messageViewRef.current) {
-      messageViewRef.current.scrollTop = messageViewRef.current.scrollHeight; // Instantly scroll to bottom
+    const container = messageViewRef.current;
+    if (!container) return;
+    
+    // first time opening
+    if (!opened) {
+      container.scrollTo({ top: container.scrollHeight });
     }
+    
+    // if there is a new chat
+    const newMessage = lastMessage !== conversation.message_content.at(-1)?.pesan
+    const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
+    if (newMessage && isAtBottom) {
+      container.scrollTo({ top: container.scrollHeight });
+      setLastMessage(conversation.message_content.at(-1)?.pesan ?? "")
+    }
+
+    setOpened(true)
   }, [conversation, failedMessage]); // Re-run when there are changes
 
   const handleAssign = () => {
@@ -46,6 +62,8 @@ export function MessageView({ conversation }: MessageViewProps) {
     const check = await sendMessage(phone, message)
     if (!check) {
       setFailedMessage(true)
+    } else {
+      setFailedMessage(false)
     }
   }
   
