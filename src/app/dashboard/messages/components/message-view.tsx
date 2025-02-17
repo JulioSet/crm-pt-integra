@@ -13,15 +13,15 @@ import { Textarea } from "@/lib/ui/textarea"
 import { sendMessage } from "@/lib/message"
 
 interface MessageViewProps {
-  conversation: Conversation
+  conversation: Conversation | null
 }
 
 export function MessageView({ conversation }: MessageViewProps) {
   const messageViewRef = useRef<HTMLDivElement | null>(null);
-  const phone = conversation.telepon
-  const [label, setLabel] = useState(conversation.label)
-  const [priority, setPriority] = useState(conversation.prioritas || "medium")
-  const [note, setNote] = useState(conversation.catatan || "")
+  const phone = conversation?.telepon
+  const [label, setLabel] = useState(conversation?.label)
+  const [priority, setPriority] = useState(conversation?.prioritas || "medium")
+  const [note, setNote] = useState(conversation?.catatan || "")
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
   const [failedMessage, setFailedMessage] = useState(false);
   const [opened, setOpened] = useState(false)
@@ -37,14 +37,15 @@ export function MessageView({ conversation }: MessageViewProps) {
     }
     
     // if there is a new chat
-    const newMessage = lastMessage !== conversation.message_content.at(-1)?.pesan
+    const newMessage = lastMessage !== conversation?.message_content.at(-1)?.pesan
     const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
     if (newMessage && isAtBottom) {
       container.scrollTo({ top: container.scrollHeight });
-      setLastMessage(conversation.message_content.at(-1)?.pesan ?? "")
+      setLastMessage(conversation?.message_content.at(-1)?.pesan ?? "")
     }
 
     setOpened(true)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation, failedMessage]); // Re-run when there are changes
 
   const handleAssign = () => {
@@ -59,11 +60,13 @@ export function MessageView({ conversation }: MessageViewProps) {
 
   const handleSendMessage = async (message: string) => {
     // Handle sending message
-    const check = await sendMessage(phone, message)
-    if (!check) {
-      setFailedMessage(true)
-    } else {
-      setFailedMessage(false)
+    if (phone !== undefined) {
+      const check = await sendMessage(phone, message)
+      if (!check) {
+        setFailedMessage(true)
+      } else {
+        setFailedMessage(false)
+      }
     }
   }
   
@@ -92,7 +95,7 @@ export function MessageView({ conversation }: MessageViewProps) {
         <MessageHeader conversation={conversation} onAssign={handleAssign} onResolve={handleResolve} />
         <div ref={messageViewRef} className="flex-1 p-4 bg-zinc-300 overflow-y-auto">
           <div className="space-y-4">
-            {conversation.message_content?.map((message) => (
+            {conversation?.message_content?.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
             {failedMessage && 

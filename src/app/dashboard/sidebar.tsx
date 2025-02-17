@@ -29,6 +29,7 @@ const sidebarItems = [
 export default function Sidebar() {
    const pathname = usePathname()
    const [collapsed, setCollapsed] = useState(false)
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [unreadCount, setUnreadCount] = useState(0)
 
    return (

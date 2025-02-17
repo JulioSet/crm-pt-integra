@@ -3,13 +3,13 @@ import { Button } from "../../../../lib/ui/button"
 import { Conversation } from "@/lib/definitions"
 
 interface MessageHeaderProps {
-  conversation: Conversation,
+  conversation: Conversation | null,
   onResolve: () => void,
   onAssign: () => void
 }
  
 export function MessageHeader({ conversation, onResolve, onAssign }: MessageHeaderProps) {
-  const identity = conversation.nama ?? `+${conversation.telepon}`
+  const identity = conversation?.nama ?? `+${conversation?.telepon}`
 
   return (
     <div className="border-b p-4 flex items-center justify-between bg-white">
