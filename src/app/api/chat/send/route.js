@@ -24,10 +24,6 @@ export async function POST(req) { // It should be POST or GET
     return new Response(JSON.stringify({ status: response.status }));
   } catch (error) {
     console.error("Error sending message:", error);
-    return new Response(
-      JSON.stringify(
-        { error: "Failed to send message to Glitch server" }, 
-        { status: 500 })
-    );
+    return new Response(JSON.stringify({ status: 500 }));
   }
 }
