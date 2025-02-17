@@ -12,11 +12,13 @@ import {
    MessagesSquare,
    LayoutDashboard,
    Bell,
+   UserCog,
 } from 'lucide-react'
 import Image from 'next/image'
 
 const sidebarItems = [
-   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, access: 'admin' },
+   { name: 'Agents', href: '/agents', icon: UserCog, access: 'admin' },
    { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
    { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
