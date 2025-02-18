@@ -1,3 +1,13 @@
+export function formatMessageDate(time: string) {
+  const timestamp = new Date(parseInt(time, 10) * 1000).toISOString()
+  return new Date(timestamp).toLocaleDateString("en-GB", { 
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  })
+}
+
 export function formatMessageTime(time: string) {
   const timestamp = new Date(parseInt(time, 10) * 1000).toISOString()
   return new Date(timestamp).toLocaleTimeString([], { 

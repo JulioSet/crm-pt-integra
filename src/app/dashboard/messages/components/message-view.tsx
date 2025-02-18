@@ -8,9 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight, DollarSign, Flag, Flame, Snowflake } from "lucide-react"
 import { Card } from "@/lib/ui/card"
 import { cn } from "@/utils/class-merger"
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { Textarea } from "@/lib/ui/textarea"
 import { sendMessage } from "@/lib/message"
+import { formatMessageDate } from "@/utils/date"
 
 interface MessageViewProps {
   conversation: Conversation | null
@@ -95,9 +96,24 @@ export function MessageView({ conversation }: MessageViewProps) {
         <MessageHeader conversation={conversation} onAssign={handleAssign} onResolve={handleResolve} />
         <div ref={messageViewRef} className="flex-1 p-4 bg-zinc-300 overflow-y-auto">
           <div className="space-y-4">
-            {conversation?.message_content?.map((message) => (
-              <MessageBubble key={message.id} message={message} />
-            ))}
+            {conversation?.message_content?.map((message, index, messages) => {
+              const currentDate = formatMessageDate(message.waktu);
+              const previousMessage = messages[index - 1];
+              const previousDate = previousMessage ? formatMessageDate(previousMessage.waktu) : null;
+            
+              const showDateHeader = currentDate !== previousDate;
+
+              return (
+                <Fragment key={message.id}>
+                  {showDateHeader && (
+                    <div className="mx-auto my-2 px-3 py-1 bg-white text-black text-sm rounded-lg w-fit">
+                      {currentDate}
+                    </div>
+                  )}
+                  <MessageBubble key={message.id} message={message} />
+                </Fragment>
+              )
+            })}
             {failedMessage && 
               <div className="flex justify-center items-center">
                 <div className="bg-white bg-opacity-40 rounded-full">
