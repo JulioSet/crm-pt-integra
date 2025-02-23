@@ -7,22 +7,20 @@ import { cn } from '@/utils/class-merger'
 import { Button } from '../../lib/ui/button'
 import {
    Users,
-   BarChart3,
    Settings,
    MessagesSquare,
-   LayoutDashboard,
    Bell,
    UserCog,
+   FileBarChart,
 } from 'lucide-react'
 import Image from 'next/image'
 
 const sidebarItems = [
-   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, access: 'admin' },
-   { name: 'Agents', href: '/agents', icon: UserCog, access: 'admin' },
-   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
-   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-   { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
    { name: 'Messages', href: '/dashboard/messages', icon: MessagesSquare },
+   { name: 'Agents', href: '/dashboard/agent', icon: UserCog, access: 'admin' },
+   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
+   { name: 'Contact Book', href: '/dashboard/contacts', icon: Users },
+   { name: 'Reports', href: '/dashboard/reports', icon: FileBarChart },
    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
