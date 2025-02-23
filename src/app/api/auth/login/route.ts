@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
    const { name, password } = await req.json();
 
    const employee = await prisma.employee.findUnique({
-      where: { name },
+      where: { name: name },
    });
    if (!employee) {
       return NextResponse.json({ status: 403 });
@@ -18,6 +18,20 @@ export async function POST(req: NextRequest) {
    if (!verified) {
       return NextResponse.json({ status: 403 });
    }
+
+   // update login date
+   const date = new Date().toLocaleDateString("en-GB", { 
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+   })
+   await prisma.employee.update({
+      where: { name: name },
+      data: { last_login: date }
+   })
 
    // create session
    await createSession(employee.name, employee.role);
