@@ -9,13 +9,14 @@ datasource db {
 }
 
 model employee {
-  id         String    @id @db.VarChar(50)
-  name       String    @unique(map: "UNIQUE") @db.VarChar(50)
-  password   String    @db.Text
-  role       String    @db.Text
-  created_at DateTime  @default(now()) @db.Timestamp(0)
-  updated_at DateTime  @default(now()) @db.Timestamp(0)
-  deteted_at DateTime? @db.Timestamp(0)
+  id          String    @id @db.VarChar(50)
+  name        String    @unique(map: "UNIQUE") @db.VarChar(50)
+  password    String    @db.Text
+  role        String    @db.Text
+  target_deal Int       @default(0)
+  last_login  String?   @db.Text
+  created_at  DateTime  @default(now()) @db.Timestamp(0)
+  deteted_at  DateTime? @db.Timestamp(0)
 }
 
 model message_header {
@@ -40,4 +41,16 @@ model message_content {
   message_header         message_header @relation(fields: [message_header_telepon], references: [telepon], onDelete: Cascade, map: "message_telepon")
 
   @@index([message_header_telepon], map: "message_telepon")
+}
+
+model employee_log {
+  id               Int    @id @default(autoincrement())
+  telepon_customer String @db.VarChar(15)
+  label            String @db.VarChar(10)
+  oleh             String @db.VarChar(50)
+}
+
+model setting {
+  name  String @id @db.VarChar(50)
+  value String @db.Text
 }
