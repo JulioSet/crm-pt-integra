@@ -4,6 +4,9 @@ import { FormEvent, useState } from "react";
 import Image from 'next/image'
 import { createEmployee } from "@/lib/employee";
 import { redirect } from "next/navigation";
+import { customAlphabet } from "nanoid";
+
+const nanoid = customAlphabet('1234567890', 10) // id
 
 export default function Setup() {
    // authentication
@@ -12,7 +15,7 @@ export default function Setup() {
 
    const handleSetup = async (e: FormEvent) => {
       e.preventDefault();
-      createEmployee(username, password, 'admin');
+      createEmployee(nanoid(), username, password, 'admin');
       redirect("/dashboard");
    };
 
@@ -29,11 +32,11 @@ export default function Setup() {
          <div 
             className="rounded bg-white shadow-md text-black p-5"
          >
-            <p className="text-lg font-bold pb-5">Buatlah akun administrator dengan mengisi form di bawah ini</p>
+            <p className="text-lg font-bold pb-5">Make an administrator account using the form below</p>
             <form onSubmit={handleSetup}>
                <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                     Nama Pengguna
+                     Username
                   </label>
                   <input
                      type="text"
@@ -44,7 +47,7 @@ export default function Setup() {
                </div>
                <div className="mb-2">
                   <label className="block text-sm font-medium mb-2">
-                     Kata Sandi
+                     Password
                   </label>
                   <input
                      type="password"
@@ -53,7 +56,7 @@ export default function Setup() {
                      className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                   />
                </div>
-               <p className="text-xs font-thin mb-4 text-red-500">Penting : Mohon disimpan di tempat yang aman karena kredensial ini digunakan untuk masuk sebagai administrator</p>
+               <p className="text-xs font-thin mb-4 text-red-500">Important : Please save the credential in safe place because it will be used to login as administrator</p>
                <button
                   type="submit"
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
