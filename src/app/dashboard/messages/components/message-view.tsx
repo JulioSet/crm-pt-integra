@@ -20,13 +20,19 @@ interface MessageViewProps {
 export function MessageView({ conversation }: MessageViewProps) {
   const messageViewRef = useRef<HTMLDivElement | null>(null);
   const phone = conversation?.telepon
-  const [label, setLabel] = useState(conversation?.label)
-  const [priority, setPriority] = useState(conversation?.prioritas || "medium")
-  const [note, setNote] = useState(conversation?.catatan || "")
+  // right panel toggle
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
-  const [failedMessage, setFailedMessage] = useState(false);
-  const [opened, setOpened] = useState(false)
+  // auto-scroll bottom
   const [lastMessage, setLastMessage] = useState("")
+  const [opened, setOpened] = useState(false)
+  // failed message trigger
+  const [failedMessage, setFailedMessage] = useState(false);
+  // delegation message feature
+  const [note, setNote] = useState(conversation?.catatan || "")
+  // sales
+  const [label, setLabel] = useState(conversation?.label)
+  // customer service
+  const [priority, setPriority] = useState(conversation?.prioritas || "medium")
 
   useEffect(() => {
     const container = messageViewRef.current;
