@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
 import { createSession } from "@/lib/session";
-import { setGlobalSession } from "@/utils/global-session";
 
 export async function POST(req: NextRequest) {
    const { name, password } = await req.json();
@@ -18,7 +17,10 @@ export async function POST(req: NextRequest) {
    if (!verified) {
       return NextResponse.json({ status: 403 });
    }
-
+   
+   // create session
+   await createSession(employee.name, employee.role);
+   
    // update login date
    const date = new Date().toLocaleDateString("en-GB", { 
       hour: '2-digit',
@@ -33,11 +35,6 @@ export async function POST(req: NextRequest) {
       data: { last_login: date }
    })
 
-   // create session
-   await createSession(employee.name, employee.role);
-
-   // set session globally
-   await setGlobalSession();
 
    return NextResponse.json({ status: 200, data: employee });
 }

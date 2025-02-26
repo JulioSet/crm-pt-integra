@@ -45,7 +45,7 @@ export async function deleteSession() {
 export async function getSession() {
    const cookie = (await cookies()).get('session')?.value;
    if (!cookie) {
-      return 403;
+      return;
    }
 
    const session = await decrypt(cookie);
