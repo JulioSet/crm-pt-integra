@@ -50,7 +50,7 @@ export default function Login() {
             <form onSubmit={handleLogin}>
                <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                     Username
+                     Nama Pengguna
                   </label>
                   <input
                      type="text"
@@ -62,7 +62,7 @@ export default function Login() {
                </div>
                <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                     Password
+                     Kata Sandi
                   </label>
                   <input
                      type="password"
@@ -78,7 +78,7 @@ export default function Login() {
                   type="submit"
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
                >
-                  Login
+                  Masuk
                </button>
             </form>
          </div>

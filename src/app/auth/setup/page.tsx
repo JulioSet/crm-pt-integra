@@ -32,11 +32,11 @@ export default function Setup() {
          <div 
             className="rounded bg-white shadow-md text-black p-5"
          >
-            <p className="text-lg font-bold pb-5">Make an administrator account using the form below</p>
+            <p className="text-lg font-bold pb-5">Buatlah akun administrator dengan mengisi form di bawah ini</p>
             <form onSubmit={handleSetup}>
                <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                     Username
+                     Nama Pengguna
                   </label>
                   <input
                      type="text"
@@ -47,7 +47,7 @@ export default function Setup() {
                </div>
                <div className="mb-2">
                   <label className="block text-sm font-medium mb-2">
-                     Password
+                     Kata Sandi
                   </label>
                   <input
                      type="password"
@@ -56,7 +56,7 @@ export default function Setup() {
                      className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                   />
                </div>
-               <p className="text-xs font-thin mb-4 text-red-500">Important : Please save the credential in safe place because it will be used to login as administrator</p>
+               <p className="text-xs font-thin mb-4 text-red-500">Penting : Mohon disimpan di tempat yang aman karena kredensial ini digunakan untuk masuk sebagai administrator</p>
                <button
                   type="submit"
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
