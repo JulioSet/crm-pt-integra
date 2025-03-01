@@ -13,7 +13,7 @@ export default function Messages() {
 
    useEffect(() => {
       // fetch conversations
-      setInterval(async () => {
+      const fetch = setInterval(async () => {
          const data = await getConversations()
          if (data) {
             setConversations(data)
@@ -21,7 +21,7 @@ export default function Messages() {
       }, 1000)
       setLoading(false)
       
-      return () => clearInterval(1000); // Cleanup on unmount
+      return () => clearInterval(fetch); // Cleanup on unmount
    }, []);
 
    return(
