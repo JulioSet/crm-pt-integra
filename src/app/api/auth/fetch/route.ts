@@ -11,7 +11,8 @@ export async function POST(req: NextRequest) {
          name: true,
          target_deal: true,
          last_login: true
-      }
+      },
+      orderBy: { name: 'asc' }
    });
    
    return NextResponse.json({ status: 200, data: employee });
