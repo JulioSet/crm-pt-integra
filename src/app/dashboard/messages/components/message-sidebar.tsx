@@ -60,7 +60,7 @@ export function MessagesSidebar({
       <div className="w-[300px] border-r flex flex-col bg-white">
          <div className="p-4 border-b space-y-4">
             <div className="flex justify-between">
-               <h2 className="text-xl font-semibold text-foreground">Messages</h2>
+               <h2 className="text-xl font-semibold text-foreground">Pesan</h2>
                <Button size="icon" variant="ghost">
                   <Plus className="h-4 w-4 m-1" />
                </Button>
