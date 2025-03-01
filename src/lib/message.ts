@@ -70,3 +70,33 @@ export async function getConversations() {
    const data = await response.json()
    return data;
 }
+
+export async function updateLabel (phone: string, label: string) {
+   await fetch('/api/chat/update/label', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, label }), // Send data as JSON
+   });
+}
+
+export async function updateNote (phone: string, note: string) {
+   await fetch('/api/chat/update/note', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, note }), // Send data as JSON
+   });
+}
+
+export async function updatePriority (phone: string, priority: string) {
+   await fetch('/api/chat/update/priority', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, priority }), // Send data as JSON
+   });
+}
