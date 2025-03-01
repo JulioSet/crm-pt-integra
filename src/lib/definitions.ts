@@ -35,3 +35,8 @@ export interface Notification {
   timestamp: string
   read: boolean
 }
+
+export interface Employee {
+  id: string
+  name: string
+}

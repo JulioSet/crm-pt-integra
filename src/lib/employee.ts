@@ -82,3 +82,16 @@ export async function deleteEmployee(id: string) {
       return;
    }
 }
+
+export async function getSession() {
+   const response = await fetch('/api/auth/session', {
+      method: 'GET',
+   });
+
+   if (response.status === 500) {
+      return false;
+   }
+
+   const data = await response.json()
+   return data;
+}
