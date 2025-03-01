@@ -1,9 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+   const session = await getSession()
+   const agent = session?.role === 'admin' ? 'admin' : session?.name as string // if role is admin then agent is '' else agent's name
+   
    try {
       const conversations = await prisma.message_header.findMany({
+         where: { akses: agent },
          include: { message_content: true },
       });
       return NextResponse.json(conversations);
