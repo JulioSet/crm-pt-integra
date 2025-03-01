@@ -1,14 +1,14 @@
-import { Check, CircleArrowOutUpRight } from "lucide-react"
+import { Check } from "lucide-react"
 import { Button } from "../../../../lib/ui/button"
 import { Conversation } from "@/lib/definitions"
 
 interface MessageHeaderProps {
+  role: string,
   conversation: Conversation | null,
-  onResolve: () => void,
-  onAssign: () => void
+  onResolve: () => void
 }
  
-export function MessageHeader({ conversation, onResolve, onAssign }: MessageHeaderProps) {
+export function MessageHeader({ role, conversation, onResolve }: MessageHeaderProps) {
   const identity = conversation?.nama ?? `+${conversation?.telepon}`
 
   return (
@@ -18,16 +18,12 @@ export function MessageHeader({ conversation, onResolve, onAssign }: MessageHead
           <h2 className="font-semibold text-foreground">{identity}</h2>
         </div>
       </div>
-      <div className="flex">
-        <Button variant="ghost" size="icon" className="flex p-1 mr-1" onClick={onAssign}>
-          <CircleArrowOutUpRight className="h-4 w-4" />
-          <span className="p-1">Assign</span>
-        </Button>
-        <Button variant="ghost" size="icon" className="flex p-1" onClick={onResolve}>
-          <Check className="h-4 w-4" />
-          <span className="p-1">Resolve</span>
-        </Button>
-      </div>
+        {role === 'cs' &&
+          <Button variant="ghost" size="icon" className="flex p-1" onClick={onResolve}>
+            <Check className="h-4 w-4" />
+            <span className="p-1">Resolve</span>
+          </Button>
+        }
     </div>
   )
 }
