@@ -28,6 +28,7 @@ model message_header {
   prioritas       String?           @db.VarChar(50)
   catatan         String?           @db.Text
   akses           String            @db.VarChar(50)
+  bala_bantuan    String?           @db.VarChar(50)
   baca            Boolean           @default(false)
   message_content message_content[]
 }
