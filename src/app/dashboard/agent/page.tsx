@@ -137,25 +137,25 @@ export default function Agents() {
    const column: GridColDef[] = [
       { 
          field: 'name', 
-         headerName: 'Name', 
+         headerName: 'Nama', 
          width: 220, 
          editable: true 
       }, 
       ...(role === 'sales' ? [{
          field: 'target_deal', 
-         headerName: 'Monthly Target Deal', 
+         headerName: 'Target Bulanan', 
          width: 150,
          editable: true
       }] : []),
       {
          field: 'last_login', 
-         headerName: 'Last Accessed', 
+         headerName: 'Terakhir Diakses', 
          width: 190
       },
       {
          field: 'actions',
          type: 'actions',
-         headerName: 'Actions',
+         headerName: 'Tindakan',
          width: 100,
          cellClassName: 'actions',
          getActions: ({ id }) => {
