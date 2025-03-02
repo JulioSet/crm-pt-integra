@@ -18,7 +18,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         className={cn(
           "max-w-[70%] rounded-lg p-3",
           message.responder === "integra"
-            ? "bg-blue-600 text-white"
+            ? "bg-blue-500 text-white"
             : "bg-white"
         )}
       >
