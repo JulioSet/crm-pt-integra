@@ -4,25 +4,18 @@ import { useEffect, useState } from "react"
 import { Conversation } from "@/lib/definitions"
 import { MessagesSidebar } from "./components/message-sidebar"
 import { MessageView } from "./components/message-view"
-import { getConversations } from "@/lib/message"
+import useChatStore from "@/store/chatStore"
 
 export default function Messages() {
+   const { data, fetchData, loading } = useChatStore();
    const [conversations, setConversations] = useState<Conversation[]>([])
    const [phone, setPhone] = useState("")
-   const [loading, setLoading] = useState(true)
 
    useEffect(() => {
       // fetch conversations
-      const fetch = setInterval(async () => {
-         const data = await getConversations()
-         if (data) {
-            setConversations(data)
-         }
-      }, 1000)
-      setLoading(false)
-      
-      return () => clearInterval(fetch); // Cleanup on unmount
-   }, []);
+      fetchData()
+      setConversations(data)
+   }, [fetchData, data]);
 
    return(
       <div className="flex h-full bg-background">
