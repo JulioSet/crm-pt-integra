@@ -1,11 +1,13 @@
+import Link from 'next/link'
 import { cn } from "@/utils/class-merger"
 import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake } from "lucide-react"
 import { Button } from "../../../../lib/ui/button"
 import { Input } from "@/lib/ui/input"
 import { Conversation, MessageLabel } from "@/lib/definitions"
 import { formatDateDistance } from "@/utils/date"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Skeleton } from "@/lib/ui/skeleton"
+import { getSession } from "@/lib/employee"
 
 interface MessagesSidebarProps {
    conversations: Conversation[]
@@ -46,6 +48,9 @@ export function MessagesSidebar({
    onSelectConversation,
    loading
 }: MessagesSidebarProps) {
+   // agent data
+   const [role, setRole] = useState("")
+   // filter feature
    const [selectedFilter, setSelectedFilter] = useState<MessageLabel | null>(null)
    const [searchQuery, setSearchQuery] = useState("")
 
@@ -56,14 +61,24 @@ export function MessagesSidebar({
       return matchesFilter && (matchesSearchNama || matchesSearchTelepon)
    })
 
+   // set agent data
+   useEffect(() => {
+      (async () => {
+         const session = await getSession()
+         setRole(session?.role)
+      })()
+   }, [role])
+
    return (
       <div className="w-[300px] border-r flex flex-col bg-white">
          <div className="p-4 border-b space-y-4">
             <div className="flex justify-between">
                <h2 className="text-xl font-semibold text-foreground">Pesan</h2>
-               <Button size="icon" variant="ghost">
-                  <Plus className="h-4 w-4 m-1" />
-               </Button>
+               <Link href={'/dashboard/contacts'}>
+                  <Button size="icon" variant="ghost">
+                     <Plus className="h-4 w-4 m-1" />
+                  </Button>
+               </Link>
             </div>
             <div className="relative">
                <Search className="absolute left-2 top-2.5 h-4 w-4" />
@@ -74,29 +89,37 @@ export function MessagesSidebar({
                   onChange={(e) => setSearchQuery(e.target.value)} 
                />
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
-               {filters.map(filter => {
-                  const Icon = filter.icon
-                  const isSelected = selectedFilter === filter.value
-                  return (
-                     <Button
-                        key={filter.value}
-                        variant={isSelected ? "default" : "outline"}
-                        size="sm"
-                        className={"rounded-md flex h-8 px-3 whitespace-nowrap"}
-                        onClick={() => setSelectedFilter(isSelected ? null : filter.value)}
-                     >
-                        <Icon className="h-4 w-4 mr-1.5" />
-                        <span className="text-xs font-medium">{filter.label}</span>
-                     </Button>
-                  )
-               })}
-            </div>
+            {role === 'admin' && (
+               <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+                  {filters.map(filter => {
+                     const Icon = filter.icon
+                     const isSelected = selectedFilter === filter.value
+                     return (
+                        <Button
+                           key={filter.value}
+                           variant={isSelected ? "default" : "outline"}
+                           size="sm"
+                           className={"rounded-md flex h-8 px-3 whitespace-nowrap"}
+                           onClick={() => setSelectedFilter(isSelected ? null : filter.value)}
+                        >
+                           <Icon className="h-4 w-4 mr-1.5" />
+                           <span className="text-xs font-medium">{filter.label}</span>
+                        </Button>
+                     )
+                  })}
+               </div>
+            )}
          </div>
          <div className="flex-1 overflow-y-auto">
             <div className="p-2 space-y-2">
                {loading && (
                   <>
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
+                     <ConversationSkeleton />
                      <ConversationSkeleton />
                      <ConversationSkeleton />
                      <ConversationSkeleton />
