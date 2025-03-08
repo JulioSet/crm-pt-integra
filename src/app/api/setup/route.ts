@@ -2,6 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-   const userCount = await prisma.employee.count();
-   return NextResponse.json({ create: userCount < 1 }); // true or false 
+   const admin = await prisma.employee.findFirst({ where: { role: 'admin' } });
+   return NextResponse.json({ create: admin ? true : false }); // true or false 
 }
