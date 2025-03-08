@@ -1,12 +1,12 @@
 import { prisma } from "./prisma";
 
-export async function sendMessage(to: string, text: string) {
+export async function sendMessage(to: string, text: string, agent: string, timestamp: string, responseTime: string) {
    const response = await fetch('/api/chat/send', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ to, text }), // Send data as JSON
+      body: JSON.stringify({ to, text, agent, timestamp, responseTime }), // Send data as JSON
    });
    const data = await response.json()
    
@@ -17,11 +17,11 @@ export async function sendMessage(to: string, text: string) {
    }
 }
 
-export async function saveMessageToDatabase(from: string, text: string, timestamp: string, responder: string) { 
+export async function saveMessageToDatabase(from: string, text: string, timestamp: string, responder: string, agent: string, responseTime: string) { 
    // console.log(`From: ${from}`); # 6287732919
    // console.log(`Message: ${text}`); # this is message
    // console.log(`Timestamp: ${new Date(timestamp * 1000)}`); # Wed Nov 20 2024 16:53:39 GMT+0700 (Indochina Time)
-   
+
    const check_message = await prisma.message_header.findFirst({
       where: {telepon: from}
    });
@@ -43,6 +43,8 @@ export async function saveMessageToDatabase(from: string, text: string, timestam
          message_header_telepon: from,
          pesan: text,
          waktu: timestamp,
+         waktu_respon: responseTime,
+         agent: agent,
          responder: responder
       }
    })
@@ -69,6 +71,26 @@ export async function getConversations() {
 
    const data = await response.json()
    return data;
+}
+
+export async function assignMessage(phone: string, agent: string) {
+   await fetch('/api/chat/assign', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, agent }), // Send data as JSON
+   });
+}
+
+export async function assignHelp(phone: string, agent: string) {
+   await fetch('/api/chat/help', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, agent }), // Send data as JSON
+   });
 }
 
 export async function updateLabel (phone: string, label: string) {
@@ -98,5 +120,15 @@ export async function updatePriority (phone: string, priority: string) {
          'Content-Type': 'application/json',
       },
       body: JSON.stringify({ phone, priority }), // Send data as JSON
+   });
+}
+
+export async function updateDeadline (phone: string, date: string) {
+   await fetch('/api/chat/update/deadline', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, date }), // Send data as JSON
    });
 }

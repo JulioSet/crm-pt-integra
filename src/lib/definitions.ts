@@ -13,6 +13,8 @@ export interface Conversation {
   prioritas: string | null
   catatan: string | null
   akses: string
+  bala_bantuan: string
+  deadline: string
   baca: boolean | null
   message_content: Message[]
 }
@@ -22,6 +24,7 @@ export interface Message {
   message_header_telepon: string
   pesan: string
   waktu: string
+  waktu_respon: string
   responder: string
 }
 
@@ -39,4 +42,5 @@ export interface Notification {
 export interface Employee {
   id: string
   name: string
+  email: string
 }
