@@ -1,6 +1,5 @@
 import { Conversation, Employee } from "@/lib/definitions";
 import { useState } from "react";
-import { cn } from "@/utils/class-merger";
 import { Button } from "@/lib/ui/button"
 import { Label } from "@/lib/ui/label";
 import { Textarea } from "@/lib/ui/textarea";
@@ -17,18 +16,18 @@ import {
    PopoverContent,
    PopoverTrigger,
 } from "@/lib/ui/popover"
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { updateNote } from "@/lib/message";
 
 interface MessagePanelTechProps {
    conversation: Conversation | null
    listAgent: Employee[]
+   assignAgent: (chosenAgent: string) => void
 }
 
-export function MessagePanelTech({ conversation, listAgent }: MessagePanelTechProps) {
+export function MessagePanelTech({ conversation, listAgent, assignAgent }: MessagePanelTechProps) {
    const phone = conversation?.telepon || ""
    const [open, setOpen] = useState(false)
-   const [agent, setAgent] = useState("")
    const [note, setNote] = useState(conversation?.catatan || "")
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -43,7 +42,7 @@ export function MessagePanelTech({ conversation, listAgent }: MessagePanelTechPr
 
    return (
       <div className="p-4 space-y-6">
-         {/* delegasi chat */}
+         {/* chat delegation */}
          <div className="space-y-4">
             <Label className="text-md font-bold">Delegasi Ke</Label>
             <Popover open={open} onOpenChange={setOpen}>
@@ -52,40 +51,32 @@ export function MessagePanelTech({ conversation, listAgent }: MessagePanelTechPr
                      variant="outline"
                      role="combobox"
                      aria-expanded={open}
-                     className="w-[200px] justify-between"
+                     className="w-[290px] justify-between"
                   >
-                     {agent
-                     ? listAgent.find((data) => data.name === agent)?.name
-                     : "Pilih agent..."}
+                     Pilih agent...
                      <ChevronsUpDown className="opacity-50" />
                   </Button>
                </PopoverTrigger>
-               <PopoverContent className='w-[200px] p-0'>
+               <PopoverContent className='w-[290px] p-0'>
                   <Command>
                      <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
                      <CommandList className="max-h-40 overflow-y-auto">
-                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                     <CommandGroup>
-                        {listAgent.map((data) => (
-                           <CommandItem
-                           className="p-1 m-1"
-                           key={data.name}
-                           value={data.name}
-                           onSelect={(currentValue) => {
-                              setAgent(currentValue === agent ? "" : currentValue)
-                              setOpen(false)
-                           }}
-                           >
-                           {data.name}
-                           <Check
-                              className={cn(
-                                 "ml-auto",
-                                 agent === data.name ? "opacity-100" : "opacity-0"
-                              )}
-                           />
-                           </CommandItem>
-                        ))}
-                     </CommandGroup>
+                        <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                        <CommandGroup>
+                           {listAgent.map((agent) => (
+                              <CommandItem
+                                 className="p-1 m-1"
+                                 key={agent.name}
+                                 value={agent.name}
+                                 onSelect={(currentValue) => {
+                                    setOpen(false)
+                                    assignAgent(currentValue)
+                                 }}
+                              >
+                              {agent.name}
+                              </CommandItem>
+                           ))}
+                        </CommandGroup>
                      </CommandList>
                   </Command>
                </PopoverContent>
@@ -95,7 +86,7 @@ export function MessagePanelTech({ conversation, listAgent }: MessagePanelTechPr
          {/* notes */}
          <div className="space-y-2">
             <Label htmlFor="note" className="text-md font-bold">
-               Notes
+               Catatan
             </Label>
             <Textarea
                id="note"
@@ -110,7 +101,7 @@ export function MessagePanelTech({ conversation, listAgent }: MessagePanelTechPr
                className="w-full"
                onClick={handleSaveNote}
             >
-               Save
+               Simpan
             </Button>
          </div>
       </div>
