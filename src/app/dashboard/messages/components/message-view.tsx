@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Card } from "@/lib/ui/card"
 import { cn } from "@/utils/class-merger"
 import { Fragment, useEffect, useRef, useState } from "react"
-import { sendMessage } from "@/lib/message"
+import { assignMessage, sendMessage } from "@/lib/message"
 import { formatMessageDate } from "@/utils/date"
 import { getEmployeeByRole, getSession } from "@/lib/employee"
 import { MessagePanelAdmin } from "./admin/message-panel-admin"
@@ -23,6 +23,7 @@ export function MessageView({ conversation }: MessageViewProps) {
   // agent data
   const [name, setName] = useState("")
   const [role, setRole] = useState("")
+  // list agent based on role except admin
   const [listAgent, setListAgent] = useState<Employee[]>([])
   // conversation data
   const phone = conversation?.telepon || ""
@@ -69,15 +70,26 @@ export function MessageView({ conversation }: MessageViewProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation, failedMessage]); // Re-run when there are changes
 
-  const handleResolve = () => {
+  const handleResolve = async () => {
     // Handle resolving conversation
-    console.log("Resolved")
+    const message = 'Kami ingin mendengar pendapat Anda tentang layanan pelanggan kami! Mohon luangkan sedikit waktu untuk mengisi survei singkat ini: https://forms.gle/BDKJdn7Bb9Qvr4x39'
+    const timestamp = Math.floor(Date.now() / 1000).toString()
+    await sendMessage(phone, message, name, timestamp, '')
   }
 
   const handleSendMessage = async (message: string) => {
     // Handle sending message
     if (phone !== undefined) {
-      const check = await sendMessage(phone, message)
+      const now = Math.floor(Date.now() / 1000)
+      const lastMessage = conversation?.message_content.at(-1)
+      let check
+      if (lastMessage?.responder === 'client') {
+        const timestampLastMessage = lastMessage?.waktu ? parseInt(lastMessage.waktu) : 0
+        const responseTime = now - timestampLastMessage
+        check = await sendMessage(phone, message, name, now.toString(), responseTime.toString())
+      } else {
+        check = await sendMessage(phone, message, name, now.toString(), '')
+      }
       if (!check) {
         setFailedMessage(true)
       } else {
@@ -86,9 +98,13 @@ export function MessageView({ conversation }: MessageViewProps) {
     }
   }
 
-  const handleAssign = () => {
+  const handleAssign = async (chosenAgent: string) => {
     // Handle assign to other agent with same role
-    
+    try {
+      await assignMessage(phone, chosenAgent)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -151,15 +167,15 @@ export function MessageView({ conversation }: MessageViewProps) {
           )}
         >
           {role === 'admin' ? (
-            <MessagePanelAdmin conversation={conversation} />
+            <MessagePanelAdmin conversation={conversation} assignAgent={handleAssign} />
           ) : role === 'sales' ? (
-            <MessagePanelSales conversation={conversation} listAgent={listAgent} />
+            <MessagePanelSales conversation={conversation} listAgent={listAgent} assignAgent={handleAssign} />
           ) : role === 'cs' ? (
-            <MessagePanelCS conversation={conversation} listAgent={listAgent} />
+            <MessagePanelCS conversation={conversation} listAgent={listAgent} assignAgent={handleAssign} />
           ) : role === 'tech' ? (
-            <MessagePanelTech conversation={conversation} listAgent={listAgent} />
+            <MessagePanelTech conversation={conversation} listAgent={listAgent} assignAgent={handleAssign} />
           ) : (
-            <p>Unknown Role</p>
+            <p></p>
           )}
         </Card>
       </div>
