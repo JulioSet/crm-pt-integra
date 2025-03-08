@@ -1,6 +1,5 @@
 import { Conversation, Employee, MessagePriority } from "@/lib/definitions";
-import { useState } from "react";
-import { cn } from "@/utils/class-merger";
+import { useEffect, useState } from "react";
 import { Button } from "@/lib/ui/button"
 import { Label } from "@/lib/ui/label";
 import { Textarea } from "@/lib/ui/textarea";
@@ -24,23 +23,36 @@ import {
    SelectTrigger, 
    SelectValue 
 } from "@/lib/ui/select"
-import { Check, ChevronsUpDown, Flag } from "lucide-react";
-import { updateNote, updatePriority } from "@/lib/message";
+import { CalendarIcon, ChevronsUpDown, Flag } from "lucide-react";
+import { assignHelp, updateDeadline, updateNote, updatePriority } from "@/lib/message";
+import { getEmployeeByRole } from "@/lib/employee";
+import { cn } from "@/utils/class-merger";
+import { format } from "date-fns";
+import { Calendar } from "@/lib/ui/calendar";
+import { id } from "date-fns/locale";
 
 interface MessagePanelCSProps {
    conversation: Conversation | null
    listAgent: Employee[]
+   assignAgent: (chosenAgent: string) => void
 }
 
-export function MessagePanelCS({ conversation, listAgent }: MessagePanelCSProps) {
+export function MessagePanelCS({ conversation, listAgent, assignAgent }: MessagePanelCSProps) {
    const phone = conversation?.telepon || ""
    // delegasi
    const [open, setOpen] = useState(false)
-   const [agent, setAgent] = useState("")
    const [note, setNote] = useState(conversation?.catatan || "")
    // priority
    const [priority, setPriority] = useState(conversation?.prioritas || "")
    // deadline
+   const [openDeadline, setOpenDeadline] = useState(false)
+   const [deadline, setDeadline] = useState<Date | undefined>(new Date(conversation?.deadline || new Date()))
+   // request help
+   const [openHelp, setOpenHelp] = useState(false)
+   const [selectedHelp, setSelectedHelp] = useState(conversation?.bala_bantuan || "")
+   // request tech
+   const [openTech, setOpenTech] = useState(false)
+   const [listTech, setListTech] = useState<Employee[]>([])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
@@ -58,12 +70,27 @@ export function MessagePanelCS({ conversation, listAgent }: MessagePanelCSProps)
       await updatePriority(phone, newPriority)
    }
 
+   const handleRequestHelp = async (selectedAgent: string) => {
+      await assignHelp(phone, selectedAgent)
+   }
+
+   const handleDeadline = async () => {
+      await updateDeadline(phone, deadline?.toString() || "")
+   }
+
+   useEffect(() => {
+      (async () => {
+         const data = await getEmployeeByRole('tech')
+         setListTech(data)
+      })()
+   }, [])
+
    return (
       <div className="p-4 space-y-6">
          {/* priority level */}
          <div className="space-y-2">
             <Label htmlFor="priority" className="text-md font-bold">
-               Priority Level
+               Level Prioritas
             </Label>
             <Select value={priority} onValueChange={handlePriorityChange}>
                <SelectTrigger className="w-full">
@@ -92,46 +119,82 @@ export function MessagePanelCS({ conversation, listAgent }: MessagePanelCSProps)
             </Select>
          </div>
 
-         {/* delegasi chat */}
+         {/* deadline */}
+         <div className="space-y-2">
+            <Label htmlFor="deadline" className="text-md font-bold">
+               Deadline
+            </Label>
+            <Popover open={openDeadline} onOpenChange={setOpenDeadline}>
+               <PopoverTrigger asChild>
+                  <Button
+                     variant={"outline"}
+                     className={cn(
+                        "w-[280px] justify-start text-left font-normal",
+                        !deadline && "text-muted-foreground"
+                     )}
+                  >
+                     <CalendarIcon className="mr-2 h-4 w-4" />
+                     {deadline ? format(deadline, "dd MMMM yyyy") : <span>Pilih tanggal</span>}
+                  </Button>
+               </PopoverTrigger>
+               <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                     locale={id}
+                     mode="single"
+                     selected={deadline}
+                     onSelect={(date) => {
+                        setOpenDeadline(false)
+                        setDeadline(date)
+                     }}
+                     initialFocus
+                  />
+               </PopoverContent>
+            </Popover>
+            <Button
+               variant="default"
+               size="icon"
+               className="w-full"
+               onClick={handleDeadline}
+            >
+               Konfirmasi
+            </Button>
+         </div>
+
+         {/* request help */}
          <div className="space-y-4">
-            <Label className="text-md font-bold">Delegasi Ke</Label>
-            <Popover open={open} onOpenChange={setOpen}>
+            <Label className="text-md font-bold">Request Bantuan</Label>
+            <Popover open={openHelp} onOpenChange={setOpenHelp}>
                <PopoverTrigger asChild>
                   <Button
                      variant="outline"
                      role="combobox"
-                     aria-expanded={open}
-                     className="w-[200px] justify-between"
+                     aria-expanded={openHelp}
+                     className="w-[290px] justify-between"
                   >
-                     {agent
-                     ? listAgent.find((data) => data.name === agent)?.name
-                     : "Pilih agent..."}
+                     {selectedHelp
+                        ? listAgent.find((agent) => agent.name === selectedHelp)?.name
+                        : "Pilih agent..."}
                      <ChevronsUpDown className="opacity-50" />
                   </Button>
                </PopoverTrigger>
-               <PopoverContent className='w-[200px] p-0'>
+               <PopoverContent className='w-[290px] p-0'>
                   <Command>
                      <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
                      <CommandList className="max-h-40 overflow-y-auto">
                      <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
                      <CommandGroup>
-                        {listAgent.map((data) => (
+                        {listAgent.map((agent) => (
                            <CommandItem
-                           className="p-1 m-1"
-                           key={data.name}
-                           value={data.name}
-                           onSelect={(currentValue) => {
-                              setAgent(currentValue === agent ? "" : currentValue)
-                              setOpen(false)
-                           }}
+                              className="p-1 m-1"
+                              key={agent.name}
+                              value={agent.name}
+                              onSelect={(currentValue) => {
+                                 setOpenHelp(false)
+                                 setSelectedHelp(currentValue)
+                                 handleRequestHelp(currentValue)
+                              }}
                            >
-                           {data.name}
-                           <Check
-                              className={cn(
-                                 "ml-auto",
-                                 agent === data.name ? "opacity-100" : "opacity-0"
-                              )}
-                           />
+                           {agent.name}
                            </CommandItem>
                         ))}
                      </CommandGroup>
@@ -141,10 +204,93 @@ export function MessagePanelCS({ conversation, listAgent }: MessagePanelCSProps)
             </Popover>
          </div>
 
+         {/* request tech */}
+         <div className="space-y-4">
+            <Label className="text-md font-bold">Request Technician</Label>
+            <Popover open={openTech} onOpenChange={setOpenTech}>
+               <PopoverTrigger asChild>
+                  <Button
+                     variant="outline"
+                     role="combobox"
+                     aria-expanded={openTech}
+                     className="w-[290px] justify-between"
+                  >
+                     Pilih agent...
+                     <ChevronsUpDown className="opacity-50" />
+                  </Button>
+               </PopoverTrigger>
+               <PopoverContent className='w-[290px] p-0'>
+                  <Command>
+                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                     <CommandList className="max-h-40 overflow-y-auto">
+                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                     <CommandGroup>
+                        {listTech.map((tech) => (
+                           <CommandItem
+                              className="p-1 m-1"
+                              key={tech.name}
+                              value={tech.name}
+                              onSelect={(currentValue) => {
+                                 setOpenTech(false)
+                                 assignAgent(currentValue)
+                                 handleRequestHelp("")
+                              }}
+                           >
+                           {tech.name}
+                           </CommandItem>
+                        ))}
+                     </CommandGroup>
+                     </CommandList>
+                  </Command>
+               </PopoverContent>
+            </Popover>
+         </div>
+
+         {/* chat delegation */}
+         <div className="space-y-4">
+            <Label className="text-md font-bold">Delegasi Ke</Label>
+            <Popover open={open} onOpenChange={setOpen}>
+               <PopoverTrigger asChild>
+                  <Button
+                     variant="outline"
+                     role="combobox"
+                     aria-expanded={open}
+                     className="w-[290px] justify-between"
+                  >
+                     Pilih agent...
+                     <ChevronsUpDown className="opacity-50" />
+                  </Button>
+               </PopoverTrigger>
+               <PopoverContent className='w-[290px] p-0'>
+                  <Command>
+                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                     <CommandList className="max-h-40 overflow-y-auto">
+                        <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                        <CommandGroup>
+                           {listAgent.map((agent) => (
+                              <CommandItem
+                                 className="p-1 m-1"
+                                 key={agent.name}
+                                 value={agent.name}
+                                 onSelect={(currentValue) => {
+                                    setOpen(false)
+                                    assignAgent(currentValue)
+                                 }}
+                              >
+                              {agent.name}
+                              </CommandItem>
+                           ))}
+                        </CommandGroup>
+                     </CommandList>
+                  </Command>
+               </PopoverContent>
+            </Popover>
+         </div>
+
          {/* notes */}
          <div className="space-y-2">
             <Label htmlFor="note" className="text-md font-bold">
-               Notes
+               Catatan
             </Label>
             <Textarea
                id="note"
@@ -159,7 +305,7 @@ export function MessagePanelCS({ conversation, listAgent }: MessagePanelCSProps)
                className="w-full"
                onClick={handleSaveNote}
             >
-               Save
+               Simpan
             </Button>
          </div>
       </div>
