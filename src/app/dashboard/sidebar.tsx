@@ -16,12 +16,12 @@ import {
 import Image from 'next/image'
 
 const sidebarItems = [
-   { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare },
+   { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare, access: '' },
    { name: 'Agent', href: '/dashboard/agent', icon: UserCog, access: 'admin' },
-   { name: 'Notifikasi', href: '/dashboard/notifications', icon: Bell },
-   { name: 'Kontak', href: '/dashboard/contacts', icon: Users },
-   { name: 'Laporan', href: '/dashboard/reports', icon: FileBarChart },
-   { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
+   { name: 'Notifikasi', href: '/dashboard/notifications', icon: Bell, access: '' },
+   { name: 'Kontak', href: '/dashboard/contacts', icon: Users, access: 'sales' },
+   { name: 'Laporan', href: '/dashboard/reports', icon: FileBarChart, access: 'admin' },
+   { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings, access: 'admin' },
 ]
 
 export default function Sidebar() {
