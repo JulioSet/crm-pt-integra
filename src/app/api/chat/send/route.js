@@ -15,9 +15,8 @@ export async function POST(req) { // It should be POST or GET
     
     // saving message to database
     if (response.status !== 500) {
-      const { to, text } = data;
-      const timestamp = Math.floor(Date.now() / 1000).toString()
-      saveMessageToDatabase(to, text, timestamp, 'integra')
+      const { to, text, agent, timestamp, responseTime } = data;
+      saveMessageToDatabase(to, text, timestamp, 'integra', agent, responseTime)
       updateMessageHeader(to, text, timestamp)
     }
     
