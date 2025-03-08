@@ -8,7 +8,12 @@ export async function GET() {
    
    try {
       const conversations = await prisma.message_header.findMany({
-         where: { akses: agent },
+         where: { 
+            OR: [
+               { akses: agent },
+               { bala_bantuan: agent }
+            ]
+         },
          include: { message_content: true },
       });
       return NextResponse.json(conversations);
