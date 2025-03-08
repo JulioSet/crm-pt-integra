@@ -20,7 +20,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
          const result = await getConversations()
          set({ data: result });
          set({ loading: false });
-      }, 3000)
+      }, 1000)
    },
 }));
 
