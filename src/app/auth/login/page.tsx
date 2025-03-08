@@ -16,7 +16,7 @@ export default function Login() {
          const response = await fetch('/api/setup');
          const employee = await response.json();
          
-         if (employee.create) {
+         if (!employee.create) {
             redirect("/auth/setup");
          }
       };
