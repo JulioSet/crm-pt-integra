@@ -11,11 +11,12 @@ const nanoid = customAlphabet('1234567890', 10) // id
 export default function Setup() {
    // authentication
    const [username, setUsername] = useState("");
+   const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
    const handleSetup = async (e: FormEvent) => {
       e.preventDefault();
-      createEmployee(nanoid(), username, password, 'admin');
+      createEmployee(nanoid(), username, password, 'admin', email);
       redirect("/dashboard");
    };
 
@@ -42,6 +43,18 @@ export default function Setup() {
                      type="text"
                      value={username}
                      onChange={(e) => setUsername(e.target.value)}
+                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                  />
+               </div>
+               <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">
+                     Email Pengguna
+                  </label>
+                  <input
+                     type="text"
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
+                     placeholder="Email ini digunakan untuk notifikasi dalam website ini"
                      className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                   />
                </div>

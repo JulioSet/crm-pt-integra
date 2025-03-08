@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 
 export async function POST(req: NextRequest) {
-   const { id, name, password, role } = await req.json(); // Read the body data
+   const { id, name, password, role, email } = await req.json(); // Read the body data
 
    const hashedPassword = await bcrypt.hash(password, 10);
    const employee = await prisma.employee.create({
@@ -11,7 +11,8 @@ export async function POST(req: NextRequest) {
          id,
          name,
          password: hashedPassword,
-         role
+         role,
+         email
       }
    });
 

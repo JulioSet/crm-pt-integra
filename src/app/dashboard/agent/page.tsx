@@ -115,15 +115,15 @@ export default function Agents() {
    const processRowUpdate = (newRow: GridRowModel) => {
       const updatedRow = { ...newRow, isNew: false };
       setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-      // code create and update user
+      // create and update user
       if (mode === 'create') {
          void (async () => {
-            await createEmployee(newRow.id, newRow.name, newRow.name, role)
+            await createEmployee(newRow.id, newRow.name, newRow.name, role, newRow.email)
          })()
       }
       if (mode === 'update') {
          void (async () => {
-            await updateEmployee(newRow.id, newRow.name, newRow.target_deal)
+            await updateEmployee(newRow.id, newRow.name, newRow.target_deal, newRow.email)
          })()
       }
       return updatedRow;
@@ -138,6 +138,12 @@ export default function Agents() {
       { 
          field: 'name', 
          headerName: 'Nama', 
+         width: 220, 
+         editable: true 
+      }, 
+      { 
+         field: 'email', 
+         headerName: 'Email', 
          width: 220, 
          editable: true 
       }, 

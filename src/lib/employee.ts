@@ -1,10 +1,10 @@
-export async function createEmployee(id: string, name: string, password: string, role: string) {
+export async function createEmployee(id: string, name: string, password: string, role: string, email: string) {
    const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, name, password, role }), // Send data as JSON
+      body: JSON.stringify({ id, name, password, role, email }), // Send data as JSON
    });
 
    if (!response.ok) {
@@ -53,13 +53,13 @@ export async function getEmployeeByRole(role: string) {
    return data;
 }
 
-export async function updateEmployee(id: string, name: string, target: number) {
+export async function updateEmployee(id: string, name: string, target: number, email: string) {
    const response = await fetch('/api/auth/update', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, name, target }), // Send data as JSON
+      body: JSON.stringify({ id, name, target, email }), // Send data as JSON
    });
    
    if (!response.ok) {
