@@ -1,8 +1,8 @@
 import { Conversation, Employee } from "@/lib/definitions";
 import { useState } from "react";
-import { Button } from "@/lib/ui/button"
-import { Label } from "@/lib/ui/label";
-import { Textarea } from "@/lib/ui/textarea";
+import { Button } from "@/components/button"
+import { Label } from "@/components/label";
+import { Textarea } from "@/components/textarea";
 import {
    Command,
    CommandEmpty,
@@ -10,12 +10,12 @@ import {
    CommandInput,
    CommandItem,
    CommandList,
-} from "@/lib/ui/command"
+} from "@/components/command"
 import {
    Popover,
    PopoverContent,
    PopoverTrigger,
-} from "@/lib/ui/popover"
+} from "@/components/popover"
 import { ChevronsUpDown } from "lucide-react";
 import { updateNote } from "@/lib/message";
 

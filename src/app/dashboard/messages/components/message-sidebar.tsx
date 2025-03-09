@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { cn } from "@/utils/class-merger"
 import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake } from "lucide-react"
-import { Button } from "../../../../lib/ui/button"
-import { Input } from "@/lib/ui/input"
+import { Button } from "../../../../components/button"
+import { Input } from "@/components/input"
 import { Conversation, MessageLabel } from "@/lib/definitions"
 import { formatDateDistance } from "@/utils/date"
 import { useEffect, useState } from "react"
-import { Skeleton } from "@/lib/ui/skeleton"
+import { Skeleton } from "@/components/skeleton"
 import { getSession } from "@/lib/employee"
 
 interface MessagesSidebarProps {

@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { Input } from "@/lib/ui/input"
-import { Button } from "../../../../lib/ui/button"
+import { Input } from "@/components/input"
+import { Button } from "../../../../components/button"
 import { Send } from "lucide-react"
 
 interface MessageInputProps {

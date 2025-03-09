@@ -1,7 +1,7 @@
 'use client'
 
 import { createEmployee, deleteEmployee, getEmployeeByRole, updateEmployee } from "@/lib/employee";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/lib/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Box, Button } from "@mui/material";
 import {
    GridRowsProp,

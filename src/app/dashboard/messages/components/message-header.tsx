@@ -1,5 +1,5 @@
 import { Check } from "lucide-react"
-import { Button } from "../../../../lib/ui/button"
+import { Button } from "../../../../components/button"
 import { Conversation } from "@/lib/definitions"
 
 interface MessageHeaderProps {

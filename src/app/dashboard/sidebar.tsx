@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/utils/class-merger'
-import { Button } from '../../lib/ui/button'
+import { Button } from '../../components/button'
 import {
    Users,
    Settings,
