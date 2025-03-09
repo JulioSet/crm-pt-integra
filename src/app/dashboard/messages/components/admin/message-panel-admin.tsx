@@ -1,15 +1,15 @@
 import { Conversation, Employee } from "@/lib/definitions";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/button"
-import { Label } from "@/components/label";
-import { Textarea } from "@/components/textarea";
+import { Button } from "@/ui/button"
+import { Label } from "@/ui/label";
+import { Textarea } from "@/ui/textarea";
 import { 
    Select, 
    SelectContent, 
    SelectItem, 
    SelectTrigger, 
    SelectValue 
-} from "@/components/select"
+} from "@/ui/select"
 import {
    Command,
    CommandEmpty,
@@ -17,12 +17,12 @@ import {
    CommandInput,
    CommandItem,
    CommandList,
-} from "@/components/command"
+} from "@/ui/command"
 import {
    Popover,
    PopoverContent,
    PopoverTrigger,
-} from "@/components/popover"
+} from "@/ui/popover"
 import { ChevronsUpDown } from "lucide-react";
 import { updateNote } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";

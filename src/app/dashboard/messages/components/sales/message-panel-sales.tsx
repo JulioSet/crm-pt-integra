@@ -1,9 +1,9 @@
 import { Conversation, Employee, MessageLabel } from "@/lib/definitions";
 import { useState } from "react";
 import { cn } from "@/utils/class-merger";
-import { Button } from "@/components/button"
-import { Label } from "@/components/label";
-import { Textarea } from "@/components/textarea";
+import { Button } from "@/ui/button"
+import { Label } from "@/ui/label";
+import { Textarea } from "@/ui/textarea";
 import {
    Command,
    CommandEmpty,
@@ -11,12 +11,12 @@ import {
    CommandInput,
    CommandItem,
    CommandList,
-} from "@/components/command"
+} from "@/ui/command"
 import {
    Popover,
    PopoverContent,
    PopoverTrigger,
-} from "@/components/popover"
+} from "@/ui/popover"
 import { ChevronsUpDown, DollarSign, Flame, Snowflake } from "lucide-react"
 import { assignHelp, updateLabel, updateNote } from "@/lib/message";
 
