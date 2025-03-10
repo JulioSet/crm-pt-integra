@@ -52,3 +52,9 @@ model setting {
   name  String @id @db.VarChar(50)
   value String @db.Text
 }
+
+model contact {
+  id      String @id @db.VarChar(50)
+  telepon String @db.VarChar(50)
+  nama    String @db.VarChar(50)
+}
