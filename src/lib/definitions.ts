@@ -31,16 +31,14 @@ export interface Message {
 export type MessageLabel = "new" | "hot" | "cold" | "deal" | "ongoing" | "resolved"
 export type MessagePriority = "high" | "medium" | "low"
 
-export interface Notification {
-  id: string
-  sender: string
-  message: string
-  timestamp: string
-  read: boolean
-}
-
 export interface Employee {
   id: string
   name: string
   email: string
+}
+
+export interface Contact {
+  id: string
+  nama: string
+  telepon: string
 }

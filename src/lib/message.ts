@@ -1,5 +1,15 @@
 import { prisma } from "./prisma";
 
+export async function createMessage(name: string, phone: string, agent: string) {
+   await fetch('/api/chat/create', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, phone, agent }), // Send data as JSON
+   });
+}
+
 export async function sendMessage(to: string, text: string, agent: string, timestamp: string, responseTime: string) {
    const response = await fetch('/api/chat/send', {
       method: 'POST',
@@ -130,5 +140,15 @@ export async function updateDeadline (phone: string, date: string) {
          'Content-Type': 'application/json',
       },
       body: JSON.stringify({ phone, date }), // Send data as JSON
+   });
+}
+
+export async function updateRead (phone: string) {
+   await fetch('/api/chat/update/read', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone }), // Send data as JSON
    });
 }

@@ -17,6 +17,20 @@ export default function Messages() {
       setConversations(data)
    }, [fetchData, data]);
 
+   // for one time use from notifcation and contact redirect
+   useEffect(() => {
+      if (typeof window !== "undefined") {
+         const telepon = localStorage.getItem("telepon") || "";
+         setPhone(telepon);
+      }
+   }, [])
+
+   useEffect(() => {
+      if (phone !== "") {
+         localStorage.removeItem("telepon")
+      }
+   }, [phone])
+
    return(
       <div className="flex h-full bg-background">
          <MessagesSidebar
