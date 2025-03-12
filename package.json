@@ -31,6 +31,7 @@
     "lucide-react": "^0.468.0",
     "nanoid": "^5.0.8",
     "next": "^15.1.7",
+    "nodemailer": "^6.10.0",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/ws": "^8.18.0",
