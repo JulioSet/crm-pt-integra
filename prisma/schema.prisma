@@ -10,8 +10,8 @@ datasource db {
 
 model employee {
   id          String    @id @db.VarChar(50)
-  name        String    @unique(map: "UNIQUE") @db.VarChar(50)
-  email       String    @db.Text
+  name        String    @db.Text
+  email       String    @unique(map: "UNIQUE") @db.VarChar(50)
   password    String    @db.Text
   role        String    @db.Text
   target_deal Int       @default(0)
