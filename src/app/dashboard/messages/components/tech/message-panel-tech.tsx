@@ -66,14 +66,14 @@ export function MessagePanelTech({ conversation, listAgent, assignAgent }: Messa
                            {listAgent.map((agent) => (
                               <CommandItem
                                  className="p-1 m-1"
-                                 key={agent.name}
-                                 value={agent.name}
+                                 key={agent.id}
+                                 value={agent.id}
                                  onSelect={(currentValue) => {
                                     setOpen(false)
                                     assignAgent(currentValue)
                                  }}
                               >
-                              {agent.name}
+                                 {agent.name}
                               </CommandItem>
                            ))}
                         </CommandGroup>

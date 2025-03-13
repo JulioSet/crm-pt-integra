@@ -1,5 +1,5 @@
 export type SessionPayload = {
-  name: string;
+  id: string;
   role: string;
   expiresAt: Date;
 };
@@ -41,4 +41,9 @@ export interface Contact {
   id: string
   nama: string
   telepon: string
+}
+
+export interface Setting {
+  name: string
+  value: string
 }

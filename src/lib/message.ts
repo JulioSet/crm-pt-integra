@@ -83,23 +83,23 @@ export async function getConversations() {
    return data;
 }
 
-export async function assignMessage(phone: string, agent: string) {
+export async function assignMessage(phone: string, id: string) {
    await fetch('/api/chat/assign', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ phone, agent }), // Send data as JSON
+      body: JSON.stringify({ phone, id }), // Send data as JSON
    });
 }
 
-export async function assignHelp(phone: string, agent: string) {
+export async function assignHelp(phone: string, id: string) {
    await fetch('/api/chat/help', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ phone, agent }), // Send data as JSON
+      body: JSON.stringify({ phone, id }), // Send data as JSON
    });
 }
 

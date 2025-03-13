@@ -186,15 +186,15 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                         {listAgent.map((agent) => (
                            <CommandItem
                               className="p-1 m-1"
-                              key={agent.name}
-                              value={agent.name}
+                              key={agent.id}
+                              value={agent.id}
                               onSelect={(currentValue) => {
                                  setOpenHelp(false)
                                  setSelectedHelp(currentValue)
                                  handleRequestHelp(currentValue)
                               }}
                            >
-                           {agent.name}
+                              {agent.name}
                            </CommandItem>
                         ))}
                      </CommandGroup>
@@ -228,15 +228,15 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                         {listTech.map((tech) => (
                            <CommandItem
                               className="p-1 m-1"
-                              key={tech.name}
-                              value={tech.name}
+                              key={tech.id}
+                              value={tech.id}
                               onSelect={(currentValue) => {
                                  setOpenTech(false)
                                  assignAgent(currentValue)
                                  handleRequestHelp("")
                               }}
                            >
-                           {tech.name}
+                              {tech.name}
                            </CommandItem>
                         ))}
                      </CommandGroup>
@@ -270,14 +270,14 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                            {listAgent.map((agent) => (
                               <CommandItem
                                  className="p-1 m-1"
-                                 key={agent.name}
-                                 value={agent.name}
+                                 key={agent.id}
+                                 value={agent.id}
                                  onSelect={(currentValue) => {
                                     setOpen(false)
                                     assignAgent(currentValue)
                                  }}
                               >
-                              {agent.name}
+                                 {agent.name}
                               </CommandItem>
                            ))}
                         </CommandGroup>

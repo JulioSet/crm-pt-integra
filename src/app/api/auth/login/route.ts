@@ -4,10 +4,10 @@ import bcrypt from 'bcrypt';
 import { createSession } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
-   const { name, password } = await req.json();
+   const { email, password } = await req.json();
 
    const employee = await prisma.employee.findUnique({
-      where: { name: name },
+      where: { email: email },
    });
    if (!employee) {
       return NextResponse.json({ status: 403 });
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
    }
    
    // create session
-   await createSession(employee.name, employee.role);
+   await createSession(employee.id, employee.role);
    
    // update login date
    const date = new Date().toLocaleDateString("en-GB", { 
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       year: "numeric",
    })
    await prisma.employee.update({
-      where: { name: name },
+      where: { email: email },
       data: { last_login: date }
    })
 

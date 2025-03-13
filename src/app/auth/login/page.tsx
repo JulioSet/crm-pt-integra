@@ -7,7 +7,7 @@ import { getEmployee } from "@/lib/employee";
 
 export default function Login() {
    // authentication
-   const [username, setUsername] = useState("");
+   const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [error, setError] = useState("");
 
@@ -25,7 +25,7 @@ export default function Login() {
 
    const handleLogin = async (e: FormEvent) => {
       e.preventDefault();
-      const result = await getEmployee(username, password);
+      const result = await getEmployee(email, password);
 
       if (!result?.success) {
          setError(result?.message || "Unknown error occurred");
@@ -50,12 +50,12 @@ export default function Login() {
             <form onSubmit={handleLogin}>
                <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                     Nama Pengguna
+                     Email
                   </label>
                   <input
                      type="text"
-                     value={username}
-                     onChange={(e) => setUsername(e.target.value)}
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
                      className="px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                      required
                   />

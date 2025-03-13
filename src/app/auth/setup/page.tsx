@@ -17,7 +17,7 @@ export default function Setup() {
    const handleSetup = async (e: FormEvent) => {
       e.preventDefault();
       createEmployee(nanoid(), username, password, 'admin', email);
-      redirect("/dashboard");
+      redirect("/dashboard/messages");
    };
 
    return (
