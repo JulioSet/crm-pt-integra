@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Card } from "@/ui/card"
 import { cn } from "@/utils/class-merger"
 import { Fragment, useEffect, useRef, useState } from "react"
-import { assignMessage, sendMessage } from "@/lib/message"
+import { assignMessage, sendMessage, updateRead } from "@/lib/message"
 import { formatMessageDate } from "@/utils/date"
 import { getEmployeeByRole, getSession } from "@/lib/employee"
 import { MessagePanelAdmin } from "./admin/message-panel-admin"
@@ -53,7 +53,7 @@ export function MessageView({ conversation }: MessageViewProps) {
     const container = messageViewRef.current;
     if (!container) return;
     
-    // first time opening
+    // to ensure it only work during first time opening
     if (!opened) {
       container.scrollTo({ top: container.scrollHeight });
     }
@@ -64,6 +64,12 @@ export function MessageView({ conversation }: MessageViewProps) {
     if ((newMessage || failedMessage) && isAtBottom) {
       container.scrollTo({ top: container.scrollHeight });
       setLastMessage(conversation?.message_content.at(-1)?.pesan ?? "")
+    }
+
+    if (isAtBottom) {
+      (async () => {
+        await updateRead(phone)
+      })()
     }
 
     setOpened(true)

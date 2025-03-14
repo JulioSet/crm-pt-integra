@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/utils/class-merger'
@@ -12,23 +12,50 @@ import {
    Bell,
    UserCog,
    FileBarChart,
+   LogOut,
 } from 'lucide-react'
 import Image from 'next/image'
+import { getSession } from '@/lib/employee'
+import useChatStore from '@/store/chatStore'
 
 const sidebarItems = [
    { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare, access: '' },
-   { name: 'Agent', href: '/dashboard/agent', icon: UserCog, access: 'admin' },
+   { name: 'Agent', href: '/dashboard/agents', icon: UserCog, access: 'admin' },
    { name: 'Notifikasi', href: '/dashboard/notifications', icon: Bell, access: '' },
    { name: 'Kontak', href: '/dashboard/contacts', icon: Users, access: 'sales' },
    { name: 'Laporan', href: '/dashboard/reports', icon: FileBarChart, access: 'admin' },
    { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings, access: 'admin' },
+   { name: 'Keluar', href: '/', icon: LogOut, access: '' },
 ]
 
 export default function Sidebar() {
+   // agent data
+   const [role, setRole] = useState("")
+   // sidebar 
    const pathname = usePathname()
    const [collapsed, setCollapsed] = useState(false)
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   // notification
+   const { data } = useChatStore();
    const [unreadCount, setUnreadCount] = useState(0)
+
+   // set agent data
+   useEffect(() => {
+      (async () => {
+         const session = await getSession()
+         setRole(session?.role)
+      })()
+   })
+
+   // set unread count
+   useEffect(() => {
+      let totalUnread = 0
+      data.forEach(conversation => {
+         if (conversation.baca === false) {
+            totalUnread++
+         }
+      })
+      setUnreadCount(totalUnread)
+   }, [data])
 
    return (
       <div className={cn(
@@ -50,33 +77,34 @@ export default function Sidebar() {
                   const Icon = item.icon
                   const isActive = pathname === item.href
                   const isNotifications = item.href === '/dashboard/notifications'
-
-                  return (
-                     <Link key={item.href} href={item.href}>
-                        <Button
-                           variant={isActive ? "secondary" : "ghost"}
-                           className={cn(
-                              "w-full flex justify-start",
-                              collapsed ? "px-2" : "px-4",
-                              collapsed && "flex justify-center items-center",
-                              isActive && "text-blue-600"
-                           )}
-                        >
-                           <Icon className={cn(
-                              "h-5 w-5",
-                              collapsed ? "mr-0" : "mr-2",
-                           )} />
-                           {!collapsed && <span>{item.name}</span>}
-                           {isNotifications && unreadCount > 0 && (
-                              <div className='pl-1'>
-                                 <div className='inline-flex items-center rounded-full border border-transparent px-1.5 text-xs font-semibold bg-red-500 text-white'>
-                                    {unreadCount}
+                  if (item.access === role || item.access === '') {
+                     return (
+                        <Link key={item.href} href={item.href}>
+                           <Button
+                              variant={isActive ? "secondary" : "ghost"}
+                              className={cn(
+                                 "w-full flex justify-start",
+                                 collapsed ? "px-2" : "px-4",
+                                 collapsed && "flex justify-center items-center",
+                                 isActive && "text-blue-600"
+                              )}
+                           >
+                              <Icon className={cn(
+                                 "h-5 w-5",
+                                 collapsed ? "mr-0" : "mr-2",
+                              )} />
+                              {!collapsed && <span>{item.name}</span>}
+                              {isNotifications && unreadCount > 0 && (
+                                 <div className='pl-1'>
+                                    <div className='inline-flex items-center rounded-full border border-transparent px-1.5 text-xs font-semibold bg-red-500 text-white'>
+                                       {unreadCount}
+                                    </div>
                                  </div>
-                              </div>
-                           )}
-                        </Button>
-                     </Link>
-                  )
+                              )}
+                           </Button>
+                        </Link>
+                     )
+                  }
                })}
             </nav>
             <div className="p-4 border-t">

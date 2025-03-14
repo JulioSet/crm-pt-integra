@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
-import { createSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
    const { email, password } = await req.json();
@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
    }
    
    // create session
+   await deleteSession()
    await createSession(employee.id, employee.role);
    
    // update login date

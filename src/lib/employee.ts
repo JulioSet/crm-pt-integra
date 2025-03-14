@@ -13,13 +13,13 @@ export async function createEmployee(id: string, name: string, password: string,
    }
 }
 
-export async function getEmployee(name: string, password: string) {
+export async function getEmployee(email: string, password: string) {
    const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, password }), // Send data as JSON
+      body: JSON.stringify({ email, password }), // Send data as JSON
    });
 
    if (!response.ok) {
@@ -33,6 +33,18 @@ export async function getEmployee(name: string, password: string) {
    }
    
    return { success: true, data: data };
+}
+
+export async function getEmail(id: string) {
+   const response = await fetch('/api/auth/email', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }), // Send data as JSON
+   });
+   const data = await response.json()
+   return data
 }
 
 export async function getEmployeeByRole(role: string) {

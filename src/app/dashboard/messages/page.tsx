@@ -5,17 +5,26 @@ import { Conversation } from "@/lib/definitions"
 import { MessagesSidebar } from "./components/message-sidebar"
 import { MessageView } from "./components/message-view"
 import useChatStore from "@/store/chatStore"
+import { getResponseTimeSetting } from "@/lib/setting"
 
 export default function Messages() {
    const { data, fetchData, loading } = useChatStore();
    const [conversations, setConversations] = useState<Conversation[]>([])
    const [phone, setPhone] = useState("")
 
+   // start fetch conversations
    useEffect(() => {
-      // fetch conversations
-      fetchData()
+      (async () => {
+         const setting = await getResponseTimeSetting()
+         const interval = parseInt(setting)
+         fetchData(interval)
+      })()
+   }, [fetchData]);
+   
+   // update conversations
+   useEffect(() => {
       setConversations(data)
-   }, [fetchData, data]);
+   }, [data]);
 
    // for one time use from notifcation and contact redirect
    useEffect(() => {
