@@ -64,13 +64,13 @@ export default function SettingsPage() {
          </div>
 
          <Card className="rounded-lg">
-            <CardHeader>
+            <CardHeader className="pl-6 pt-6">
                <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
                   <p className="text-2xl font-semibold mb-1">Konfigurasi Batas Waktu Respon</p>
                </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 pl-6 pb-6">
+            <CardContent className="pt-6 pl-6 pb-6">
                <div className="grid gap-6 max-w-sm">
                   <div className="grid grid-cols-3 gap-4">
                      <div className="space-y-2">
