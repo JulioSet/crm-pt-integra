@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Card } from "@/ui/card"
 import { cn } from "@/utils/class-merger"
 import { Fragment, useEffect, useRef, useState } from "react"
-import { assignMessage, sendMessage, updateRead } from "@/lib/message"
+import { assignMessage, sendMessage, updateLabel, updateRead } from "@/lib/message"
 import { formatMessageDate } from "@/utils/date"
 import { getEmployeeByRole, getSession } from "@/lib/employee"
 import { MessagePanelAdmin } from "./admin/message-panel-admin"
@@ -81,6 +81,7 @@ export function MessageView({ conversation }: MessageViewProps) {
     const message = 'Kami ingin mendengar pendapat Anda tentang layanan pelanggan kami! Mohon luangkan sedikit waktu untuk mengisi survei singkat ini: https://forms.gle/BDKJdn7Bb9Qvr4x39'
     const timestamp = Math.floor(Date.now() / 1000).toString()
     await sendMessage(phone, message, name, timestamp, '')
+    await updateLabel(phone, 'resolved')
   }
 
   const handleSendMessage = async (message: string) => {
