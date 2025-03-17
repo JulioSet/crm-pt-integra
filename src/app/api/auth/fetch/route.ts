@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
       select: {
          id: true,
          name: true,
+         email: true,
          target_deal: true,
          last_login: true
       },

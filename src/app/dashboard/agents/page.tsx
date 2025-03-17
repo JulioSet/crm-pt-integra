@@ -42,7 +42,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
       const id = nanoid();
       setRows((oldRows) => [
          ...oldRows,
-         { id, name: '', email: '', target_deal: 0, isNew: true },
+         { id, name: 'Wajib Diisi', email: 'Wajib Diisi', target_deal: 0, last_login: '-', isNew: true },
       ]);
       setRowModesModel((oldModel) => ({
          ...oldModel,
@@ -156,7 +156,8 @@ export default function Agents() {
       {
          field: 'last_login', 
          headerName: 'Terakhir Diakses', 
-         width: 190
+         width: 190,
+         valueGetter: (data) => data ?? "-",
       },
       {
          field: 'actions',
