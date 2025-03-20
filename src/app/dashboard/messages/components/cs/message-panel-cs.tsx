@@ -25,11 +25,12 @@ import {
 } from "@/ui/select"
 import { CalendarIcon, ChevronsUpDown, Flag } from "lucide-react";
 import { assignHelp, updateDeadline, updateNote, updatePriority } from "@/lib/message";
-import { getEmployeeByRole } from "@/lib/employee";
+import { getEmployeeByRole, getSession } from "@/lib/employee";
 import { cn } from "@/utils/class-merger";
 import { format } from "date-fns";
 import { Calendar } from "@/ui/calendar";
 import { id } from "date-fns/locale";
+import { toast } from "sonner";
 
 interface MessagePanelCSProps {
    conversation: Conversation | null
@@ -38,6 +39,9 @@ interface MessagePanelCSProps {
 }
 
 export function MessagePanelCS({ conversation, listAgent, assignAgent }: MessagePanelCSProps) {
+   // agent data
+   const [ID, setID] = useState('')
+   // conversation data
    const phone = conversation?.telepon || ""
    // delegasi
    const [open, setOpen] = useState(false)
@@ -54,6 +58,13 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
    const [openTech, setOpenTech] = useState(false)
    const [listTech, setListTech] = useState<Employee[]>([])
 
+   useEffect(() => {
+      (async () => {
+         const session = await getSession()
+         setID(session?.id)
+      })()
+   }, [])
+
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
       setNote(event.target.value)
@@ -62,12 +73,14 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
    const handleSaveNote = async () => {
       // Handle save note
       await updateNote(phone, note)
+      toast("Catatan berhasil disimpan")
    }
 
    const handlePriorityChange = async (newPriority: MessagePriority) => {
       // Handle priotity change
       setPriority(newPriority)
       await updatePriority(phone, newPriority)
+      toast("Prioritas berhasil diganti")
    }
 
    const handleRequestHelp = async (selectedAgent: string) => {
@@ -76,6 +89,9 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
 
    const handleDeadline = async () => {
       await updateDeadline(phone, deadline?.toString() || "")
+      toast("Deadline berhasil ditentukan", {
+         description: deadline?.toString()
+      })
    }
 
    useEffect(() => {
@@ -172,7 +188,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                      className="w-[290px] justify-between"
                   >
                      {selectedHelp
-                        ? listAgent.find((agent) => agent.name === selectedHelp)?.name
+                        ? listAgent.find((agent) => agent.id === selectedHelp)?.name
                         : "Pilih agent..."}
                      <ChevronsUpDown className="opacity-50" />
                   </Button>
@@ -184,18 +200,21 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                      <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
                      <CommandGroup>
                         {listAgent.map((agent) => (
-                           <CommandItem
-                              className="p-1 m-1"
-                              key={agent.id}
-                              value={agent.id}
-                              onSelect={(currentValue) => {
-                                 setOpenHelp(false)
-                                 setSelectedHelp(currentValue)
-                                 handleRequestHelp(currentValue)
-                              }}
-                           >
-                              {agent.name}
-                           </CommandItem>
+                           agent.id !== ID && (
+                              <CommandItem
+                                 className="p-1 m-1"
+                                 key={agent.id}
+                                 value={agent.id}
+                                 onSelect={(currentValue) => {
+                                    setOpen(false)
+                                    setSelectedHelp(currentValue)
+                                    handleRequestHelp(currentValue)
+                                    toast("Berhasil meminta bantuan")
+                                 }}
+                              >
+                                 {agent.name}
+                              </CommandItem>
+                           )
                         ))}
                      </CommandGroup>
                      </CommandList>
@@ -268,17 +287,20 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                         <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
                         <CommandGroup>
                            {listAgent.map((agent) => (
-                              <CommandItem
-                                 className="p-1 m-1"
-                                 key={agent.id}
-                                 value={agent.id}
-                                 onSelect={(currentValue) => {
-                                    setOpen(false)
-                                    assignAgent(currentValue)
-                                 }}
-                              >
-                                 {agent.name}
-                              </CommandItem>
+                              agent.id !== ID && (
+                                 <CommandItem
+                                    className="p-1 m-1"
+                                    key={agent.id}
+                                    value={agent.id}
+                                    onSelect={(currentValue) => {
+                                       setOpen(false)
+                                       assignAgent(currentValue)
+                                       handleRequestHelp("")
+                                    }}
+                                 >
+                                    {agent.name}
+                                 </CommandItem>
+                              )
                            ))}
                         </CommandGroup>
                      </CommandList>

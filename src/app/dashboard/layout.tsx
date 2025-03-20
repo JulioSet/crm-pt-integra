@@ -1,3 +1,4 @@
+import { Toaster } from "@/ui/sonner";
 import Sidebar from "./sidebar";
 
 export default function DashboardLayout({ 
@@ -11,6 +12,7 @@ export default function DashboardLayout({
          <main className="flex-1 overflow-auto">
             {children}
          </main>
+         <Toaster />
       </div>
    );
 }

@@ -21,7 +21,7 @@ interface MessageViewProps {
 
 export function MessageView({ conversation }: MessageViewProps) {
   // agent data
-  const [name, setName] = useState("")
+  const [ID, setID] = useState("")
   const [role, setRole] = useState("")
   // list agent based on role except admin
   const [listAgent, setListAgent] = useState<Employee[]>([])
@@ -40,7 +40,7 @@ export function MessageView({ conversation }: MessageViewProps) {
   useEffect(() => {
     (async () => {
       const session = await getSession()
-      setName(session?.name)
+      setID(session?.id)
       setRole(session?.role)
 
       const data = await getEmployeeByRole(role)
@@ -80,7 +80,7 @@ export function MessageView({ conversation }: MessageViewProps) {
     // Handle resolving conversation
     const message = 'Kami ingin mendengar pendapat Anda tentang layanan pelanggan kami! Mohon luangkan sedikit waktu untuk mengisi survei singkat ini: https://forms.gle/BDKJdn7Bb9Qvr4x39'
     const timestamp = Math.floor(Date.now() / 1000).toString()
-    await sendMessage(phone, message, name, timestamp, '')
+    await sendMessage(phone, message, ID, timestamp, '')
     await updateLabel(phone, 'resolved')
   }
 
@@ -93,9 +93,9 @@ export function MessageView({ conversation }: MessageViewProps) {
       if (lastMessage?.responder === 'client') {
         const timestampLastMessage = lastMessage?.waktu ? parseInt(lastMessage.waktu) : 0
         const responseTime = now - timestampLastMessage
-        check = await sendMessage(phone, message, name, now.toString(), responseTime.toString())
+        check = await sendMessage(phone, message, ID, now.toString(), responseTime.toString())
       } else {
-        check = await sendMessage(phone, message, name, now.toString(), '')
+        check = await sendMessage(phone, message, ID, now.toString(), '')
       }
       if (!check) {
         setFailedMessage(true)

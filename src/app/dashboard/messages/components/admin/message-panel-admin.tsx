@@ -26,6 +26,7 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { updateNote } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
+import { toast } from "sonner";
 
 interface MessagePanelAdminProps {
    conversation: Conversation | null
@@ -38,6 +39,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
    const [job, setJob] = useState("sales")
    const [listAgent, setListAgent] = useState<Employee[]>([])
    const [note, setNote] = useState(conversation?.catatan || "")
+   const [loadingAgent, setLoadingAgent] = useState(true)
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
@@ -47,12 +49,15 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
    const handleSaveNote = async () => {
       // Handle save note
       await updateNote(phone, note)
+      toast("Catatan berhasil disimpan")
    }
 
    useEffect(() => {
       (async () => {
+         setLoadingAgent(true)
          const data = await getEmployeeByRole(job)
          setListAgent(data)
+         setLoadingAgent(false)
       })()
    }, [job])
 
@@ -96,22 +101,31 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                      <Command>
                         <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
                         <CommandList className="max-h-40 overflow-y-auto">
-                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                           <CommandGroup>
-                              {listAgent.map((agent) => (
-                                 <CommandItem
-                                    className="p-1 m-1"
-                                    key={agent.id}
-                                    value={agent.id}
-                                    onSelect={(currentValue) => {
-                                       setOpen(false)
-                                       assignAgent(currentValue)
-                                    }}
-                                 >
-                                    {agent.name}
-                                 </CommandItem>
-                              ))}
-                           </CommandGroup>
+                           {loadingAgent ? (
+                              <div className="flex justify-center pt-2 pb-2">
+                                 <div className="w-4 h-4 border-4 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                              </div>
+                           ) : (
+                              <div>
+                                 <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                                 <CommandGroup>
+                                    {listAgent.map((agent) => (
+                                       <CommandItem
+                                          className="p-1 m-1"
+                                          key={agent.id}
+                                          value={agent.id}
+                                          onSelect={(currentValue) => {
+                                             setOpen(false)
+                                             assignAgent(currentValue)
+                                          }}
+                                       >
+                                          {agent.name}
+                                       </CommandItem>
+                                    ))}
+                                 </CommandGroup>
+                              </div>
+                              ) 
+                           }
                         </CommandList>
                      </Command>
                   </PopoverContent>

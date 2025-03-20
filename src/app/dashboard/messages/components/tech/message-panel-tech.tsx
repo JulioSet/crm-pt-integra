@@ -18,6 +18,7 @@ import {
 } from "@/ui/popover"
 import { ChevronsUpDown } from "lucide-react";
 import { updateNote } from "@/lib/message";
+import { toast } from "sonner";
 
 interface MessagePanelTechProps {
    conversation: Conversation | null
@@ -38,6 +39,7 @@ export function MessagePanelTech({ conversation, listAgent, assignAgent }: Messa
    const handleSaveNote = async () => {
       // Handle save note
       await updateNote(phone, note)
+      toast("Catatan berhasil disimpan")
    }
 
    return (

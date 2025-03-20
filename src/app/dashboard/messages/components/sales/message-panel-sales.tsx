@@ -1,5 +1,5 @@
 import { Conversation, Employee, MessageLabel } from "@/lib/definitions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/utils/class-merger";
 import { Button } from "@/ui/button"
 import { Label } from "@/ui/label";
@@ -19,6 +19,8 @@ import {
 } from "@/ui/popover"
 import { ChevronsUpDown, DollarSign, Flame, Snowflake } from "lucide-react"
 import { assignHelp, updateLabel, updateNote } from "@/lib/message";
+import { toast } from "sonner";
+import { getSession } from "@/lib/employee";
 
 interface MessagePanelSalesProps {
    conversation: Conversation | null
@@ -27,12 +29,24 @@ interface MessagePanelSalesProps {
 }
 
 export function MessagePanelSales({ conversation, listAgent, assignAgent }: MessagePanelSalesProps) {
+   // agent data
+   const [ID, setID] = useState('')
+   // conversation data
    const phone = conversation?.telepon || ""
    // delegasi
    const [open, setOpen] = useState(false)
    const [note, setNote] = useState(conversation?.catatan || "")
    // label
    const [label, setLabel] = useState(conversation?.label || "")
+   // request help
+   const [selectedHelp, setSelectedHelp] = useState(conversation?.bala_bantuan || "")
+
+   useEffect(() => {
+      (async () => {
+         const session = await getSession()
+         setID(session?.id)
+      })()
+   }, [])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
@@ -42,12 +56,14 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    const handleSaveNote = async () => {
       // Handle save note
       await updateNote(phone, note)
+      toast("Catatan berhasil disimpan")
    }
 
    const handleLabelChange = async (newLabel: MessageLabel) => {
       // Handle status change
       setLabel(newLabel)
       await updateLabel(phone, newLabel)
+      toast("Label berhasil diganti")
    }
 
    const handleRequestHelp = async (selectedAgent: string) => {
@@ -110,7 +126,9 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                      aria-expanded={open}
                      className="w-[290px] justify-between"
                   >
-                     Pilih agent...
+                     {selectedHelp
+                        ? listAgent.find((agent) => agent.id === selectedHelp)?.name
+                        : "Pilih agent..."}
                      <ChevronsUpDown className="opacity-50" />
                   </Button>
                </PopoverTrigger>
@@ -121,17 +139,20 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                      <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
                      <CommandGroup>
                         {listAgent.map((agent) => (
-                           <CommandItem
-                              className="p-1 m-1"
-                              key={agent.id}
-                              value={agent.id}
-                              onSelect={(currentValue) => {
-                                 setOpen(false)
-                                 handleRequestHelp(currentValue)
-                              }}
-                           >
-                              {agent.name}
-                           </CommandItem>
+                           agent.id !== ID && (
+                              <CommandItem
+                                 className="p-1 m-1"
+                                 key={agent.id}
+                                 value={agent.id}
+                                 onSelect={(currentValue) => {
+                                    setOpen(false)
+                                    setSelectedHelp(currentValue)
+                                    handleRequestHelp(currentValue)
+                                 }}
+                              >
+                                 {agent.name}
+                              </CommandItem>
+                           )
                         ))}
                      </CommandGroup>
                      </CommandList>
@@ -162,17 +183,21 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                      <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
                      <CommandGroup>
                         {listAgent.map((agent) => (
-                           <CommandItem
-                              className="p-1 m-1"
-                              key={agent.id}
-                              value={agent.id}
-                              onSelect={(currentValue) => {
-                                 setOpen(false)
-                                 assignAgent(currentValue)
-                              }}
-                           >
-                              {agent.name}
-                           </CommandItem>
+                           agent.id !== ID && (
+                              <CommandItem
+                                 className="p-1 m-1"
+                                 key={agent.id}
+                                 value={agent.id}
+                                 onSelect={(currentValue) => {
+                                    setOpen(false)
+                                    assignAgent(currentValue)
+                                    handleRequestHelp("")
+                                    toast("Berhasil meminta bantuan")
+                                 }}
+                              >
+                                 {agent.name}
+                              </CommandItem>
+                           )
                         ))}
                      </CommandGroup>
                      </CommandList>
