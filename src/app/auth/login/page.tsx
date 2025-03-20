@@ -56,7 +56,7 @@ export default function Login() {
                      type="text"
                      value={email}
                      onChange={(e) => setEmail(e.target.value)}
-                     className="px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                      required
                   />
                </div>
@@ -68,7 +68,7 @@ export default function Login() {
                      type="password"
                      value={password}
                      onChange={(e) => setPassword(e.target.value)}
-                     className="px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                      required
                   />
                </div>

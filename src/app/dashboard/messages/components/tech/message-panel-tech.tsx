@@ -1,5 +1,5 @@
 import { Conversation, Employee } from "@/lib/definitions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/ui/button"
 import { Label } from "@/ui/label";
 import { Textarea } from "@/ui/textarea";
@@ -19,6 +19,7 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { updateNote } from "@/lib/message";
 import { toast } from "sonner";
+import { getSession } from "@/lib/employee";
 
 interface MessagePanelTechProps {
    conversation: Conversation | null
@@ -28,8 +29,16 @@ interface MessagePanelTechProps {
 
 export function MessagePanelTech({ conversation, listAgent, assignAgent }: MessagePanelTechProps) {
    const phone = conversation?.telepon || ""
+   const [ID, setID] = useState('')
    const [open, setOpen] = useState(false)
    const [note, setNote] = useState(conversation?.catatan || "")
+
+   useEffect(() => {
+      (async () => {
+         const session = await getSession()
+         setID(session?.id)
+      })()
+   }, [])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
@@ -66,17 +75,19 @@ export function MessagePanelTech({ conversation, listAgent, assignAgent }: Messa
                         <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
                         <CommandGroup>
                            {listAgent.map((agent) => (
-                              <CommandItem
-                                 className="p-1 m-1"
-                                 key={agent.id}
-                                 value={agent.id}
-                                 onSelect={(currentValue) => {
-                                    setOpen(false)
-                                    assignAgent(currentValue)
-                                 }}
-                              >
-                                 {agent.name}
-                              </CommandItem>
+                              agent.id !== ID && (
+                                 <CommandItem
+                                    className="p-1 m-1"
+                                    key={agent.id}
+                                    value={agent.id}
+                                    onSelect={(currentValue) => {
+                                       setOpen(false)
+                                       assignAgent(currentValue)
+                                    }}
+                                 >
+                                    {agent.name}
+                                 </CommandItem>
+                              )
                            ))}
                         </CommandGroup>
                      </CommandList>
