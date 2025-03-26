@@ -152,3 +152,26 @@ export async function updateRead (phone: string) {
       body: JSON.stringify({ phone }), // Send data as JSON
    });
 }
+
+export async function fetchAll() {
+   const response = await fetch('/api/chat/all', {
+      method: 'GET',
+   });
+
+   if (response.status === 500) {
+      return false;
+   }
+
+   const data = await response.json()
+   return data;
+}
+
+export async function setDateResolve(phone: string) {
+   await fetch('/api/chat/resolve', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone }), // Send data as JSON
+   });
+}

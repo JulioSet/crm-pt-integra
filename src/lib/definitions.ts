@@ -16,6 +16,8 @@ export interface Conversation {
   bala_bantuan: string
   deadline: string
   baca: boolean | null
+  waktu_admin_delegasi: string | null
+  waktu_resolusi: string | null
   message_content: Message[]
 }
 

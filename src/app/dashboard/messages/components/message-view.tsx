@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Card } from "@/ui/card"
 import { cn } from "@/utils/class-merger"
 import { Fragment, useEffect, useRef, useState } from "react"
-import { assignMessage, sendMessage, updateLabel, updateRead } from "@/lib/message"
+import { assignMessage, sendMessage, setDateResolve, updateLabel, updateRead } from "@/lib/message"
 import { formatMessageDate } from "@/utils/date"
 import { getEmployeeByRole, getSession } from "@/lib/employee"
 import { MessagePanelAdmin } from "./admin/message-panel-admin"
@@ -82,6 +82,7 @@ export function MessageView({ conversation }: MessageViewProps) {
     const timestamp = Math.floor(Date.now() / 1000).toString()
     await sendMessage(phone, message, ID, timestamp, '')
     await updateLabel(phone, 'resolved')
+    await setDateResolve(phone)
   }
 
   const handleSendMessage = async (message: string) => {
