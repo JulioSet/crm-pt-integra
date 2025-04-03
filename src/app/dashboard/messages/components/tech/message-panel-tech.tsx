@@ -28,6 +28,7 @@ interface MessagePanelTechProps {
 }
 
 export function MessagePanelTech({ conversation, listAgent, assignAgent }: MessagePanelTechProps) {
+   const initialNote = conversation?.catatan || ""
    const phone = conversation?.telepon || ""
    const [ID, setID] = useState('')
    const [open, setOpen] = useState(false)
@@ -103,7 +104,7 @@ export function MessagePanelTech({ conversation, listAgent, assignAgent }: Messa
             </Label>
             <Textarea
                id="note"
-               placeholder="Add notes about this conversation..."
+               placeholder="Tambahkan catatan untuk percakapan ini..."
                value={note}
                onChange={handleNoteChange}
                className="min-h-[200px] resize-none"
@@ -113,6 +114,7 @@ export function MessagePanelTech({ conversation, listAgent, assignAgent }: Messa
                size="icon"
                className="w-full"
                onClick={handleSaveNote}
+               disabled={note === initialNote}
             >
                Simpan
             </Button>

@@ -44,6 +44,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
    // conversation data
    const phone = conversation?.telepon || ""
    // delegasi
+   const initialNote = conversation?.catatan || ""
    const [open, setOpen] = useState(false)
    const [note, setNote] = useState(conversation?.catatan || "")
    // priority
@@ -316,7 +317,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
             </Label>
             <Textarea
                id="note"
-               placeholder="Add notes about this conversation..."
+               placeholder="Tambahkan catatan untuk percakapan ini..."
                value={note}
                onChange={handleNoteChange}
                className="min-h-[200px] resize-none"
@@ -326,6 +327,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                size="icon"
                className="w-full"
                onClick={handleSaveNote}
+               disabled={note === initialNote}
             >
                Simpan
             </Button>

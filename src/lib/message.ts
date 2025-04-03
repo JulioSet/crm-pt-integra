@@ -103,6 +103,16 @@ export async function assignHelp(phone: string, id: string) {
    });
 }
 
+export async function updateName (phone: string, name: string) {
+   await fetch('/api/chat/update/name', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, name }), // Send data as JSON
+   });
+}
+
 export async function updateLabel (phone: string, label: string) {
    await fetch('/api/chat/update/label', {
       method: 'POST',

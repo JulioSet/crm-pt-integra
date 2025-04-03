@@ -34,6 +34,7 @@ interface MessagePanelAdminProps {
 }
 
 export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdminProps) {
+   const initialNote = conversation?.catatan || ""
    const phone = conversation?.telepon || ""
    const [open, setOpen] = useState(false)
    const [job, setJob] = useState("sales")
@@ -140,7 +141,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
             </Label>
             <Textarea
                id="note"
-               placeholder="Add notes about this conversation..."
+               placeholder="Tambahkan catatan untuk percakapan ini..."
                value={note}
                onChange={handleNoteChange}
                className="min-h-[200px] resize-none"
@@ -150,6 +151,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                size="icon"
                className="w-full"
                onClick={handleSaveNote}
+               disabled={note === initialNote}
             >
                Simpan
             </Button>

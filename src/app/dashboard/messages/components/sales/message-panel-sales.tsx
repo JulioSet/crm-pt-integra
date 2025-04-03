@@ -18,9 +18,11 @@ import {
    PopoverTrigger,
 } from "@/ui/popover"
 import { ChevronsUpDown, DollarSign, Flame, Snowflake } from "lucide-react"
-import { assignHelp, updateLabel, updateNote } from "@/lib/message";
+import { assignHelp, updateLabel, updateName, updateNote } from "@/lib/message";
 import { toast } from "sonner";
 import { getSession } from "@/lib/employee";
+import { createContact } from "@/lib/contact";
+import { customAlphabet } from "nanoid";
 
 interface MessagePanelSalesProps {
    conversation: Conversation | null
@@ -33,7 +35,10 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    const [ID, setID] = useState('')
    // conversation data
    const phone = conversation?.telepon || ""
+   // add contact
+   const [client, setClient] = useState('')
    // delegasi
+   const initialNote = conversation?.catatan || ""
    const [open, setOpen] = useState(false)
    const [note, setNote] = useState(conversation?.catatan || "")
    // label
@@ -53,25 +58,61 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
       setNote(event.target.value)
    }
 
+   const handleClientChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      // Handle name change
+      setClient(event.target.value)
+   }
+
    const handleSaveNote = async () => {
       // Handle save note
       await updateNote(phone, note)
       toast("Catatan berhasil disimpan")
    }
-
+   
    const handleLabelChange = async (newLabel: MessageLabel) => {
       // Handle status change
       setLabel(newLabel)
       await updateLabel(phone, newLabel)
       toast("Label berhasil diganti")
    }
-
+   
    const handleRequestHelp = async (selectedAgent: string) => {
       await assignHelp(phone, selectedAgent)
+      toast("Berhasil meminta bantuan")
+   }
+   
+   const handleAddContact = async () => {
+      const nanoid = customAlphabet('1234567890', 10) // id
+      await createContact(nanoid(), client, phone)
+      await updateName(phone, client)
+      toast("Kontak baru berhasil disimpan")
    }
 
    return (
       <div className="p-4 space-y-6">
+         {/* add contact */}
+         {conversation?.nama === null && (
+            <div className="space-y-4">
+               <Label className="text-md font-bold">Add Contact</Label>
+               <Textarea
+                  id="client"
+                  placeholder="Isi dengan nama kontak klien..."
+                  value={client}
+                  onChange={handleClientChange}
+                  className="min-h-[10px] resize-none"
+               />
+               <Button
+                  variant="default"
+                  size="icon"
+                  className="w-full"
+                  onClick={handleAddContact}
+                  disabled={client === ''}
+               >
+                  Tambah Kontak
+               </Button>
+            </div>
+         )}
+         
          {/* label */}
          <div className="space-y-4">
             <Label className="text-md font-bold">Label</Label>
@@ -213,7 +254,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
             </Label>
             <Textarea
                id="note"
-               placeholder="Add notes about this conversation..."
+               placeholder="Tambahkan catatan untuk percakapan ini..."
                value={note}
                onChange={handleNoteChange}
                className="min-h-[200px] resize-none"
@@ -223,6 +264,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                size="icon"
                className="w-full"
                onClick={handleSaveNote}
+               disabled={note === initialNote}
             >
                Simpan
             </Button>
