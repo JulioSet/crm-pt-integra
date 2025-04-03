@@ -4,6 +4,8 @@ import { Conversation } from "@/lib/definitions"
 import { fetchAll } from "@/lib/message"
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card"
 import { useEffect, useState } from "react"
+import { SalesPerformanceTable } from "./components/salesPerformanceTable"
+import { CSPerformanceTable } from "./components/csPerformanceTable"
 
 export default function ReportsPage() {
   const [conversations, setConversations] = useState<Conversation[]>([])
@@ -64,9 +66,6 @@ export default function ReportsPage() {
     const m = Math.floor((avg % 3600) / 60)
     const s = avg % 60
 
-    console.log('1: ', value)
-    console.log('1: ', count)
-
     if (h > 0) {
       result += `${h}j `
     }
@@ -94,9 +93,6 @@ export default function ReportsPage() {
     const h = Math.floor(avg / 3600)
     const m = Math.floor((avg % 3600) / 60)
     const s = avg % 60
-
-    console.log('1: ', value)
-    console.log('1: ', count)
 
     if (h > 0) {
       result += `${h}j `
@@ -127,9 +123,6 @@ export default function ReportsPage() {
     const h = Math.floor(avg / 3600)
     const m = Math.floor((avg % 3600) / 60)
     const s = avg % 60
-
-    console.log('1: ', value)
-    console.log('1: ', count)
 
     if (h > 0) {
       result += `${h}j `
@@ -232,6 +225,26 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Row 4 */}
+      <Card className="rounded-lg col-span-4">
+        <CardHeader>
+          <CardTitle className="font-semibold text-2xl pt-5 pl-5 pb-4">Tabel Perfoma Sales</CardTitle>
+        </CardHeader>
+        <CardContent className="pl-2">
+          <SalesPerformanceTable conversations={conversations} />
+        </CardContent>
+      </Card>
+
+      {/* Row 5 */}
+      <Card className="rounded-lg col-span-4">
+        <CardHeader>
+          <CardTitle className="font-semibold text-2xl pt-5 pl-5 pb-4">Tabel Perfoma Customer Service</CardTitle>
+        </CardHeader>
+        <CardContent className="pl-2">
+          <CSPerformanceTable conversations={conversations} />
+        </CardContent>
+      </Card>
     </div>
   )
 }

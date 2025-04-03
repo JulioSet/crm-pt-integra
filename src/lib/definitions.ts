@@ -27,6 +27,7 @@ export interface Message {
   pesan: string
   waktu: string
   waktu_respon: string
+  agent: string
   responder: string
 }
 
@@ -37,6 +38,8 @@ export interface Employee {
   id: string
   name: string
   email: string
+  role: string
+  target_deal: string
 }
 
 export interface Contact {
