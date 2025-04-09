@@ -17,8 +17,6 @@ export async function POST(req: NextRequest) {
             akses: agent
          }
       });
-   } else {
-      return false
    }
 
    return NextResponse.json({ message: "success creating conversation"});
