@@ -37,9 +37,17 @@ export async function saveMessageToDatabase(from: string, text: string, timestam
    });
 
    if (check_message === null) {
+      const contact = await prisma.contact.findFirst({
+         where: {telepon: from},
+         select: {
+            nama: true
+         }
+      })
+
       await prisma.message_header.create({
          data: {
             telepon: from,
+            nama: contact?.nama,
             pesan_terbaru: text,
             waktu_terbaru: timestamp,
             label: 'new',
