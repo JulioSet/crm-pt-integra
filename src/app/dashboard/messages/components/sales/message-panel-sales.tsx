@@ -39,11 +39,12 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    const [client, setClient] = useState('')
    // delegasi
    const initialNote = conversation?.catatan || ""
-   const [open, setOpen] = useState(false)
+   const [openDelegasi, setOpenDelegasi] = useState(false)
    const [note, setNote] = useState(conversation?.catatan || "")
    // label
    const [label, setLabel] = useState(conversation?.label || "")
    // request help
+   const [openHelp, setOpenHelp] = useState(false)
    const [selectedHelp, setSelectedHelp] = useState(conversation?.bala_bantuan || "")
 
    useEffect(() => {
@@ -159,12 +160,12 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
          {/* request help */}
          <div className="space-y-4">
             <Label className="text-md font-bold">Request Bantuan</Label>
-            <Popover open={open} onOpenChange={setOpen}>
+            <Popover open={openHelp} onOpenChange={setOpenHelp}>
                <PopoverTrigger asChild>
                   <Button
                      variant="outline"
                      role="combobox"
-                     aria-expanded={open}
+                     aria-expanded={openHelp}
                      className="w-[290px] justify-between"
                   >
                      {selectedHelp
@@ -186,7 +187,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                                  key={agent.id}
                                  value={agent.id}
                                  onSelect={(currentValue) => {
-                                    setOpen(false)
+                                    setOpenDelegasi(false)
                                     setSelectedHelp(currentValue)
                                     handleRequestHelp(currentValue)
                                  }}
@@ -205,12 +206,12 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
          {/* chat delegation */}
          <div className="space-y-4">
             <Label className="text-md font-bold">Delegasi Ke</Label>
-            <Popover open={open} onOpenChange={setOpen}>
+            <Popover open={openDelegasi} onOpenChange={setOpenDelegasi}>
                <PopoverTrigger asChild>
                   <Button
                      variant="outline"
                      role="combobox"
-                     aria-expanded={open}
+                     aria-expanded={openDelegasi}
                      className="w-[290px] justify-between"
                   >
                      Pilih agent...
@@ -230,7 +231,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                                  key={agent.id}
                                  value={agent.id}
                                  onSelect={(currentValue) => {
-                                    setOpen(false)
+                                    setOpenDelegasi(false)
                                     assignAgent(currentValue)
                                     handleRequestHelp("")
                                     toast("Berhasil meminta bantuan")

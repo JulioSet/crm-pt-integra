@@ -170,7 +170,7 @@ export function MessageView({ conversation }: MessageViewProps) {
 
         <Card 
           className={cn(
-            "border-none rounded-none flex flex-col transition-all duration-300",
+            "border-none rounded-none flex flex-col transition-all duration-300 h-[100vh] overflow-y-auto overflow-x-hidden",
             isPanelCollapsed ? "w-0 opacity-0 overflow-hidden" : "w-80 opacity-100"
           )}
         >
