@@ -14,9 +14,9 @@ export async function middleware(req: NextRequest) {
 
    const rolePermissions: Record<string, string[]> = {
       admin: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/settings', '/dashboard/agent', '/dashboard/reports'],
-      sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/settings', '/dashboard/contacts'],
-      cs: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/settings'],
-      tech: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/settings'],
+      sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts'],
+      cs: ['/dashboard/messages', '/dashboard/notifications'],
+      tech: ['/dashboard/messages', '/dashboard/notifications'],
    };
 
    // Get all allowed paths for the user role
