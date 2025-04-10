@@ -156,97 +156,101 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                </Button>
             </div>
          </div>
+         
+         {conversation?.akses === ID && 
+            <div>
+               {/* request help */}
+               <div className="space-y-4">
+                  <Label className="text-md font-bold">Request Bantuan</Label>
+                  <Popover open={openHelp} onOpenChange={setOpenHelp}>
+                     <PopoverTrigger asChild>
+                        <Button
+                           variant="outline"
+                           role="combobox"
+                           aria-expanded={openHelp}
+                           className="w-[290px] justify-between"
+                        >
+                           {selectedHelp
+                              ? listAgent.find((agent) => agent.id === selectedHelp)?.name
+                              : "Pilih agent..."}
+                           <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                     </PopoverTrigger>
+                     <PopoverContent className='w-[290px] p-0'>
+                        <Command>
+                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                           <CommandList className="max-h-40 overflow-y-auto">
+                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                           <CommandGroup>
+                              {listAgent.map((agent) => (
+                                 agent.id !== ID && (
+                                    <CommandItem
+                                       className="p-1 m-1"
+                                       key={agent.id}
+                                       value={agent.id}
+                                       onSelect={(currentValue) => {
+                                          setOpenDelegasi(false)
+                                          setSelectedHelp(currentValue)
+                                          handleRequestHelp(currentValue)
+                                       }}
+                                    >
+                                       {agent.name}
+                                    </CommandItem>
+                                 )
+                              ))}
+                           </CommandGroup>
+                           </CommandList>
+                        </Command>
+                     </PopoverContent>
+                  </Popover>
+               </div>
 
-         {/* request help */}
-         <div className="space-y-4">
-            <Label className="text-md font-bold">Request Bantuan</Label>
-            <Popover open={openHelp} onOpenChange={setOpenHelp}>
-               <PopoverTrigger asChild>
-                  <Button
-                     variant="outline"
-                     role="combobox"
-                     aria-expanded={openHelp}
-                     className="w-[290px] justify-between"
-                  >
-                     {selectedHelp
-                        ? listAgent.find((agent) => agent.id === selectedHelp)?.name
-                        : "Pilih agent..."}
-                     <ChevronsUpDown className="opacity-50" />
-                  </Button>
-               </PopoverTrigger>
-               <PopoverContent className='w-[290px] p-0'>
-                  <Command>
-                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                     <CommandList className="max-h-40 overflow-y-auto">
-                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                     <CommandGroup>
-                        {listAgent.map((agent) => (
-                           agent.id !== ID && (
-                              <CommandItem
-                                 className="p-1 m-1"
-                                 key={agent.id}
-                                 value={agent.id}
-                                 onSelect={(currentValue) => {
-                                    setOpenDelegasi(false)
-                                    setSelectedHelp(currentValue)
-                                    handleRequestHelp(currentValue)
-                                 }}
-                              >
-                                 {agent.name}
-                              </CommandItem>
-                           )
-                        ))}
-                     </CommandGroup>
-                     </CommandList>
-                  </Command>
-               </PopoverContent>
-            </Popover>
-         </div>
-
-         {/* chat delegation */}
-         <div className="space-y-4">
-            <Label className="text-md font-bold">Delegasi Ke</Label>
-            <Popover open={openDelegasi} onOpenChange={setOpenDelegasi}>
-               <PopoverTrigger asChild>
-                  <Button
-                     variant="outline"
-                     role="combobox"
-                     aria-expanded={openDelegasi}
-                     className="w-[290px] justify-between"
-                  >
-                     Pilih agent...
-                     <ChevronsUpDown className="opacity-50" />
-                  </Button>
-               </PopoverTrigger>
-               <PopoverContent className='w-[290px] p-0'>
-                  <Command>
-                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                     <CommandList className="max-h-40 overflow-y-auto">
-                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                     <CommandGroup>
-                        {listAgent.map((agent) => (
-                           agent.id !== ID && (
-                              <CommandItem
-                                 className="p-1 m-1"
-                                 key={agent.id}
-                                 value={agent.id}
-                                 onSelect={(currentValue) => {
-                                    setOpenDelegasi(false)
-                                    assignAgent(currentValue)
-                                    handleRequestHelp("")
-                                    toast("Berhasil meminta bantuan")
-                                 }}
-                              >
-                                 {agent.name}
-                              </CommandItem>
-                           )
-                        ))}
-                     </CommandGroup>
-                     </CommandList>
-                  </Command>
-               </PopoverContent>
-            </Popover>
-         </div>
+               {/* chat delegation */}
+               <div className="space-y-4">
+                  <Label className="text-md font-bold">Delegasi Ke</Label>
+                  <Popover open={openDelegasi} onOpenChange={setOpenDelegasi}>
+                     <PopoverTrigger asChild>
+                        <Button
+                           variant="outline"
+                           role="combobox"
+                           aria-expanded={openDelegasi}
+                           className="w-[290px] justify-between"
+                        >
+                           Pilih agent...
+                           <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                     </PopoverTrigger>
+                     <PopoverContent className='w-[290px] p-0'>
+                        <Command>
+                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                           <CommandList className="max-h-40 overflow-y-auto">
+                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                           <CommandGroup>
+                              {listAgent.map((agent) => (
+                                 agent.id !== ID && (
+                                    <CommandItem
+                                       className="p-1 m-1"
+                                       key={agent.id}
+                                       value={agent.id}
+                                       onSelect={(currentValue) => {
+                                          setOpenDelegasi(false)
+                                          assignAgent(currentValue)
+                                          handleRequestHelp("")
+                                          toast("Berhasil meminta bantuan")
+                                       }}
+                                    >
+                                       {agent.name}
+                                    </CommandItem>
+                                 )
+                              ))}
+                           </CommandGroup>
+                           </CommandList>
+                        </Command>
+                     </PopoverContent>
+                  </Popover>
+               </div>
+            </div>
+         }
 
          {/* notes */}
          <div className="space-y-2">

@@ -177,138 +177,142 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
             </Button>
          </div>
 
-         {/* request help */}
-         <div className="space-y-4">
-            <Label className="text-md font-bold">Request Bantuan</Label>
-            <Popover open={openHelp} onOpenChange={setOpenHelp}>
-               <PopoverTrigger asChild>
-                  <Button
-                     variant="outline"
-                     role="combobox"
-                     aria-expanded={openHelp}
-                     className="w-[290px] justify-between"
-                  >
-                     {selectedHelp
-                        ? listAgent.find((agent) => agent.id === selectedHelp)?.name
-                        : "Pilih agent..."}
-                     <ChevronsUpDown className="opacity-50" />
-                  </Button>
-               </PopoverTrigger>
-               <PopoverContent className='w-[290px] p-0'>
-                  <Command>
-                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                     <CommandList className="max-h-40 overflow-y-auto">
-                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                     <CommandGroup>
-                        {listAgent.map((agent) => (
-                           agent.id !== ID && (
-                              <CommandItem
-                                 className="p-1 m-1"
-                                 key={agent.id}
-                                 value={agent.id}
-                                 onSelect={(currentValue) => {
-                                    setOpen(false)
-                                    setSelectedHelp(currentValue)
-                                    handleRequestHelp(currentValue)
-                                    toast("Berhasil meminta bantuan")
-                                 }}
-                              >
-                                 {agent.name}
-                              </CommandItem>
-                           )
-                        ))}
-                     </CommandGroup>
-                     </CommandList>
-                  </Command>
-               </PopoverContent>
-            </Popover>
-         </div>
+         {conversation?.akses === ID && 
+            <div>
+               {/* request help */}
+               <div className="space-y-4">
+                  <Label className="text-md font-bold">Request Bantuan</Label>
+                  <Popover open={openHelp} onOpenChange={setOpenHelp}>
+                     <PopoverTrigger asChild>
+                        <Button
+                           variant="outline"
+                           role="combobox"
+                           aria-expanded={openHelp}
+                           className="w-[290px] justify-between"
+                        >
+                           {selectedHelp
+                              ? listAgent.find((agent) => agent.id === selectedHelp)?.name
+                              : "Pilih agent..."}
+                           <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                     </PopoverTrigger>
+                     <PopoverContent className='w-[290px] p-0'>
+                        <Command>
+                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                           <CommandList className="max-h-40 overflow-y-auto">
+                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                           <CommandGroup>
+                              {listAgent.map((agent) => (
+                                 agent.id !== ID && (
+                                    <CommandItem
+                                       className="p-1 m-1"
+                                       key={agent.id}
+                                       value={agent.id}
+                                       onSelect={(currentValue) => {
+                                          setOpen(false)
+                                          setSelectedHelp(currentValue)
+                                          handleRequestHelp(currentValue)
+                                          toast("Berhasil meminta bantuan")
+                                       }}
+                                    >
+                                       {agent.name}
+                                    </CommandItem>
+                                 )
+                              ))}
+                           </CommandGroup>
+                           </CommandList>
+                        </Command>
+                     </PopoverContent>
+                  </Popover>
+               </div>
 
-         {/* request tech */}
-         <div className="space-y-4">
-            <Label className="text-md font-bold">Request Technician</Label>
-            <Popover open={openTech} onOpenChange={setOpenTech}>
-               <PopoverTrigger asChild>
-                  <Button
-                     variant="outline"
-                     role="combobox"
-                     aria-expanded={openTech}
-                     className="w-[290px] justify-between"
-                  >
-                     Pilih agent...
-                     <ChevronsUpDown className="opacity-50" />
-                  </Button>
-               </PopoverTrigger>
-               <PopoverContent className='w-[290px] p-0'>
-                  <Command>
-                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                     <CommandList className="max-h-40 overflow-y-auto">
-                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                     <CommandGroup>
-                        {listTech.map((tech) => (
-                           <CommandItem
-                              className="p-1 m-1"
-                              key={tech.id}
-                              value={tech.id}
-                              onSelect={(currentValue) => {
-                                 setOpenTech(false)
-                                 assignAgent(currentValue)
-                                 handleRequestHelp("")
-                              }}
-                           >
-                              {tech.name}
-                           </CommandItem>
-                        ))}
-                     </CommandGroup>
-                     </CommandList>
-                  </Command>
-               </PopoverContent>
-            </Popover>
-         </div>
-
-         {/* chat delegation */}
-         <div className="space-y-4">
-            <Label className="text-md font-bold">Delegasi Ke</Label>
-            <Popover open={open} onOpenChange={setOpen}>
-               <PopoverTrigger asChild>
-                  <Button
-                     variant="outline"
-                     role="combobox"
-                     aria-expanded={open}
-                     className="w-[290px] justify-between"
-                  >
-                     Pilih agent...
-                     <ChevronsUpDown className="opacity-50" />
-                  </Button>
-               </PopoverTrigger>
-               <PopoverContent className='w-[290px] p-0'>
-                  <Command>
-                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                     <CommandList className="max-h-40 overflow-y-auto">
-                        <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                        <CommandGroup>
-                           {listAgent.map((agent) => (
-                              agent.id !== ID && (
+               {/* request tech */}
+               <div className="space-y-4">
+                  <Label className="text-md font-bold">Request Technician</Label>
+                  <Popover open={openTech} onOpenChange={setOpenTech}>
+                     <PopoverTrigger asChild>
+                        <Button
+                           variant="outline"
+                           role="combobox"
+                           aria-expanded={openTech}
+                           className="w-[290px] justify-between"
+                        >
+                           Pilih agent...
+                           <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                     </PopoverTrigger>
+                     <PopoverContent className='w-[290px] p-0'>
+                        <Command>
+                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                           <CommandList className="max-h-40 overflow-y-auto">
+                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                           <CommandGroup>
+                              {listTech.map((tech) => (
                                  <CommandItem
                                     className="p-1 m-1"
-                                    key={agent.id}
-                                    value={agent.id}
+                                    key={tech.id}
+                                    value={tech.id}
                                     onSelect={(currentValue) => {
-                                       setOpen(false)
+                                       setOpenTech(false)
                                        assignAgent(currentValue)
                                        handleRequestHelp("")
                                     }}
                                  >
-                                    {agent.name}
+                                    {tech.name}
                                  </CommandItem>
-                              )
-                           ))}
-                        </CommandGroup>
-                     </CommandList>
-                  </Command>
-               </PopoverContent>
-            </Popover>
-         </div>
+                              ))}
+                           </CommandGroup>
+                           </CommandList>
+                        </Command>
+                     </PopoverContent>
+                  </Popover>
+               </div>
+
+               {/* chat delegation */}
+               <div className="space-y-4">
+                  <Label className="text-md font-bold">Delegasi Ke</Label>
+                  <Popover open={open} onOpenChange={setOpen}>
+                     <PopoverTrigger asChild>
+                        <Button
+                           variant="outline"
+                           role="combobox"
+                           aria-expanded={open}
+                           className="w-[290px] justify-between"
+                        >
+                           Pilih agent...
+                           <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                     </PopoverTrigger>
+                     <PopoverContent className='w-[290px] p-0'>
+                        <Command>
+                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                           <CommandList className="max-h-40 overflow-y-auto">
+                              <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                              <CommandGroup>
+                                 {listAgent.map((agent) => (
+                                    agent.id !== ID && (
+                                       <CommandItem
+                                          className="p-1 m-1"
+                                          key={agent.id}
+                                          value={agent.id}
+                                          onSelect={(currentValue) => {
+                                             setOpen(false)
+                                             assignAgent(currentValue)
+                                             handleRequestHelp("")
+                                          }}
+                                       >
+                                          {agent.name}
+                                       </CommandItem>
+                                    )
+                                 ))}
+                              </CommandGroup>
+                           </CommandList>
+                        </Command>
+                     </PopoverContent>
+                  </Popover>
+               </div>
+            </div>
+         }
 
          {/* notes */}
          <div className="space-y-2">
