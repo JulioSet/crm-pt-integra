@@ -46,25 +46,34 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
    // delegasi
    const initialNote = conversation?.catatan || ""
    const [open, setOpen] = useState(false)
-   const [note, setNote] = useState(conversation?.catatan || "")
+   const [note, setNote] = useState("")
    // priority
-   const [priority, setPriority] = useState(conversation?.prioritas || "")
+   const [priority, setPriority] = useState("")
    // deadline
    const [openDeadline, setOpenDeadline] = useState(false)
-   const [deadline, setDeadline] = useState<Date | undefined>(new Date(conversation?.deadline || new Date()))
+   const [deadline, setDeadline] = useState<Date>()
    // request help
    const [openHelp, setOpenHelp] = useState(false)
-   const [selectedHelp, setSelectedHelp] = useState(conversation?.bala_bantuan || "")
+   const [selectedHelp, setSelectedHelp] = useState("")
    // request tech
    const [openTech, setOpenTech] = useState(false)
    const [listTech, setListTech] = useState<Employee[]>([])
 
+   // just to fetch session one-time
    useEffect(() => {
       (async () => {
          const session = await getSession()
          setID(session?.id)
       })()
    }, [])
+
+   // to update ui accordingly
+   useEffect(() => {
+      setNote(initialNote)
+      setPriority(conversation?.prioritas || "")
+      setDeadline(new Date(conversation?.deadline || new Date()))
+      setSelectedHelp(conversation?.bala_bantuan || "")
+   }, [conversation?.bala_bantuan, conversation?.deadline, conversation?.prioritas, initialNote])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change

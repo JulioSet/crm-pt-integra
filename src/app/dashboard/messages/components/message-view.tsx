@@ -88,6 +88,11 @@ export function MessageView({ conversation }: MessageViewProps) {
   const handleSendMessage = async (message: string) => {
     // Handle sending message
     if (phone !== undefined) {
+      // check if label is still 'new'
+      if (conversation?.label === 'new') {
+        await updateLabel(phone, 'ongoing')
+      }
+
       const now = Math.floor(Date.now() / 1000)
       const lastMessage = conversation?.message_content.at(-1)
       let check

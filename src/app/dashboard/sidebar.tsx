@@ -32,6 +32,7 @@ export default function Sidebar() {
    // agent data
    const [role, setRole] = useState("")
    // sidebar 
+   const { resetLoadingStateToLogout } = useChatStore();
    const pathname = usePathname()
    const [collapsed, setCollapsed] = useState(false)
    // notification
@@ -88,6 +89,11 @@ export default function Sidebar() {
                                  collapsed && "flex justify-center items-center",
                                  isActive && "text-blue-600"
                               )}
+                              onClick={() => {
+                                 if (item.name === 'Keluar') {
+                                    resetLoadingStateToLogout();
+                                 }
+                              }}
                            >
                               <Icon className={cn(
                                  "h-5 w-5",

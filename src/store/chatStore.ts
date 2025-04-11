@@ -12,6 +12,7 @@ interface ChatStore {
   fetchData: (reminderInterval: number) => void;
   startMessageReminder: (id: string, phone: string, reminderInterval: number) => void
   stopMessageReminder: (phone: string) => void
+  resetLoadingStateToLogout: () => void
 }
 
 const useChatStore = create<ChatStore>((set, get) => ({
@@ -32,6 +33,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
          }
          set({ data: result });
          set({ loading: false });
+
          // set up reminder
          result.forEach((msg: Conversation) => {
             if (!msg.baca) {
@@ -75,6 +77,10 @@ const useChatStore = create<ChatStore>((set, get) => ({
       });
       }
    },
+   // to reset state of loading to logout
+   resetLoadingStateToLogout: () => {
+      set({ loading: true });
+   }
 }));
 
 export default useChatStore;

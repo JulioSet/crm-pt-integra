@@ -40,19 +40,27 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    // delegasi
    const initialNote = conversation?.catatan || ""
    const [openDelegasi, setOpenDelegasi] = useState(false)
-   const [note, setNote] = useState(conversation?.catatan || "")
+   const [note, setNote] = useState("")
    // label
-   const [label, setLabel] = useState(conversation?.label || "")
+   const [label, setLabel] = useState("")
    // request help
    const [openHelp, setOpenHelp] = useState(false)
-   const [selectedHelp, setSelectedHelp] = useState(conversation?.bala_bantuan || "")
+   const [selectedHelp, setSelectedHelp] = useState("")
 
+   // just to fetch session one-time
    useEffect(() => {
       (async () => {
          const session = await getSession()
          setID(session?.id)
       })()
    }, [])
+
+   // to update ui accordingly
+   useEffect(() => {
+      setLabel(conversation?.label || "")
+      setNote(initialNote)
+      setSelectedHelp(conversation?.bala_bantuan || "")
+   }, [conversation?.bala_bantuan, conversation?.label, initialNote])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change

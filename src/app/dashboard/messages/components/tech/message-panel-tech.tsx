@@ -32,14 +32,20 @@ export function MessagePanelTech({ conversation, listAgent, assignAgent }: Messa
    const phone = conversation?.telepon || ""
    const [ID, setID] = useState('')
    const [open, setOpen] = useState(false)
-   const [note, setNote] = useState(conversation?.catatan || "")
+   const [note, setNote] = useState("")
 
+   // just to fetch session one-time
    useEffect(() => {
       (async () => {
          const session = await getSession()
          setID(session?.id)
       })()
    }, [])
+
+   // to update ui accordingly
+   useEffect(() => {
+      setNote(initialNote)
+   }, [initialNote])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
