@@ -16,13 +16,13 @@ interface MessagesSidebarProps {
    loading: boolean
 }
 
-const filters: { label: string; value: MessageLabel; icon: LucideIcon }[] = [
-   { label: "New Case", value: "new", icon: MessageCircleWarning },
-   { label: "Ongoing", value: "ongoing", icon: Clock },
-   { label: "Hot", value: "hot", icon: Flame },
-   { label: "Cold", value: "cold", icon: Snowflake },
-   { label: "Deal", value: "deal", icon: DollarSign },
-   { label: "Resolved", value: "resolved", icon: CheckCircle2 },
+const filters: { label: string; value: MessageLabel; icon: LucideIcon; access: string }[] = [
+   { label: "New Case", value: "new", icon: MessageCircleWarning, access: '' },
+   { label: "Ongoing", value: "ongoing", icon: Clock, access: '' },
+   { label: "Hot", value: "hot", icon: Flame, access: 'sales' },
+   { label: "Cold", value: "cold", icon: Snowflake, access: 'sales' },
+   { label: "Deal", value: "deal", icon: DollarSign, access: 'sales' },
+   { label: "Resolved", value: "resolved", icon: CheckCircle2, access: 'cs' },
 ]
 
 function ConversationSkeleton() {
@@ -89,11 +89,11 @@ export function MessagesSidebar({
                   onChange={(e) => setSearchQuery(e.target.value)} 
                />
             </div>
-            {role === 'admin' && (
-               <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
-                  {filters.map(filter => {
-                     const Icon = filter.icon
-                     const isSelected = selectedFilter === filter.value
+            <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+               {filters.map(filter => {
+                  const Icon = filter.icon
+                  const isSelected = selectedFilter === filter.value
+                  if (filter.access === role || filter.access === '') {
                      return (
                         <Button
                            key={filter.value}
@@ -106,9 +106,9 @@ export function MessagesSidebar({
                            <span className="text-xs font-medium">{filter.label}</span>
                         </Button>
                      )
-                  })}
-               </div>
-            )}
+                  }
+               })}
+            </div>
          </div>
          <div className="flex-1 overflow-y-auto">
             <div className="p-2 space-y-2">
