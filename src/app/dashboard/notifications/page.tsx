@@ -58,45 +58,47 @@ export default function Notifications() {
                   </CardContent>
                </Card>
             ) : (
-               data.map((conversation) => (
-                  <Card
-                     key={conversation.telepon}
-                     className={`transition-colors ${
-                        conversation.baca ? "bg-background" : "bg-secondary/20"
-                     }`}
-                  >
-                     <CardContent className="flex items-start space-x-4 p-4">
-                        <div className="flex-1 space-y-1">
-                           <div className="flex items-center justify-between">
-                              <p className="font-medium">{conversation.nama ?? `+${conversation.telepon}`}</p>
-                              <span className="text-sm text-muted-foreground">
-                                 {formatDateDistance(conversation.waktu_terbaru)}
-                              </span>
-                           </div>
-                           <p className="text-sm text-muted-foreground">{conversation.pesan_terbaru}</p>
-                           <div className="flex items-center space-x-2 pt-2">
-                              <Button
-                                 variant="ghost"
-                                 size="default"
-                                 onClick={() => replyMessage(conversation.telepon)}
-                              >
-                                 <MessageSquare className="mr-2 h-4 w-4" />
-                                 Balas
-                              </Button>
-                              {!conversation.baca && (
+               data
+                  .filter(conversation => conversation.baca === false)
+                  .map((conversation) => (
+                     <Card
+                        key={conversation.telepon}
+                        className={`transition-colors ${
+                           conversation.baca ? "bg-background" : "bg-secondary/20"
+                        }`}
+                     >
+                        <CardContent className="flex items-start space-x-4 p-4">
+                           <div className="flex-1 space-y-1">
+                              <div className="flex items-center justify-between">
+                                 <p className="font-medium">{conversation.nama ?? `+${conversation.telepon}`}</p>
+                                 <span className="text-sm text-muted-foreground">
+                                    {formatDateDistance(conversation.waktu_terbaru)}
+                                 </span>
+                              </div>
+                              <p className="text-sm text-muted-foreground">{conversation.pesan_terbaru}</p>
+                              <div className="flex items-center space-x-2 pt-2">
                                  <Button
                                     variant="ghost"
                                     size="default"
-                                    onClick={() => markAsRead(conversation.telepon)}
+                                    onClick={() => replyMessage(conversation.telepon)}
                                  >
-                                    <Check className="mr-2 h-4 w-4" />
-                                    Tandai sudah dibaca
+                                    <MessageSquare className="mr-2 h-4 w-4" />
+                                    Balas
                                  </Button>
-                              )}
+                                 {!conversation.baca && (
+                                    <Button
+                                       variant="ghost"
+                                       size="default"
+                                       onClick={() => markAsRead(conversation.telepon)}
+                                    >
+                                       <Check className="mr-2 h-4 w-4" />
+                                       Tandai sudah dibaca
+                                    </Button>
+                                 )}
+                              </div>
                            </div>
-                        </div>
-                     </CardContent>
-                  </Card>
+                        </CardContent>
+                     </Card>
                ))
             )}
          </div>
