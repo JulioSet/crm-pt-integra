@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
    const session = await getSession()
-   const agent = session?.role === 'admin' ? 'admin' : session?.id as string // if role is admin then agent is '' else agent's name
+   const agent = session?.id as string // if role is admin then agent is '' else agent's name
    
    try {
       const conversations = await prisma.message_header.findMany({

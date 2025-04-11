@@ -1,6 +1,6 @@
 import { Conversation } from '@/lib/definitions';
 import { getEmail, getSession } from '@/lib/employee';
-import { getConversations } from '@/lib/message';
+import { fetchAll, getConversations } from '@/lib/message';
 import { sendMail } from '@/lib/notification';
 import { create } from 'zustand';
 
@@ -23,11 +23,16 @@ const useChatStore = create<ChatStore>((set, get) => ({
       if (get().isFetching) return; // Prevent multiple intervals
       set({ isFetching: true });
       setInterval(async () => {
-         const result = await getConversations()
+         const session = await getSession()
+         let result
+         if (session.role === 'admin') {
+            result = await fetchAll()
+         } else {
+            result = await getConversations()
+         }
          set({ data: result });
          set({ loading: false });
          // set up reminder
-         const session = await getSession()
          result.forEach((msg: Conversation) => {
             if (!msg.baca) {
                get().startMessageReminder(session.id, msg.telepon, reminderInterval)
