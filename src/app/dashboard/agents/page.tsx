@@ -42,7 +42,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
       const id = nanoid();
       setRows((oldRows) => [
          ...oldRows,
-         { id, name: 'Wajib Diisi', email: 'Wajib Diisi', target_deal: 0, last_login: '-', isNew: true },
+         { id, name: 'Isi nama', email: 'Isi email', target_deal: 5, last_login: '-', isNew: true },
       ]);
       setRowModesModel((oldModel) => ({
          ...oldModel,
