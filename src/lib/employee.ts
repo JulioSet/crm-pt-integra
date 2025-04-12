@@ -90,7 +90,7 @@ export async function deleteEmployee(id: string) {
    });
    
    if (!response.ok) {
-      console.error('Failed to update employee');
+      console.error('Failed to delete employee');
       return;
    }
 }
@@ -106,4 +106,37 @@ export async function getSession() {
 
    const data = await response.json()
    return data;
+}
+
+export async function assignLeader(role: string, value: string) {
+   const response = await fetch('/api/auth/leader/assign', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ role, value }), // Send data as JSON
+   });
+   
+   if (!response.ok) {
+      console.error('Failed to assign leader');
+      return;
+   }
+}
+
+export async function fetchLeader(role: string) {
+   const response = await fetch('/api/auth/leader/fetch', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ role }), // Send data as JSON
+   });
+   
+   if (!response.ok) {
+      console.error('Failed to fetch leader');
+      return;
+   }
+
+   const { value } = await response.json();
+   return value;
 }
