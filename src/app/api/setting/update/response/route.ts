@@ -11,6 +11,6 @@ export async function POST(req: NextRequest) {
       }
    });
 
-   return NextResponse.json({ message: "success updating user" });
+   return NextResponse.json({ message: "success updating response time limit" });
 }
 
