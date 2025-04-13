@@ -14,16 +14,12 @@ export async function POST(req: NextRequest) {
       const settingName = roleToSettingName[role];
       
       if (settingName) {
-         const leader = await prisma.setting.findFirst({
+         const leader = await prisma.setting.upsert({
             where: { name: settingName },
-            select: { value: true }
+            update: {},
+            create: { name: settingName, value: '' }
          });
-         if (!leader) {
-            await prisma.setting.create({
-               data: { name: settingName, value: '' }
-            });
-         }
-         return NextResponse.json(leader || '');
+         return NextResponse.json(leader);
       }
 
    } catch (error) {

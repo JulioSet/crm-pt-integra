@@ -3,17 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
    try {
-      const responseTime = await prisma.setting.findFirst({
+      const responseTime = await prisma.setting.upsert({
          where: { name: 'response' },
-         select: { value: true }
+         update: {},
+         create: { name: 'response', value: '180000' }
       });
 
-      if (!responseTime) {
-         await prisma.setting.create({
-            data: { name: 'response', value: '10000' }
-         });
-      }
-      return NextResponse.json(responseTime || 10000);
+      return NextResponse.json(responseTime);
    } catch (error) {
       console.error("Error fetching settings:", error);
       return NextResponse.json(
