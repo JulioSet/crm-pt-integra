@@ -13,6 +13,7 @@ export interface Conversation {
   prioritas: string | null
   catatan: string | null
   akses: string
+  role_penanggung_jawab: string | null
   bala_bantuan: string
   deadline: string
   baca: boolean | null
