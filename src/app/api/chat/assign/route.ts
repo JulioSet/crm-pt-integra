@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 
 export async function POST(req: NextRequest) {
-   const { phone, id } = await req.json(); // Read the body data
+   const { phone, id, role_delegation } = await req.json(); // Read the body data
 
    await prisma.message_header.update({
       where: { telepon: phone },
@@ -19,11 +19,12 @@ export async function POST(req: NextRequest) {
       await prisma.message_header.update({
          where: { telepon: phone },
          data: {
-            waktu_admin_delegasi: now.toString()
+            role_penanggung_jawab: role_delegation,
+            waktu_admin_delegasi: now.toString(),
          }
       })
    }
 
-   return NextResponse.json({ message: "success updating label" });
+   return NextResponse.json({ message: "success delegating conversation" });
 }
 

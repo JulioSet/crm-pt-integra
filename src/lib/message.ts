@@ -91,13 +91,13 @@ export async function getConversations() {
    return data;
 }
 
-export async function assignMessage(phone: string, id: string) {
+export async function assignMessage(phone: string, id: string, role_delegation: string) {
    await fetch('/api/chat/assign', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ phone, id }), // Send data as JSON
+      body: JSON.stringify({ phone, id, role_delegation }), // Send data as JSON
    });
 }
 

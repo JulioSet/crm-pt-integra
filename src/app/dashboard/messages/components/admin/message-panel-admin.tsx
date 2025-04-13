@@ -30,7 +30,7 @@ import { toast } from "sonner";
 
 interface MessagePanelAdminProps {
    conversation: Conversation | null
-   assignAgent: (chosenAgent: string) => void
+   assignAgent: (chosenAgent: string, role: string) => void
 }
 
 export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdminProps) {
@@ -39,8 +39,9 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
    const [open, setOpen] = useState(false)
    const [job, setJob] = useState("sales")
    const [listAgent, setListAgent] = useState<Employee[]>([])
-   const [note, setNote] = useState(conversation?.catatan || "")
    const [loadingAgent, setLoadingAgent] = useState(true)
+   const [selectedAgent, setSelectedAgent] = useState("")
+   const [note, setNote] = useState(conversation?.catatan || "")
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
@@ -58,9 +59,14 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
          setLoadingAgent(true)
          const data = await getEmployeeByRole(job)
          setListAgent(data)
+         setSelectedAgent(conversation?.akses || "")
          setLoadingAgent(false)
       })()
-   }, [job])
+   }, [conversation?.akses, job])
+
+   useEffect(() => {
+      setJob(conversation?.role_penanggung_jawab || "sales")
+   }, [])
 
    return (
       <div className="p-4 space-y-6">
@@ -92,9 +98,9 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-[200px] justify-between"
+                        className="w-[200px] justify-between hover:text-black"
                      >
-                        Pilih agent...
+                        {listAgent.find((agent) => agent.id === selectedAgent)?.name || "Pilih agent..."}
                         <ChevronsUpDown className="opacity-50" />
                      </Button>
                   </PopoverTrigger>
@@ -117,7 +123,8 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                                           value={agent.id}
                                           onSelect={(currentValue) => {
                                              setOpen(false)
-                                             assignAgent(currentValue)
+                                             assignAgent(currentValue, job)
+                                             setSelectedAgent(currentValue)
                                           }}
                                        >
                                           {agent.name}
