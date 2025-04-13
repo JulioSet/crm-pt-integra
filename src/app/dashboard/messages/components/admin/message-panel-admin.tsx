@@ -66,6 +66,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
 
    useEffect(() => {
       setJob(conversation?.role_penanggung_jawab || "sales")
+   // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    return (
