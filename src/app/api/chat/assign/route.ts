@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
          where: { telepon: phone },
          data: {
             role_penanggung_jawab: role_delegation,
+            persetujuan_delegasi_dari_admin: true,
             waktu_admin_delegasi: now.toString(),
          }
       })
