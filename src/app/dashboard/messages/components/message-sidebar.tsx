@@ -93,7 +93,7 @@ export function MessagesSidebar({
                {filters.map(filter => {
                   const Icon = filter.icon
                   const isSelected = selectedFilter === filter.value
-                  if (filter.access === role || filter.access === '') {
+                  if (role === 'admin') {
                      return (
                         <Button
                            key={filter.value}
@@ -106,6 +106,21 @@ export function MessagesSidebar({
                            <span className="text-xs font-medium">{filter.label}</span>
                         </Button>
                      )
+                  } else {
+                     if (filter.access === role || filter.access === '') {
+                        return (
+                           <Button
+                              key={filter.value}
+                              variant={isSelected ? "default" : "outline"}
+                              size="sm"
+                              className={"rounded-md flex h-8 px-3 whitespace-nowrap"}
+                              onClick={() => setSelectedFilter(isSelected ? null : filter.value)}
+                           >
+                              <Icon className="h-4 w-4 mr-1.5" />
+                              <span className="text-xs font-medium">{filter.label}</span>
+                           </Button>
+                        )
+                     }
                   }
                })}
             </div>
