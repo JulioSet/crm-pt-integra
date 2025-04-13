@@ -8,6 +8,7 @@ import { SalesPerformanceTable } from "./components/salesPerformanceTable"
 import { CSPerformanceTable } from "./components/csPerformanceTable"
 
 export default function ReportsPage() {
+  const [loading, setLoading] = useState(true)
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [totalConversation, setTotalConversation] = useState('')
   const [totalDeal, setTotalDeal] = useState('')
@@ -36,6 +37,8 @@ export default function ReportsPage() {
     setAverageFirstTimeResponse(countFirstTimeResponse)
     setAverageResolutionTime(countResolutionTime)
     setAverageWaitTime(countWaitTime)
+    
+    setLoading(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversations])
 
@@ -64,7 +67,7 @@ export default function ReportsPage() {
     const avg = value / count
     const h = Math.floor(avg / 3600)
     const m = Math.floor((avg % 3600) / 60)
-    const s = avg % 60
+    const s = Math.floor(avg % 60)
 
     if (h > 0) {
       result += `${h}j `
@@ -92,7 +95,7 @@ export default function ReportsPage() {
     const avg = value / count
     const h = Math.floor(avg / 3600)
     const m = Math.floor((avg % 3600) / 60)
-    const s = avg % 60
+    const s = Math.floor(avg % 60)
 
     if (h > 0) {
       result += `${h}j `
@@ -122,7 +125,7 @@ export default function ReportsPage() {
     const avg = value / count
     const h = Math.floor(avg / 3600)
     const m = Math.floor((avg % 3600) / 60)
-    const s = avg % 60
+    const s = Math.floor(avg % 60)
 
     if (h > 0) {
       result += `${h}j `
@@ -137,114 +140,122 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Laporan Perfoma</h2>
-      </div>
+    <div>
+      {loading ? (
+        <div className="flex items-center justify-center h-screen">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
+        </div>
+      ) : (
+        <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-bold tracking-tight">Laporan Perfoma</h2>
+          </div>
 
-      {/* Row 1 */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Rata-Rata Durasi Respon Pertama</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{averageFirstTimeResponse}</div>
-          </CardContent>
-        </Card>
-        <Card className="rounded-ld">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Rata-Rata Durasi Tunggu</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{averageWaitTime}</div>
-          </CardContent>
-        </Card>
-        <Card className="rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Rata-Rata Durasi Resolusi</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{averageResolutionTime}</div>
-          </CardContent>
-        </Card>
-      </div>
+          {/* Row 1 */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="rounded-lg">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Rata-Rata Durasi Respon Pertama</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{averageFirstTimeResponse}</div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-ld">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Rata-Rata Durasi Tunggu</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{averageWaitTime}</div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-lg">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Rata-Rata Durasi Resolusi</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{averageResolutionTime}</div>
+              </CardContent>
+            </Card>
+          </div>
 
-      {/* Row 2 */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Total Percakapan</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{totalConversation}</div>
-          </CardContent>
-        </Card>
-        <Card className="rounded-ld">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Total Deal</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{totalDeal}</div>
-          </CardContent>
-        </Card>
-        <Card className="rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Total Resolved</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{totalResolvedConversation}</div>
-          </CardContent>
-        </Card>
-      </div>
+          {/* Row 2 */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="rounded-lg">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Total Percakapan</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{totalConversation}</div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-ld">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Total Deal</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{totalDeal}</div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-lg">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Total Resolved</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{totalResolvedConversation}</div>
+              </CardContent>
+            </Card>
+          </div>
 
-      {/* Row 3 */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Total Percakapan yang Didelegasi</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{totalAssignedConversation}</div>
-          </CardContent>
-        </Card>
-        <Card className="rounded-ld">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Total Percakapan yang Belum Didelegasi</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{totalUnassignedConversation}</div>
-          </CardContent>
-        </Card>
-        <Card className="rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
-            <CardTitle className="text-sm font-medium">Total Percakapan per Hari</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-6 pb-6">
-            <div className="text-2xl font-bold">{totalConversationPerDay}</div>
-          </CardContent>
-        </Card>
-      </div>
+          {/* Row 3 */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="rounded-lg">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Total Percakapan yang Didelegasi</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{totalAssignedConversation}</div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-ld">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Total Percakapan yang Belum Didelegasi</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{totalUnassignedConversation}</div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-lg">
+              <CardHeader className="flex flex-row items-center justify-between pl-6 pt-6">
+                <CardTitle className="text-sm font-medium">Total Percakapan per Hari</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-6 pb-6">
+                <div className="text-2xl font-bold">{totalConversationPerDay}</div>
+              </CardContent>
+            </Card>
+          </div>
 
-      {/* Row 4 */}
-      <Card className="rounded-lg col-span-4">
-        <CardHeader>
-          <CardTitle className="font-semibold text-2xl pt-5 pl-5 pb-4">Tabel Perfoma Sales</CardTitle>
-        </CardHeader>
-        <CardContent className="pl-2">
-          <SalesPerformanceTable conversations={conversations} />
-        </CardContent>
-      </Card>
+          {/* Row 4 */}
+          <Card className="rounded-lg col-span-4">
+            <CardHeader>
+              <CardTitle className="font-semibold text-2xl pt-5 pl-5 pb-4">Tabel Perfoma Sales</CardTitle>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <SalesPerformanceTable conversations={conversations} />
+            </CardContent>
+          </Card>
 
-      {/* Row 5 */}
-      <Card className="rounded-lg col-span-4">
-        <CardHeader>
-          <CardTitle className="font-semibold text-2xl pt-5 pl-5 pb-4">Tabel Perfoma Customer Service</CardTitle>
-        </CardHeader>
-        <CardContent className="pl-2">
-          <CSPerformanceTable conversations={conversations} />
-        </CardContent>
-      </Card>
+          {/* Row 5 */}
+          <Card className="rounded-lg col-span-4">
+            <CardHeader>
+              <CardTitle className="font-semibold text-2xl pt-5 pl-5 pb-4">Tabel Perfoma Customer Service</CardTitle>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <CSPerformanceTable conversations={conversations} />
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
