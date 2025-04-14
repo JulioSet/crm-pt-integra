@@ -19,13 +19,13 @@ import { getSession } from '@/lib/employee'
 import useChatStore from '@/store/chatStore'
 
 const sidebarItems = [
-   { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare, access: '' },
-   { name: 'Agent', href: '/dashboard/agents', icon: UserCog, access: 'admin' },
-   { name: 'Notifikasi', href: '/dashboard/notifications', icon: Bell, access: '' },
-   { name: 'Kontak', href: '/dashboard/contacts', icon: Users, access: 'sales' },
-   { name: 'Laporan', href: '/dashboard/reports', icon: FileBarChart, access: 'admin' },
-   { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings, access: 'admin' },
-   { name: 'Keluar', href: '/', icon: LogOut, access: '' },
+   { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare, access: ['admin', 'sales', 'cs', 'tech'] },
+   { name: 'Agent', href: '/dashboard/agents', icon: UserCog, access: ['admin'] },
+   { name: 'Notifikasi', href: '/dashboard/notifications', icon: Bell, access: ['admin', 'sales', 'cs', 'tech'] },
+   { name: 'Kontak', href: '/dashboard/contacts', icon: Users, access: ['admin', 'sales'] },
+   { name: 'Laporan', href: '/dashboard/reports', icon: FileBarChart, access: ['admin'] },
+   { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings, access: ['admin'] },
+   { name: 'Keluar', href: '/', icon: LogOut, access: ['admin', 'sales', 'cs', 'tech'] },
 ]
 
 export default function Sidebar() {
@@ -74,11 +74,12 @@ export default function Sidebar() {
                />
             </div>
             <nav className="flex-1 space-y-1 p-2">
-               {sidebarItems.map((item) => {
-                  const Icon = item.icon
-                  const isActive = pathname === item.href
-                  const isNotifications = item.href === '/dashboard/notifications'
-                  if (item.access === role || item.access === '') {
+               {sidebarItems
+                  .filter(item => item.access.includes(role))
+                  .map((item) => {
+                     const Icon = item.icon
+                     const isActive = pathname === item.href
+                     const isNotifications = item.href === '/dashboard/notifications'
                      return (
                         <Link key={item.href} href={item.href}>
                            <Button
@@ -110,8 +111,8 @@ export default function Sidebar() {
                            </Button>
                         </Link>
                      )
-                  }
-               })}
+                  })
+               }
             </nav>
             <div className="p-4 border-t">
                <Button
