@@ -25,7 +25,7 @@ import {
 } from "@/ui/select"
 import { CalendarIcon, ChevronsUpDown, Flag } from "lucide-react";
 import { assignHelp, updateDeadline, updateNote, updatePriority } from "@/lib/message";
-import { getEmployeeByRole, getSession } from "@/lib/employee";
+import { fetchLeader, getEmployeeByRole, getSession } from "@/lib/employee";
 import { cn } from "@/utils/class-merger";
 import { format } from "date-fns";
 import { Calendar } from "@/ui/calendar";
@@ -35,18 +35,20 @@ import { toast } from "sonner";
 interface MessagePanelCSProps {
    conversation: Conversation | null
    listAgent: Employee[]
-   assignAgent: (chosenAgent: string) => void
+   assignAgent: (chosenAgent: string, role: string) => void
 }
 
 export function MessagePanelCS({ conversation, listAgent, assignAgent }: MessagePanelCSProps) {
    // agent data
+   const [isLeader, setIsLeader] = useState(false)
    const [ID, setID] = useState('')
    // conversation data
    const phone = conversation?.telepon || ""
    // delegasi
    const initialNote = conversation?.catatan || ""
-   const [open, setOpen] = useState(false)
    const [note, setNote] = useState("")
+   const [open, setOpen] = useState(false)
+   const [selectedDelegationAgent, setSelectedDelegationAgent] = useState("")
    // priority
    const [priority, setPriority] = useState("")
    // deadline
@@ -64,8 +66,13 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
       (async () => {
          const session = await getSession()
          setID(session?.id)
+
+         const leader = await fetchLeader('sales')
+         if (leader === ID) {
+            setIsLeader(true)
+         }
       })()
-   }, [])
+   }, [ID])
 
    // to update ui accordingly
    useEffect(() => {
@@ -95,6 +102,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
 
    const handleRequestHelp = async (selectedAgent: string) => {
       await assignHelp(phone, selectedAgent)
+      toast("Berhasil meminta bantuan")
    }
 
    const handleDeadline = async () => {
@@ -186,7 +194,52 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
             </Button>
          </div>
 
-         {conversation?.akses === ID && 
+         {/* chat delegation */}
+         {isLeader && (
+            <div className="space-y-4">
+               <Label className="text-md font-bold">Delegasi Ke</Label>
+               <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                     <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-[290px] justify-between hover:text-black"
+                     >
+                        {listAgent.find((agent) => agent.id === selectedDelegationAgent)?.name || "Pilih agent..."}
+                        <ChevronsUpDown className="opacity-50" />
+                     </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-[290px] p-0'>
+                     <Command>
+                        <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                        <CommandList className="max-h-40 overflow-y-auto">
+                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                           <CommandGroup>
+                              {listAgent.map((agent) => (
+                                 <CommandItem
+                                    className="p-1 m-1"
+                                    key={agent.id}
+                                    value={agent.id}
+                                    onSelect={(currentValue) => {
+                                       setOpen(false)
+                                       assignAgent(currentValue, "")
+                                       setSelectedDelegationAgent(currentValue)
+                                       toast("Berhasil meminta persetujuan admin untuk delegasi")
+                                    }}
+                                 >
+                                    {agent.name}
+                                 </CommandItem>
+                              ))}
+                           </CommandGroup>
+                        </CommandList>
+                     </Command>
+                  </PopoverContent>
+               </Popover>
+            </div>
+         )}
+
+         {(conversation?.akses === ID || isLeader) && 
             <div>
                {/* request help */}
                <div className="space-y-4">
@@ -197,7 +250,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                            variant="outline"
                            role="combobox"
                            aria-expanded={openHelp}
-                           className="w-[290px] justify-between"
+                           className="w-[290px] justify-between hover:text-black"
                         >
                            {selectedHelp
                               ? listAgent.find((agent) => agent.id === selectedHelp)?.name
@@ -244,7 +297,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                            variant="outline"
                            role="combobox"
                            aria-expanded={openTech}
-                           className="w-[290px] justify-between"
+                           className="w-[290px] justify-between hover:text-black"
                         >
                            Pilih agent...
                            <ChevronsUpDown className="opacity-50" />
@@ -263,58 +316,13 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                                     value={tech.id}
                                     onSelect={(currentValue) => {
                                        setOpenTech(false)
-                                       assignAgent(currentValue)
-                                       handleRequestHelp("")
+                                       handleRequestHelp(currentValue)
                                     }}
                                  >
                                     {tech.name}
                                  </CommandItem>
                               ))}
                            </CommandGroup>
-                           </CommandList>
-                        </Command>
-                     </PopoverContent>
-                  </Popover>
-               </div>
-
-               {/* chat delegation */}
-               <div className="space-y-4">
-                  <Label className="text-md font-bold">Delegasi Ke</Label>
-                  <Popover open={open} onOpenChange={setOpen}>
-                     <PopoverTrigger asChild>
-                        <Button
-                           variant="outline"
-                           role="combobox"
-                           aria-expanded={open}
-                           className="w-[290px] justify-between"
-                        >
-                           Pilih agent...
-                           <ChevronsUpDown className="opacity-50" />
-                        </Button>
-                     </PopoverTrigger>
-                     <PopoverContent className='w-[290px] p-0'>
-                        <Command>
-                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                           <CommandList className="max-h-40 overflow-y-auto">
-                              <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                              <CommandGroup>
-                                 {listAgent.map((agent) => (
-                                    agent.id !== ID && (
-                                       <CommandItem
-                                          className="p-1 m-1"
-                                          key={agent.id}
-                                          value={agent.id}
-                                          onSelect={(currentValue) => {
-                                             setOpen(false)
-                                             assignAgent(currentValue)
-                                             handleRequestHelp("")
-                                          }}
-                                       >
-                                          {agent.name}
-                                       </CommandItem>
-                                    )
-                                 ))}
-                              </CommandGroup>
                            </CommandList>
                         </Command>
                      </PopoverContent>

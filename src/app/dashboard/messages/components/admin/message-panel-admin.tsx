@@ -126,6 +126,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                                              setOpen(false)
                                              assignAgent(currentValue, job)
                                              setSelectedAgent(currentValue)
+                                             toast("Berhasil delegasi chat")
                                           }}
                                        >
                                           {agent.name}

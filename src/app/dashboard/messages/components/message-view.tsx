@@ -14,7 +14,6 @@ import { MessagePanelAdmin } from "./admin/message-panel-admin"
 import { MessagePanelSales } from "./sales/message-panel-sales"
 import { MessagePanelCS } from "./cs/message-panel-cs"
 import { MessagePanelTech } from "./tech/message-panel-tech"
-import { toast } from "sonner"
 
 interface MessageViewProps {
   conversation: Conversation | null
@@ -116,7 +115,6 @@ export function MessageView({ conversation }: MessageViewProps) {
     // Handle assign to other agent with same role
     try {
       await assignMessage(phone, chosenAgent, role)
-      toast("Berhasil delegasi chat")
     } catch (error) {
       console.error(error)
     }
