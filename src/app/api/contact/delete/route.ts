@@ -10,14 +10,20 @@ export async function POST(req: NextRequest) {
          telepon: true
       }
    })
-
-   await prisma.message_header.update({
-      where: { telepon: data?.telepon },
-      data: {
-         nama: null
-      }
+   
+   const check_any_connected_message = await prisma.message_header.findFirst({
+      where: { telepon: data?.telepon }
    })
 
+   if (check_any_connected_message) {
+      await prisma.message_header.update({
+         where: { telepon: data?.telepon },
+         data: {
+            nama: null
+         }
+      })
+   }
+   
    await prisma.contact.delete({
       where: { id: id }
    });

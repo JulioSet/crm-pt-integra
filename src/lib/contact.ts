@@ -51,7 +51,7 @@ export async function deleteContact(id: string) {
    });
    
    if (!response.ok) {
-      console.error('Failed to update contact');
+      console.error('Failed to delete contact');
       return;
    }
 }

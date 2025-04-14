@@ -44,7 +44,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
       const id = nanoid();
       setRows((oldRows) => [
          ...oldRows,
-         { id, name: 'Isi nama', telepon: 'Isi telepon (awalan 62)', isNew: true },
+         { id, nama: 'Isi nama', telepon: 'Awali 62', isNew: true },
       ]);
       setRowModesModel((oldModel) => ({
          ...oldModel,
@@ -64,6 +64,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
 
 // Page UI
 export default function Contacts() {
+   const [loading, setLoading] = useState(true)
    // agent data
    const [agent, setAgent] = useState("")
    // Table data
@@ -87,6 +88,7 @@ export default function Contacts() {
          }
       }
       fetchData()
+      setLoading(false)
    }, [])
 
    const handleAddConversation = (id: GridRowId) => async () => {
@@ -115,6 +117,7 @@ export default function Contacts() {
       setRows(rows.filter((row) => row.id !== id));
       void (async () => {
          await deleteContact(id.toString())
+         console.log(id.toString())
       })()
    };
 
@@ -226,45 +229,53 @@ export default function Contacts() {
    ];
 
    return (
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-         <div className="flex items-center justify-between">
-            <h2 className="text-3xl font-bold tracking-tight">Kontak</h2>
-         </div>
-         <Box
-            sx={{
-               maxHeight: 500,
-               '& .actions': {
-                  color: 'text.secondary',
-               },
-               '& .textPrimary': {
-                  color: 'text.primary',
-               },
-            }}
-         >
-            <DataGrid
-               rows={rows}
-               columns={column}
-               editMode="row"
-               rowModesModel={rowModesModel}
-               onRowModesModelChange={handleRowModesModelChange}
-               onRowEditStop={handleRowEditStop}
-               processRowUpdate={processRowUpdate}
-               slots={{ toolbar: EditToolbar }}
-               slotProps={{
-                  toolbar: { setRows, setRowModesModel, setMode },
-               }}
-               pageSizeOptions={[10, 25, 50]}
-               initialState={{
-                  sorting: {
-                     sortModel: [{ field: 'name', sort: 'asc' }],
-                  },
-                  pagination: { 
-                     paginationModel: { pageSize: 10, page: 0 } 
-                  }, // Default 10 rows per page
-               }}
-               pagination
-            />
-         </Box>
+      <div>
+         {loading ? (
+            <div className="flex items-center justify-center h-screen">
+               <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
+            </div>
+         ) : (
+            <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+               <div className="flex items-center justify-between">
+                  <h2 className="text-3xl font-bold tracking-tight">Kontak</h2>
+               </div>
+               <Box
+                  sx={{
+                     maxHeight: 500,
+                     '& .actions': {
+                        color: 'text.secondary',
+                     },
+                     '& .textPrimary': {
+                        color: 'text.primary',
+                     },
+                  }}
+               >
+                  <DataGrid
+                     rows={rows}
+                     columns={column}
+                     editMode="row"
+                     rowModesModel={rowModesModel}
+                     onRowModesModelChange={handleRowModesModelChange}
+                     onRowEditStop={handleRowEditStop}
+                     processRowUpdate={processRowUpdate}
+                     slots={{ toolbar: EditToolbar }}
+                     slotProps={{
+                        toolbar: { setRows, setRowModesModel, setMode },
+                     }}
+                     pageSizeOptions={[10, 25, 50]}
+                     initialState={{
+                        sorting: {
+                           sortModel: [{ field: 'name', sort: 'asc' }],
+                        },
+                        pagination: { 
+                           paginationModel: { pageSize: 10, page: 0 } 
+                        }, // Default 10 rows per page
+                     }}
+                     pagination
+                  />
+               </Box>
+            </div>
+         )}
       </div>
    );
 }
