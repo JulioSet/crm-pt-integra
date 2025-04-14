@@ -80,7 +80,8 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
       setPriority(conversation?.prioritas || "")
       setDeadline(new Date(conversation?.deadline || new Date()))
       setSelectedHelp(conversation?.bala_bantuan || "")
-   }, [conversation?.bala_bantuan, conversation?.deadline, conversation?.prioritas, initialNote])
+      setSelectedDelegationAgent(conversation?.akses || "")
+   }, [conversation?.akses, conversation?.bala_bantuan, conversation?.deadline, conversation?.prioritas, initialNote])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change

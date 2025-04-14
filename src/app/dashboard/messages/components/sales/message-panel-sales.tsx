@@ -67,7 +67,8 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
       setLabel(conversation?.label || "")
       setNote(initialNote)
       setSelectedHelp(conversation?.bala_bantuan || "")
-   }, [conversation?.bala_bantuan, conversation?.label, initialNote])
+      setSelectedDelegationAgent(conversation?.akses || "")
+   }, [conversation?.akses, conversation?.bala_bantuan, conversation?.label, initialNote])
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
