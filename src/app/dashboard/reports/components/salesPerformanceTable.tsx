@@ -12,7 +12,7 @@ import { Button } from "@/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select"
 import { useEffect, useState } from "react"
 import { Conversation, Employee } from "@/lib/definitions"
-import { getEmployeeByRole } from "@/lib/employee"
+import { fetchLeader, getEmployeeByRole } from "@/lib/employee"
 import { getResponseTimeSetting } from "@/lib/setting"
 import { cn } from "@/utils/class-merger"
 import { Badge } from "@/ui/badge"
@@ -22,6 +22,7 @@ interface SalesPerformanceTableProps {
 }
 
 export function SalesPerformanceTable({ conversations }: SalesPerformanceTableProps) {
+   const [leader, setLeader] = useState("")
    const [currentPage, setCurrentPage] = useState(1)
    const [pageSize, setPageSize] = useState(5)
    const [employees, setEmployees] = useState<Employee[]>([])
@@ -35,6 +36,14 @@ export function SalesPerformanceTable({ conversations }: SalesPerformanceTablePr
          }
       }
       fetchData()
+
+      const fetchLeaderSales = async () => {
+        const data = await fetchLeader('sales')
+        if (data) {
+          setLeader(data)
+        }
+      }
+      fetchLeaderSales()
 
       const fetchTimeLimitSetting = async () => {
         const data = await getResponseTimeSetting()
@@ -108,15 +117,10 @@ export function SalesPerformanceTable({ conversations }: SalesPerformanceTablePr
           {paginatedAgents.map((employee) => {
             // define employe role
             let role = ''
-            if (employee.role === 'sales') {
-              role = 'Sales'
+            if (employee.id === leader) {
+              role += 'Kepala '
             }
-            if (employee.role === 'cs') {
-              role = 'Customer Service'
-            }
-            if (employee.role === 'ts') {
-              role = 'Technical Support'
-            }
+            role += 'Sales'
 
             // average response time, count ongoing, count hot, count cold, count deal
             let avg_response_time = 0
@@ -132,15 +136,17 @@ export function SalesPerformanceTable({ conversations }: SalesPerformanceTablePr
               let value = 0
               conversation.message_content.map((message) => {
                 if (message.agent === employee.id) {
-                  value += parseInt(message.waktu_respon)
-                  count++
+                  if (parseInt(message.waktu_respon)) {
+                    value += parseInt(message.waktu_respon)
+                    count++
+                  }
                 }
               })
 
               avg_response_time = value / count
               const h = Math.floor(avg_response_time / 3600)
               const m = Math.floor((avg_response_time % 3600) / 60)
-              const s = avg_response_time % 60
+              const s = Math.floor(avg_response_time % 60)
 
               if (h > 0) {
                 string_avg_response_time += `${h}j `
