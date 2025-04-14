@@ -69,15 +69,14 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
 
    return (
       <GridToolbarContainer>
-         <div className="pl-2 pt-2 pb-2">
-            <Button
-               variant={'default'}
-               onClick={handleClick}
-            >
-               Tambah Agent
-               <GridAddIcon />
-            </Button>
-         </div>
+         <Button
+            variant={"default"}
+            className="p-1 bg-transparent text-sky-600 hover:bg-slate-50"
+            onClick={handleClick}
+         >
+            <GridAddIcon fontSize="small" />
+            <p className="pl-2">TAMBAH AGENT</p>
+         </Button>
       </GridToolbarContainer>
    );
 }
