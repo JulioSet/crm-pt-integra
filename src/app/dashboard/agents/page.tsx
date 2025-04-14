@@ -287,46 +287,50 @@ export default function Agents() {
                   </Select>
                </div>
                <div className="flex w-full">
-                  <Label className="pt-3 pr-2">Pemegang jabatan kepala saat ini : </Label>
-                  <Popover open={openLeaderSelection} onOpenChange={setOpenLeaderSelection}>
-                     <PopoverTrigger asChild>
-                        <Button
-                           variant="outline"
-                           role="combobox"
-                           aria-expanded={openLeaderSelection}
-                           className="w-[290px] justify-between hover:text-black"
-                        >
-                           {selectedLeader
-                              ? rows.find((agent) => agent.id === selectedLeader)?.name
-                              : "Pilih agent..."}
-                           <ChevronsUpDown className="opacity-50" />
-                        </Button>
-                     </PopoverTrigger>
-                     <PopoverContent className='w-[290px] p-0'>
-                        <Command>
-                           <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
-                           <CommandList className="max-h-40 overflow-y-auto">
-                           <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
-                           <CommandGroup>
-                              {rows.map((agent) => (
-                                 <CommandItem
-                                    className="p-1 m-1"
-                                    key={agent.id}
-                                    value={agent.id}
-                                    onSelect={(currentValue) => {
-                                       setOpenLeaderSelection(false)
-                                       setSelectedLeader(currentValue)
-                                       handleLeader(currentValue)
-                                    }}
-                                 >
-                                    {agent.name}
-                                 </CommandItem>
-                              ))}
-                           </CommandGroup>
-                           </CommandList>
-                        </Command>
-                     </PopoverContent>
-                  </Popover>
+                  {role !== 'tech' && (
+                     <div>
+                        <Label className="pt-3 pr-2">Pemegang jabatan kepala saat ini : </Label>
+                        <Popover open={openLeaderSelection} onOpenChange={setOpenLeaderSelection}>
+                           <PopoverTrigger asChild>
+                              <Button
+                                 variant="outline"
+                                 role="combobox"
+                                 aria-expanded={openLeaderSelection}
+                                 className="w-[290px] justify-between hover:text-black"
+                              >
+                                 {selectedLeader
+                                    ? rows.find((agent) => agent.id === selectedLeader)?.name
+                                    : "Pilih agent..."}
+                                 <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                           </PopoverTrigger>
+                           <PopoverContent className='w-[290px] p-0'>
+                              <Command>
+                                 <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                                 <CommandList className="max-h-40 overflow-y-auto">
+                                 <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                                 <CommandGroup>
+                                    {rows.map((agent) => (
+                                       <CommandItem
+                                          className="p-1 m-1"
+                                          key={agent.id}
+                                          value={agent.id}
+                                          onSelect={(currentValue) => {
+                                             setOpenLeaderSelection(false)
+                                             setSelectedLeader(currentValue)
+                                             handleLeader(currentValue)
+                                          }}
+                                       >
+                                          {agent.name}
+                                       </CommandItem>
+                                    ))}
+                                 </CommandGroup>
+                                 </CommandList>
+                              </Command>
+                           </PopoverContent>
+                        </Popover>
+                     </div>
+                  )}
                </div>
                <Box
                   sx={{
