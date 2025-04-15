@@ -120,53 +120,54 @@ export function CSPerformanceTable({ conversations }: SalesPerformanceTableProps
             role += 'Customer Service'
 
             // average response time, count ongoing, count hot, count cold, count deal
+            let count = 0
+            let value = 0
             let avg_response_time = 0
             let string_avg_response_time = ''
             let count_ongoing = 0
             let count_resolved = 0
 
             conversations.map((conversation) => {
-               // counting average response time
-               let count = 0
-               let value = 0
-               conversation.message_content.map((message) => {
-                  if (message.agent === employee.id) {
-                    if (parseInt(message.waktu_respon)) {
-                      value += parseInt(message.waktu_respon)
-                      count++
-                    }
+              conversation.message_content.map((message) => {
+                if (message.agent === employee.id) {
+                  if (parseInt(message.waktu_respon)) {
+                    value += parseInt(message.waktu_respon)
+                    count++
                   }
-               })
+                }
+              })
 
-               avg_response_time = value / count
-               const h = Math.floor(avg_response_time / 3600)
-               const m = Math.floor((avg_response_time % 3600) / 60)
-               const s = Math.floor(avg_response_time % 60)
-
-               if (h > 0) {
-               string_avg_response_time += `${h}j `
-               }
-               if (m > 0) {
-               string_avg_response_time += `${m}m `
-               }
-               if (s > 0) {
-               string_avg_response_time += `${s}d`
-               }
-               // if there is no chat with agent access
-               if (string_avg_response_time === '') {
-                  string_avg_response_time = `-`
-               }
-
-               // processing label conversation
-               if (conversation.akses === employee.id) {
-                  if (conversation.label === 'ongoing') {
-                     count_ongoing++
-                  }
-                  if (conversation.label === 'resolved') {
-                     count_resolved++
-                  }
-               }
+              // processing label conversation
+              if (conversation.akses === employee.id) {
+                if (conversation.label === 'ongoing') {
+                    count_ongoing++
+                }
+                if (conversation.label === 'resolved') {
+                    count_resolved++
+                }
+              }
             })
+
+            // counting average response time
+            avg_response_time = value / count
+            const isUnderLimit = avg_response_time <= timeResponseLimit/1000
+            const h = Math.floor(avg_response_time / 3600)
+            const m = Math.floor((avg_response_time % 3600) / 60)
+            const s = Math.floor(avg_response_time % 60)
+
+            if (h > 0) {
+            string_avg_response_time += `${h}j `
+            }
+            if (m > 0) {
+            string_avg_response_time += `${m}m `
+            }
+            if (s > 0) {
+            string_avg_response_time += `${s}d`
+            }
+            // if there is no chat with agent access
+            if (string_avg_response_time === '') {
+              string_avg_response_time = `-`
+            }
             
             return (
               <TableRow key={employee.id} className="hover:bg-slate-100">
@@ -179,7 +180,7 @@ export function CSPerformanceTable({ conversations }: SalesPerformanceTableProps
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={avg_response_time <= timeResponseLimit/1000 && avg_response_time !== 0 ? "default" : "secondary"}>
+                  <Badge variant={isUnderLimit && avg_response_time !== 0 ? "default" : "secondary"}>
                     <p className="font-bold">{string_avg_response_time}</p>
                   </Badge>
                 </TableCell>
