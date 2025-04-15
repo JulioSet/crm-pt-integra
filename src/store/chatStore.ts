@@ -1,6 +1,6 @@
 import { Conversation } from '@/lib/definitions';
 import { getEmail, getSession } from '@/lib/employee';
-import { fetchAll, getConversations } from '@/lib/message';
+import { fetchAllMessage, getConversations } from '@/lib/message';
 import { sendMail } from '@/lib/notification';
 import { create } from 'zustand';
 
@@ -27,7 +27,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
          const session = await getSession()
          let result
          if (session.role === 'admin') {
-            result = await fetchAll()
+            result = await fetchAllMessage()
          } else {
             result = await getConversations()
          }

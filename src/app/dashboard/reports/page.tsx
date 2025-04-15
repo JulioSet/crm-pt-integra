@@ -1,7 +1,7 @@
 "use client"
 
 import { Conversation } from "@/lib/definitions"
-import { fetchAll } from "@/lib/message"
+import { fetchAllMessage } from "@/lib/message"
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card"
 import { useEffect, useState } from "react"
 import { SalesPerformanceTable } from "./components/salesPerformanceTable"
@@ -22,7 +22,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     (async () => {
-      const result = await fetchAll()
+      const result = await fetchAllMessage()
       setConversations(result)
     })()
   }, [])

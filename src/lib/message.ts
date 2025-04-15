@@ -171,7 +171,7 @@ export async function updateRead (phone: string) {
    });
 }
 
-export async function fetchAll() {
+export async function fetchAllMessage() {
    const response = await fetch('/api/chat/all', {
       method: 'GET',
    });
