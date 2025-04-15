@@ -13,6 +13,8 @@ import {
    UserCog,
    FileBarChart,
    LogOut,
+   Activity,
+   ReceiptText,
 } from 'lucide-react'
 import Image from 'next/image'
 import { getSession } from '@/lib/employee'
@@ -20,8 +22,10 @@ import useChatStore from '@/store/chatStore'
 
 const sidebarItems = [
    { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare, access: ['admin', 'sales', 'cs', 'tech'] },
-   { name: 'Agent', href: '/dashboard/agents', icon: UserCog, access: ['admin'] },
    { name: 'Notifikasi', href: '/dashboard/notifications', icon: Bell, access: ['admin', 'sales', 'cs', 'tech'] },
+   { name: 'Agent', href: '/dashboard/agents', icon: UserCog, access: ['admin'] },
+   { name: 'Izin Delegasi', href: '/dashboard/delegation_permission', icon: Activity, access: ['admin'] },
+   { name: 'Riwayat Delegasi', href: '/dashboard/delegation_history', icon: ReceiptText, access: ['admin', 'sales', 'cs'] },
    { name: 'Kontak', href: '/dashboard/contacts', icon: Users, access: ['admin', 'sales'] },
    { name: 'Laporan', href: '/dashboard/reports', icon: FileBarChart, access: ['admin'] },
    { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings, access: ['admin'] },
