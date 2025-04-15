@@ -1,6 +1,6 @@
 export function formatMessageDate(time: string) {
   const timestamp = new Date(parseInt(time, 10) * 1000).toISOString()
-  return new Date(timestamp).toLocaleDateString("en-GB", { 
+  return new Date(timestamp).toLocaleDateString("id-ID", { 
     weekday: "long",
     day: "2-digit",
     month: "long",
@@ -35,7 +35,7 @@ export function formatDateDistance(date: string | null) {
   msgDateOnly.setHours(0, 0, 0, 0);
   const isYesterday = msgDateOnly.getTime() === yesterday.getTime()
   if (isYesterday) {
-    return 'Yesterday'
+    return 'Kemarin'
   }
 
   if (diffInHours < 24) {
