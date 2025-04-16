@@ -28,14 +28,14 @@ model message_header {
   label                           String?           @db.VarChar(50)
   prioritas                       String?           @db.VarChar(50)
   catatan                         String?           @db.Text
-  akses                           String            @db.VarChar(50)
   role_penanggung_jawab           String?           @db.VarChar(50)
+  akses                           String            @db.VarChar(50)
   bala_bantuan                    String?           @db.VarChar(50)
   deadline                        String?           @db.VarChar(50)
   baca                            Boolean           @default(false)
   waktu_admin_delegasi            String?           @db.VarChar(50)
   waktu_resolusi                  String?           @db.VarChar(50)
-  persetujuan_delegasi_dari_admin Boolean?          @default(false)
+  persetujuan_delegasi_dari_admin Int?              @default(2) @db.TinyInt
   message_content                 message_content[]
 }
 
