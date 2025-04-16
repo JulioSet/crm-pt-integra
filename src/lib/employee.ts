@@ -140,3 +140,16 @@ export async function fetchLeader(role: string) {
    const { value } = await response.json();
    return value;
 }
+
+export async function fetchAllEmployee() {
+   const response = await fetch('/api/auth/all', {
+      method: 'GET',
+   });
+
+   if (response.status === 500) {
+      return false;
+   }
+
+   const data = await response.json()
+   return data;
+}

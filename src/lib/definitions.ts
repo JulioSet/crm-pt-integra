@@ -19,6 +19,7 @@ export interface Conversation {
   baca: boolean | null
   waktu_admin_delegasi: string | null
   waktu_resolusi: string | null
+  persetujuan_delegasi_dari_admin: number
   message_content: Message[]
 }
 

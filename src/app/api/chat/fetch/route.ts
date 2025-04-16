@@ -42,7 +42,7 @@ export async function GET() {
                   { bala_bantuan: agent },
                ],
                AND: [
-                  { persetujuan_delegasi_dari_admin: true },
+                  { persetujuan_delegasi_dari_admin: 1 },
                ]
             },
             include: { message_content: true },

@@ -171,6 +171,16 @@ export async function updateRead (phone: string) {
    });
 }
 
+export async function updateDelegatePermission(phone: string, answer: number) {
+   await fetch('/api/chat/update/delegate_permission', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, answer }), // Send data as JSON
+   });
+}
+
 export async function fetchAllMessage() {
    const response = await fetch('/api/chat/all', {
       method: 'GET',
