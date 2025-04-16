@@ -5,21 +5,11 @@ import { Conversation } from "@/lib/definitions"
 import { MessagesSidebar } from "./components/message-sidebar"
 import { MessageView } from "./components/message-view"
 import useChatStore from "@/store/chatStore"
-import { getResponseTimeSetting } from "@/lib/setting"
 
 export default function Messages() {
-   const { data, fetchData, loading } = useChatStore();
+   const { data, loading } = useChatStore();
    const [conversations, setConversations] = useState<Conversation[]>([])
    const [phone, setPhone] = useState("")
-
-   // start fetch conversations
-   useEffect(() => {
-      (async () => {
-         const setting = await getResponseTimeSetting()
-         const interval = parseInt(setting)
-         fetchData(interval)
-      })()
-   }, [fetchData]);
    
    // update conversations
    useEffect(() => {
