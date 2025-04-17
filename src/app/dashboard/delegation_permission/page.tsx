@@ -16,6 +16,7 @@ import useChatStore from "@/store/chatStore";
 import { GridRowId } from "@mui/x-data-grid";
 import { Check, X } from "lucide-react";
 import { updateDelegatePermission } from "@/lib/message";
+import { createDelegationHistory } from "@/lib/delegation_history";
 
 // Page UI
 export default function DelagationPermission() {
@@ -33,13 +34,12 @@ export default function DelagationPermission() {
          let fetch_employees
 
          if (role !== 'all') {
-            fetch_conversations = data.filter(conversation => conversation.role_penanggung_jawab === role && conversation.akses !== 'admin' && conversation.persetujuan_delegasi_dari_admin === 2)
+            fetch_conversations = data.filter(conversation => conversation.akses !== 'admin' && conversation.role_penanggung_jawab === role && conversation.persetujuan_delegasi_dari_admin === 2)
             fetch_employees = await getEmployeeByRole(role)
          } else {
             fetch_conversations = data.filter(conversation => conversation.akses !== 'admin' && conversation.persetujuan_delegasi_dari_admin === 2)
             fetch_employees = await fetchAllEmployee()
          }
-
          if (fetch_employees) {
             setEmployees(fetch_employees)
          }
@@ -51,16 +51,32 @@ export default function DelagationPermission() {
       setLoading(false)
    }, [data, role])
 
-   const handleAdminAccept = (id: GridRowId) => async () => {
-      await updateDelegatePermission(id as string, 1)
-      const name = data.find(conversation => conversation.telepon === id)?.nama || `+${id}`
-      toast(`Izin delegasi percakapan dengan ${name} telah disetujui`)
+   const handleAdminAccept = (telepon: GridRowId) => async () => {
+      // update permission
+      await updateDelegatePermission(telepon as string, 1)
+      const name = data.find(conversation => conversation.telepon === telepon)?.nama || "-"
+      const output = name || `+${telepon}`
+
+      // create log
+      const akses = data.find(conversation => conversation.telepon === telepon)?.akses
+      const employee = employees.find(employee => employee.id === akses)
+      await createDelegationHistory(telepon as string, name, employee?.name || "", employee?.role || "", 1)
+      
+      toast(`Izin delegasi percakapan dengan ${output} telah disetujui`)
    }
 
-   const handleAdminReject = (id: GridRowId) => async () => {
-      await updateDelegatePermission(id as string, 0)
-      const name = data.find(conversation => conversation.telepon === id)?.nama || `+${id}`
-      toast(`Izin delegasi percakapan dengan ${name} telah ditolak`)
+   const handleAdminReject = (telepon: GridRowId) => async () => {
+      // update permission
+      await updateDelegatePermission(telepon as string, 0)
+      const name = data.find(conversation => conversation.telepon === telepon)?.nama || "-"
+      const output = name || `+${telepon}`
+
+      // create log
+      const akses = data.find(conversation => conversation.telepon === telepon)?.akses
+      const employee = employees.find(employee => employee.id === akses)
+      await createDelegationHistory(telepon as string, name, employee?.name || "", employee?.role || "", 0)
+
+      toast(`Izin delegasi percakapan dengan ${output} telah ditolak`)
 }
 
    // set table header here!
@@ -148,7 +164,7 @@ export default function DelagationPermission() {
                      <SelectContent>
                         <SelectItem value="all" className="pt-2 pb-2 mr-1 pr-7">
                            <span className="flex items-center">
-                              All
+                              Semua
                            </span>
                         </SelectItem>
                         <SelectItem value="sales" className="pt-2 pb-2 mr-1 pr-7">
@@ -182,7 +198,7 @@ export default function DelagationPermission() {
                      pageSizeOptions={[10, 25, 50]}
                      initialState={{
                         sorting: {
-                           sortModel: [{ field: 'name', sort: 'asc' }],
+                           sortModel: [{ field: 'time', sort: 'desc' }],
                         },
                         pagination: { 
                            paginationModel: { pageSize: 10, page: 0 } 

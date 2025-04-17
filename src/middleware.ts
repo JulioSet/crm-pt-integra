@@ -14,8 +14,8 @@ export async function middleware(req: NextRequest) {
 
    const rolePermissions: Record<string, string[]> = {
       admin: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/settings', '/dashboard/agent', '/dashboard/reports', '/dashboard/delegation_permission', '/dashboard/delegation_history'],
-      sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts'],
-      cs: ['/dashboard/messages', '/dashboard/notifications'],
+      sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/delegation_history'],
+      cs: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/delegation_history'],
       tech: ['/dashboard/messages', '/dashboard/notifications'],
    };
 

@@ -54,3 +54,11 @@ export interface Setting {
   name: string
   value: string
 }
+
+export interface DelegationHistory {
+  telepon: string
+  agent: string
+  role: string
+  status: number
+  waktu: string
+}

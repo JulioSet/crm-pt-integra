@@ -114,7 +114,7 @@ export function MessageView({ conversation }: MessageViewProps) {
   const handleAssign = async (chosenAgent: string, role: string) => {
     // Handle assign to other agent with same role
     try {
-      await assignMessage(phone, chosenAgent, role)
+      await assignMessage(phone, conversation?.nama || "-", chosenAgent, role)
     } catch (error) {
       console.error(error)
     }

@@ -48,3 +48,18 @@ export function formatDateDistance(date: string | null) {
     return messageDate.toLocaleDateString()
   }
 }
+
+export function formatFullDate(time: string) {
+  if (time) {
+    const timestamp = new Date(parseInt(time, 10) * 1000).toISOString()
+    return new Date(timestamp).toLocaleDateString("id-ID", { 
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: '2-digit', 
+      minute: '2-digit'
+    })
+  }
+
+  return 'Invalid Date'
+}
