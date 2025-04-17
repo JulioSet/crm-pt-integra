@@ -62,3 +62,13 @@ model contact {
   telepon String @db.VarChar(50)
   nama    String @db.VarChar(50)
 }
+
+model delegation_history {
+  id      Int     @id @default(autoincrement())
+  telepon String  @db.VarChar(50)
+  nama    String? @db.VarChar(50)
+  agent   String  @db.VarChar(50)
+  role    String  @db.VarChar(50)
+  status  Int     @default(2) @db.TinyInt
+  waktu   String  @db.VarChar(50)
+}
