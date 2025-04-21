@@ -16,10 +16,11 @@ import { MessagePanelCS } from "./cs/message-panel-cs"
 import { MessagePanelTech } from "./tech/message-panel-tech"
 
 interface MessageViewProps {
-  conversation: Conversation | null
+  conversation: Conversation | null,
+  onClose: () => void
 }
 
-export function MessageView({ conversation }: MessageViewProps) {
+export function MessageView({ conversation, onClose }: MessageViewProps) {
   // agent data
   const [ID, setID] = useState("")
   const [role, setRole] = useState("")
@@ -124,7 +125,7 @@ export function MessageView({ conversation }: MessageViewProps) {
     <div className="flex-1 flex">
       {/* Chat */}
       <div className="flex-1 flex flex-col">
-        <MessageHeader role={role} conversation={conversation} onResolve={handleResolve} />
+        <MessageHeader role={role} conversation={conversation} onResolve={handleResolve} onClose={onClose} />
         {/* message body */}
         <div ref={messageViewRef} className="flex-1 p-4 bg-zinc-300 overflow-y-auto">
           <div className="space-y-4">
@@ -163,13 +164,16 @@ export function MessageView({ conversation }: MessageViewProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -left-3 top-4 z-10 h-6 w-6 rounded-full border shadow-md bg-white"
+          className={cn(
+            "absolute top-4 z-10 h-6 w-6 rounded-full border shadow-md bg-white",
+            isPanelCollapsed ? "-left-6" : "-left-3"
+          )}
           onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
         >
           {isPanelCollapsed ? (
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-6 w-6" />
           ) : (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-6 w-6" />
           )}
         </Button>
 
