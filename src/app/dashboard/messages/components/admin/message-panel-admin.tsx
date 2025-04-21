@@ -24,7 +24,7 @@ import {
    PopoverTrigger,
 } from "@/ui/popover"
 import { ChevronsUpDown } from "lucide-react";
-import { updateNote } from "@/lib/message";
+import { assignHelp, updateNote } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
 import { toast } from "sonner";
 
@@ -40,8 +40,12 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
    const [job, setJob] = useState("sales")
    const [listAgent, setListAgent] = useState<Employee[]>([])
    const [loadingAgent, setLoadingAgent] = useState(true)
+   // delegasi
    const [selectedAgent, setSelectedAgent] = useState("")
    const [note, setNote] = useState(conversation?.catatan || "")
+   // request help
+   const [openHelp, setOpenHelp] = useState(false)
+   const [selectedHelp, setSelectedHelp] = useState("")
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
@@ -52,6 +56,15 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
       // Handle save note
       await updateNote(phone, note)
       toast("Catatan berhasil disimpan")
+   }
+
+   const handleRequestHelp = async (selectedAgent: string) => {
+      await assignHelp(phone, selectedAgent)
+      if (selectedAgent !== "") {
+         toast("Berhasil meminta bantuan")
+      } else {
+         toast("Berhasil clear bantuan")
+      }
    }
 
    useEffect(() => {
@@ -68,6 +81,13 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
       setJob(conversation?.role_penanggung_jawab || "sales")
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
+
+  // to update ui accordingly
+   useEffect(() => {
+      setNote(initialNote)
+      setSelectedHelp(conversation?.bala_bantuan || "")
+      setSelectedAgent(conversation?.akses || "")
+   }, [conversation?.akses, conversation?.bala_bantuan, initialNote])
 
    return (
       <div className="p-4 space-y-6">
@@ -143,6 +163,59 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
             </div>
          </div>
 
+         {/* request help */}
+         <div className="space-y-4">
+            <Label className="text-md font-bold">Request Bantuan</Label>
+            <Popover open={openHelp} onOpenChange={setOpenHelp}>
+               <PopoverTrigger asChild>
+                  <Button
+                     variant="outline"
+                     role="combobox"
+                     aria-expanded={openHelp}
+                     className="w-[290px] justify-between hover:text-black"
+                  >
+                     {selectedHelp
+                        ? listAgent.find((agent) => agent.id === selectedHelp)?.name
+                        : "Pilih agent..."}
+                     <ChevronsUpDown className="opacity-50" />
+                  </Button>
+               </PopoverTrigger>
+               <PopoverContent className='w-[290px] p-0'>
+                  <Command>
+                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                     <CommandList className="max-h-40 overflow-y-auto">
+                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                     <CommandGroup>
+                        {listAgent.map((agent) => (
+                           <CommandItem
+                              className="p-1 m-1"
+                              key={agent.id}
+                              value={agent.id}
+                              onSelect={(currentValue) => {
+                                 setOpenHelp(false)
+                                 setSelectedHelp(currentValue)
+                                 handleRequestHelp(currentValue)
+                              }}
+                           >
+                              {agent.name}
+                           </CommandItem>
+                        ))}
+                     </CommandGroup>
+                     </CommandList>
+                  </Command>
+               </PopoverContent>
+            </Popover>
+            <Button
+               variant="default"
+               size="icon"
+               className="w-full"
+               onClick={() => handleRequestHelp("")}
+               disabled={selectedHelp === ""}
+            >
+               Clear Help
+            </Button>
+         </div>
+         
          {/* notes */}
          <div className="space-y-2">
             <Label htmlFor="note" className="text-md font-bold">
