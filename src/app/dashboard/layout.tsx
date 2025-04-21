@@ -23,7 +23,7 @@ export default function DashboardLayout({
    }, [fetchData]);
 
    return(
-      <div className="flex h-screen bg-white">
+      <div className="flex h-screen bg-white overflow-hidden">
          <Sidebar />
          <main className="flex-1 overflow-auto">
             {children}

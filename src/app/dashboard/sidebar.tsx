@@ -66,7 +66,8 @@ export default function Sidebar() {
       <div className={cn(
          "border bg-white",
          collapsed ? "w-16" : "w-64",
-         "transition-all duration-300"
+         "transition-all duration-300",
+         "overflow-y-auto"
       )}>
          <div className="flex h-full flex-col">
             <div className="flex justify-center items-center p-4 border-b">
