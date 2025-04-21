@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { cn } from "@/utils/class-merger"
-import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake } from "lucide-react"
+import { CheckCircle2, Clock, DollarSign, Flame, LucideIcon, MessageCircle, MessageCircleWarning, Plus, Search, Snowflake, Users } from "lucide-react"
 import { Button } from "../../../../ui/button"
 import { Input } from "@/ui/input"
 import { Conversation, MessageLabel } from "@/lib/definitions"
@@ -170,8 +170,11 @@ export function MessagesSidebar({
                                  {formatDateDistance(conversation.waktu_terbaru)}
                               </span>
                            </div>
-                           <div className="text-sm text-muted-foreground line-clamp-1">
+                           <div className="flex items-center text-sm text-muted-foreground line-clamp-1">
                               {conversation.pesan_terbaru}
+                              {(conversation.bala_bantuan || conversation.bala_bantuan !== "") && (
+                                 <Users className='ml-auto h-4 w-4' />
+                              )}
                            </div>
                         </div>
                      </button>
