@@ -1,4 +1,4 @@
-import { saveMessageToDatabase, updateMessageHeader } from "@/lib/message";
+import { saveMessageToDatabase, updateMessageHeader, updateRead } from "@/lib/message";
 
 export async function POST(req) { // It should be POST or GET
 
@@ -10,14 +10,7 @@ export async function POST(req) { // It should be POST or GET
     const { from, text, timestamp } = data;
     saveMessageToDatabase(from, text, timestamp, 'client', '', '');
     updateMessageHeader(from, text, timestamp)
-
-    // chamge read status
-    await prisma.message_header.findMany({
-      where: { telepon: phone },
-      data: {
-        baca: false
-      }
-    });
+    updateRead(from)
 
     return new Response(JSON.stringify({ status: "Message processed successfully" }), {
       status: 200,
