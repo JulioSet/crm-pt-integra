@@ -95,7 +95,11 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    
    const handleRequestHelp = async (selectedAgent: string) => {
       await assignHelp(phone, selectedAgent)
-      toast("Berhasil meminta bantuan")
+      if (selectedAgent !== "") {
+         toast("Berhasil meminta bantuan")
+      } else {
+         toast("Berhasil clear bantuan")
+      }
    }
    
    const handleAddContact = async () => {
@@ -201,7 +205,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                                  key={agent.id}
                                  value={agent.id}
                                  onSelect={(currentValue) => {
-                                    setOpenDelegasi(false)
+                                    setOpenHelp(false)
                                     assignAgent(currentValue, "")
                                     setSelectedDelegationAgent(currentValue)
                                     toast("Berhasil meminta persetujuan admin untuk delegasi")
@@ -263,6 +267,15 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                      </Command>
                   </PopoverContent>
                </Popover>
+               <Button
+                  variant="default"
+                  size="icon"
+                  className="w-full"
+                  onClick={() => handleRequestHelp("")}
+                  disabled={selectedHelp === ""}
+               >
+                  Clear Help
+               </Button>
             </div>
          }
 
