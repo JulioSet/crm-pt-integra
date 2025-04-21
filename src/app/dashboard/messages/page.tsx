@@ -11,6 +11,10 @@ export default function Messages() {
    const [conversations, setConversations] = useState<Conversation[]>([])
    const [phone, setPhone] = useState("")
    
+   const handleCloseChat = async () => {
+      setPhone("")
+    }
+
    // update conversations
    useEffect(() => {
       setConversations(data)
@@ -39,7 +43,7 @@ export default function Messages() {
             loading={loading}
          />
          {conversations.find(conversation => conversation.telepon === phone) ? (
-            <MessageView conversation={conversations.find(conversation => conversation.telepon === phone) ?? null} />
+            <MessageView conversation={conversations.find(conversation => conversation.telepon === phone) ?? null} onClose={handleCloseChat} />
          ) : (
             <div className="flex flex-1 items-center justify-center space-y-4 p-4 md:p-8 pt-6 bg-white">
                <p className="text-slate-400">Belum Ada Percakapan yang Terpilih</p>
