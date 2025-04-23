@@ -75,8 +75,10 @@ model delegation_history {
 }
 
 model delegation_notification {
-  id      Int    @id @default(autoincrement())
-  telepon String @db.VarChar(50)
-  agen    String @db.VarChar(50)
-  alasan  String @db.Text
+  id            Int     @id @default(autoincrement())
+  telepon       String  @db.VarChar(50)
+  nama          String? @db.VarChar(50)
+  agen_sekarang String  @db.VarChar(50)
+  agen_sebelum  String  @db.VarChar(50)
+  alasan        String  @db.Text
 }

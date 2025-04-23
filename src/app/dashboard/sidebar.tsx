@@ -19,6 +19,8 @@ import {
 import Image from 'next/image'
 import { getSession } from '@/lib/employee'
 import useChatStore from '@/store/chatStore'
+import { fetchDelegationNotification } from '@/lib/delegation'
+import { DelegationNotification } from '@/lib/definitions'
 
 const sidebarItems = [
    { name: 'Pesan', href: '/dashboard/messages', icon: MessagesSquare, access: ['admin', 'sales', 'cs', 'tech', 'resepsionis'] },
@@ -34,6 +36,7 @@ const sidebarItems = [
 
 export default function Sidebar() {
    // agent data
+   const [agent, setAgent] = useState("")
    const [role, setRole] = useState("")
    // sidebar 
    const { resetLoadingStateToLogout } = useChatStore();
@@ -41,12 +44,13 @@ export default function Sidebar() {
    const [collapsed, setCollapsed] = useState(false)
    // notification
    const { data } = useChatStore();
-   const [unreadCount, setUnreadCount] = useState(0)
+   const [notificationCount, setNotificationCount] = useState(0)
 
    // set agent data
    useEffect(() => {
       (async () => {
          const session = await getSession()
+         setAgent(session?.id)
          setRole(session?.role)
       })()
    })
@@ -59,8 +63,13 @@ export default function Sidebar() {
             totalUnread++
          }
       })
-      setUnreadCount(totalUnread)
-   }, [data])
+      let delegationNotification: number
+      (async () => {
+         const fetchDelegation: DelegationNotification[] = await fetchDelegationNotification()
+         delegationNotification = fetchDelegation.filter(del => del.agen_sekarang === agent || del.agen_sebelum === agent).length
+         setNotificationCount(totalUnread + delegationNotification)
+      })()
+   }, [data, agent])
 
    return (
       <div className={cn(
@@ -106,10 +115,10 @@ export default function Sidebar() {
                                  collapsed ? "mr-0" : "mr-2",
                               )} />
                               {!collapsed && <span>{item.name}</span>}
-                              {isNotifications && unreadCount > 0 && (
+                              {isNotifications && notificationCount > 0 && (
                                  <div className='pl-1'>
                                     <div className='inline-flex items-center rounded-full border border-transparent px-1.5 text-xs font-semibold bg-red-500 text-white'>
-                                       {unreadCount}
+                                       {notificationCount}
                                     </div>
                                  </div>
                               )}

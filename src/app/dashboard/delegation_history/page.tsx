@@ -1,7 +1,7 @@
 'use client'
 
 import { DelegationHistory } from "@/lib/definitions";
-import { fetchAllDelegationHistory } from "@/lib/delegation_history";
+import { fetchAllDelegationHistory } from "@/lib/delegation";
 import { getSession } from "@/lib/employee";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
 import { formatFullDate } from "@/utils/date";

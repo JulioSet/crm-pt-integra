@@ -16,7 +16,7 @@ import useChatStore from "@/store/chatStore";
 import { GridRowId } from "@mui/x-data-grid";
 import { Check, X } from "lucide-react";
 import { updateDelegatePermission } from "@/lib/message";
-import { createDelegationHistory } from "@/lib/delegation_history";
+import { createDelegationHistory } from "@/lib/delegation";
 
 // Page UI
 export default function DelagationPermission() {

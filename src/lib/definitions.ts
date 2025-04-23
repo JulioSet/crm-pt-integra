@@ -63,3 +63,12 @@ export interface DelegationHistory {
   status: number
   waktu: string
 }
+
+export interface DelegationNotification {
+  id: number
+  telepon: string
+  nama: string | null
+  agen_sekarang: string
+  agen_sebelum: string
+  alasan: string
+}

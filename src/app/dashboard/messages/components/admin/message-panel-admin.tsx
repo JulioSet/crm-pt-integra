@@ -27,6 +27,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { assignHelp, assignTech, updateNote } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
 import { toast } from "sonner";
+import { createDelegationNotification } from "@/lib/delegation";
 
 interface MessagePanelAdminProps {
    conversation: Conversation | null
@@ -86,7 +87,9 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
 
    const handleDelegation = () => {
       assignAgent(selectedAgent, job)
+      createDelegationNotification(phone, conversation?.nama || "", selectedAgent, conversation?.akses || "", reason)
       toast("Berhasil delegasi chat")
+      setReason("")
    }
 
    // set delegation list
@@ -193,6 +196,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
             <Textarea
                id="delegation_reason"
                placeholder="Tambahkan alasan delegasi disini..."
+               value={reason}
                onChange={handleDelegationReasonChange}
                className="min-h-[100px] resize-none"
             />

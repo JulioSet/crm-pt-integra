@@ -31,6 +31,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/ui/calendar";
 import { id } from "date-fns/locale";
 import { toast } from "sonner";
+import { createDelegationNotification } from "@/lib/delegation";
 
 interface MessagePanelCSProps {
    conversation: Conversation | null
@@ -89,7 +90,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
    const handleDelegationReasonChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setReason(event.target.value)
    }
-   
+
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
       setNote(event.target.value)
@@ -103,7 +104,9 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
 
    const handleDelegation = () => {
       assignAgent(selectedDelegationAgent, "")
+      createDelegationNotification(phone, conversation?.nama || "", selectedDelegationAgent, conversation?.akses || "", reason)
       toast("Berhasil meminta persetujuan admin untuk delegasi")
+      setReason("")
    }
 
    const handlePriorityChange = async (newPriority: MessagePriority) => {
@@ -269,6 +272,7 @@ export function MessagePanelCS({ conversation, listAgent, assignAgent }: Message
                <Textarea
                   id="delegation_reason"
                   placeholder="Tambahkan alasan delegasi disini..."
+                  value={reason}
                   onChange={handleDelegationReasonChange}
                   className="min-h-[100px] resize-none"
                />

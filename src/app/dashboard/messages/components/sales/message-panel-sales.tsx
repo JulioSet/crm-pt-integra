@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { fetchLeader, getSession } from "@/lib/employee";
 import { createContact } from "@/lib/contact";
 import { customAlphabet } from "nanoid";
+import { createDelegationNotification } from "@/lib/delegation";
 
 interface MessagePanelSalesProps {
    conversation: Conversation | null
@@ -87,7 +88,9 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
 
    const handleDelegation = () => {
       assignAgent(selectedDelegationAgent, "")
+      createDelegationNotification(phone, conversation?.nama || "", selectedDelegationAgent, conversation?.akses || "", reason)
       toast("Berhasil meminta persetujuan admin untuk delegasi")
+      setReason("")
    }
 
    const handleSaveNote = async () => {
@@ -230,6 +233,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                <Textarea
                   id="delegation_reason"
                   placeholder="Tambahkan alasan delegasi disini..."
+                  value={reason}
                   onChange={handleDelegationReasonChange}
                   className="min-h-[100px] resize-none"
                />

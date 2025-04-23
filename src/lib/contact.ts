@@ -26,6 +26,24 @@ export async function getContacts() {
    return data;
 }
 
+export async function getContactInfo(phone: string) {
+   const response = await fetch('/api/contact/info', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone }), // Send data as JSON
+   });
+
+   if (!response.ok) {
+      console.error('Failed to fetch contact info');
+      return;
+   }
+   
+   const data = await response.json();
+   return data;
+}
+
 export async function updateContact(id: string, name: string, phone: string) {
    const response = await fetch('/api/contact/update', {
       method: 'POST',
