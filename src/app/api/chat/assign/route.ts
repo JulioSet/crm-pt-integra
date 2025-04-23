@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       select: { name: true }
    })
    const now = Math.floor(Date.now() / 1000)
-   if (role === 'admin') {
+   if (role === 'admin' || role === 'resepsionis') {
       await prisma.message_header.update({
          where: { telepon: phone },
          data: {

@@ -264,7 +264,7 @@ export default function Agents() {
                <div className="w-44">
                   <Select value={role} onValueChange={setRole}>
                      <SelectTrigger className="w-full rounded">
-                        <SelectValue placeholder="Set priority" />
+                        <SelectValue placeholder="Set Role" />
                      </SelectTrigger>
                      <SelectContent>
                         <SelectItem value="sales" className="pt-2 pb-2 mr-1 pr-7">
@@ -282,11 +282,16 @@ export default function Agents() {
                               Technical Support
                            </span>
                         </SelectItem>
+                        <SelectItem value="resepsionis" className="pt-2 pb-2 mr-1 pr-7">
+                           <span className="flex items-center">
+                              Resepsionis
+                           </span>
+                        </SelectItem>
                      </SelectContent>
                   </Select>
                </div>
                <div className="flex w-full">
-                  {role !== 'tech' && (
+                  {(role !== 'tech' && role !== 'resepsionis') && (
                      <div>
                         <Label className="pt-3 pr-2">Pemegang jabatan kepala saat ini : </Label>
                         <Popover open={openLeaderSelection} onOpenChange={setOpenLeaderSelection}>

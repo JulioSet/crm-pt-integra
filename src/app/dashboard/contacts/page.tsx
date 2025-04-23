@@ -67,6 +67,7 @@ export default function Contacts() {
    const [loading, setLoading] = useState(true)
    // agent data
    const [agent, setAgent] = useState("")
+   const [role, setRole] = useState("")
    // Table data
    const [rows, setRows] = useState<GridRowsProp>([]); // set data here!
    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({}); // for inserting new row
@@ -76,6 +77,7 @@ export default function Contacts() {
       (async () => {
          const session = await getSession()
          setAgent(session?.name)
+         setRole(session?.role)
       })()
    }, [])
 
@@ -167,7 +169,8 @@ export default function Contacts() {
          field: 'telepon', 
          headerName: 'Nomor Telepon', 
          width: 150, 
-         editable: true 
+         editable: true,
+         valueGetter: (data) => `+${data}`,
       },
       {
          field: 'actions',
@@ -176,46 +179,58 @@ export default function Contacts() {
          width: 120,
          cellClassName: 'actions',
          getActions: ({ id }) => {
-         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+            const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
-         if (isInEditMode) {
-            return [
-               <GridActionsCellItem
-                  key={nanoid()}
-                  icon={<Save />}
-                  label="Save"
-                  sx={{
-                     color: 'primary.main',
-                  }}
-                  onClick={handleSaveClick(id)}
-               />,
-               <GridActionsCellItem
-                  key={nanoid()}
-                  icon={<X />}
-                  label="Cancel"
-                  className="textPrimary"
-                  onClick={handleCancelClick(id)}
-                  color="inherit"
-               />,
-            ];
-         }
+            if (isInEditMode) {
+               return [
+                  <GridActionsCellItem
+                     key={nanoid()}
+                     icon={<Save />}
+                     label="Save"
+                     sx={{
+                        color: 'primary.main',
+                     }}
+                     onClick={handleSaveClick(id)}
+                  />,
+                  <GridActionsCellItem
+                     key={nanoid()}
+                     icon={<X />}
+                     label="Cancel"
+                     className="textPrimary"
+                     onClick={handleCancelClick(id)}
+                     color="inherit"
+                  />,
+               ];
+            }
+
+            if (role === 'admin') {
+               return [
+                  <GridActionsCellItem
+                     key={nanoid()}
+                     icon={<Pencil />}
+                     label="Edit"
+                     className="textPrimary"
+                     onClick={handleEditClick(id)}
+                     color="inherit"
+                  />,
+                  <GridActionsCellItem
+                     key={nanoid()}
+                     icon={<Trash />}
+                     label="Delete"
+                     onClick={handleDeleteClick(id)}
+                     color="inherit"
+                  />,
+                  <GridActionsCellItem
+                     key={nanoid()}
+                     icon={<MessageSquarePlus />}
+                     label="Message"
+                     onClick={handleAddConversation(id)}
+                     color="inherit"
+                  />,
+               ];
+            }
 
             return [
-               <GridActionsCellItem
-                  key={nanoid()}
-                  icon={<Pencil />}
-                  label="Edit"
-                  className="textPrimary"
-                  onClick={handleEditClick(id)}
-                  color="inherit"
-               />,
-               <GridActionsCellItem
-                  key={nanoid()}
-                  icon={<Trash />}
-                  label="Delete"
-                  onClick={handleDeleteClick(id)}
-                  color="inherit"
-               />,
                <GridActionsCellItem
                   key={nanoid()}
                   icon={<MessageSquarePlus />}

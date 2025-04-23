@@ -42,6 +42,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    const initialNote = conversation?.catatan || ""
    const [openDelegasi, setOpenDelegasi] = useState(false)
    const [selectedDelegationAgent, setSelectedDelegationAgent] = useState("")
+   const [reason, setReason] = useState("")
    const [note, setNote] = useState("")
    // label
    const [label, setLabel] = useState("")
@@ -70,6 +71,10 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
       setSelectedDelegationAgent(conversation?.akses || "")
    }, [conversation?.akses, conversation?.bala_bantuan, conversation?.label, initialNote])
 
+   const handleDelegationReasonChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setReason(event.target.value)
+   }
+
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle note change
       setNote(event.target.value)
@@ -78,6 +83,11 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
    const handleClientChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       // Handle name change
       setClient(event.target.value)
+   }
+
+   const handleDelegation = () => {
+      assignAgent(selectedDelegationAgent, "")
+      toast("Berhasil meminta persetujuan admin untuk delegasi")
    }
 
    const handleSaveNote = async () => {
@@ -205,10 +215,8 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                                  key={agent.id}
                                  value={agent.id}
                                  onSelect={(currentValue) => {
-                                    setOpenHelp(false)
-                                    assignAgent(currentValue, "")
+                                    setOpenDelegasi(false)
                                     setSelectedDelegationAgent(currentValue)
-                                    toast("Berhasil meminta persetujuan admin untuk delegasi")
                                  }}
                               >
                                  {agent.name}
@@ -219,6 +227,21 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                      </Command>
                   </PopoverContent>
                </Popover>
+               <Textarea
+                  id="delegation_reason"
+                  placeholder="Tambahkan alasan delegasi disini..."
+                  onChange={handleDelegationReasonChange}
+                  className="min-h-[100px] resize-none"
+               />
+               <Button
+                  variant="default"
+                  size="icon"
+                  className="w-full"
+                  onClick={handleDelegation}
+                  disabled={selectedDelegationAgent === conversation?.akses}
+               >
+                  Delegasi
+               </Button>
             </div>
          )}
 
@@ -271,7 +294,10 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                   variant="default"
                   size="icon"
                   className="w-full"
-                  onClick={() => handleRequestHelp("")}
+                  onClick={() => {
+                     setSelectedHelp("")
+                     handleRequestHelp("")
+                  }}
                   disabled={selectedHelp === ""}
                >
                   Clear Help

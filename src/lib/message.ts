@@ -51,7 +51,7 @@ export async function saveMessageToDatabase(from: string, text: string, timestam
             pesan_terbaru: text,
             waktu_terbaru: timestamp,
             label: 'new',
-            akses: 'admin'
+            akses: 'resepsionis'
          }
       });
    }
@@ -103,6 +103,16 @@ export async function assignMessage(phone: string, name: string, id: string, rol
 
 export async function assignHelp(phone: string, id: string) {
    await fetch('/api/chat/help', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, id }), // Send data as JSON
+   });
+}
+
+export async function assignTech(phone: string, id: string) {
+   await fetch('/api/chat/tech', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',

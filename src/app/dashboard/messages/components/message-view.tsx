@@ -14,6 +14,7 @@ import { MessagePanelAdmin } from "./admin/message-panel-admin"
 import { MessagePanelSales } from "./sales/message-panel-sales"
 import { MessagePanelCS } from "./cs/message-panel-cs"
 import { MessagePanelTech } from "./tech/message-panel-tech"
+import { MessagePanelResepsionis } from "./resepsionis/message-panel-resepsionis"
 
 interface MessageViewProps {
   conversation: Conversation | null,
@@ -191,6 +192,8 @@ export function MessageView({ conversation, onClose }: MessageViewProps) {
             <MessagePanelCS conversation={conversation} listAgent={listAgent} assignAgent={handleAssign} />
           ) : role === 'tech' ? (
             <MessagePanelTech conversation={conversation} listAgent={listAgent} assignAgent={handleAssign} />
+          ) : role === 'resepsionis' ? (
+            <MessagePanelResepsionis conversation={conversation} assignAgent={handleAssign} />
           ) : (
             <p></p>
           )}

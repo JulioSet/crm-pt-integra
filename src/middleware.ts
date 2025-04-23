@@ -17,6 +17,7 @@ export async function middleware(req: NextRequest) {
       sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/delegation_history'],
       cs: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/delegation_history'],
       tech: ['/dashboard/messages', '/dashboard/notifications'],
+      resepsionis: ['/dashboard/messages', '/dashboard/notifications'],
    };
 
    // Get all allowed paths for the user role

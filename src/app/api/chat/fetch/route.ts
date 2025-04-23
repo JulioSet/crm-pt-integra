@@ -4,8 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
    const session = await getSession()
-   const agent = session?.id as string
+   let agent = session?.id as string
    const role =  session?.role as string
+
+   if (role === 'resepsionis') {
+      agent = role
+   }
    
    try {
       let conversations;
@@ -40,6 +44,7 @@ export async function GET() {
                OR: [
                   { akses: agent },
                   { bala_bantuan: agent },
+                  { tech: agent },
                ],
                AND: [
                   { persetujuan_delegasi_dari_admin: 1 },

@@ -56,24 +56,24 @@ export default function DelagationHistory() {
       { 
          field: 'telepon', 
          headerName: 'Telepon', 
-         width: 220, 
+         width: 150, 
          valueGetter: (data) => `+${data}`
       },
       { 
          field: 'nama', 
          headerName: 'Nama', 
-         width: 220,
+         width: 150,
       },
       { 
          field: 'agent', 
-         headerName: 'Agent yang Ditugaskan', 
-         width: 220, 
+         headerName: 'Agent', 
+         width: 150, 
          valueGetter: (data) => data ?? ""
       },
       { 
          field: 'role', 
          headerName: 'Role', 
-         width: 220,
+         width: 150,
          valueGetter: (data) => {
             if (data === 'cs') {
                return 'Customer Service'
@@ -86,7 +86,7 @@ export default function DelagationHistory() {
       { 
          field: 'waktu', 
          headerName: 'Waktu', 
-         width: 220,
+         width: 200,
          valueGetter: (data) => formatFullDate(data)
       },
       { 
@@ -134,7 +134,7 @@ export default function DelagationHistory() {
          ) : (
             <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
                <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-bold tracking-tight">Izin Delegasi</h2>
+                  <h2 className="text-3xl font-bold tracking-tight">Riwayat Izin Delegasi</h2>
                </div>
                {agentRole === 'admin' && (
                   <div className="w-44">

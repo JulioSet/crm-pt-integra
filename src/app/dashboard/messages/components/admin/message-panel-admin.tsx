@@ -24,7 +24,7 @@ import {
    PopoverTrigger,
 } from "@/ui/popover"
 import { ChevronsUpDown } from "lucide-react";
-import { assignHelp, updateNote } from "@/lib/message";
+import { assignHelp, assignTech, updateNote } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
 import { toast } from "sonner";
 
@@ -36,24 +36,32 @@ interface MessagePanelAdminProps {
 export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdminProps) {
    const initialNote = conversation?.catatan || ""
    const phone = conversation?.telepon || ""
+   // delegasi
    const [open, setOpen] = useState(false)
    const [job, setJob] = useState("sales")
    const [listAgent, setListAgent] = useState<Employee[]>([])
    const [loadingAgent, setLoadingAgent] = useState(true)
-   // delegasi
    const [selectedAgent, setSelectedAgent] = useState("")
-   const [note, setNote] = useState(conversation?.catatan || "")
+   const [reason, setReason] = useState("")
+   const [note, setNote] = useState("")
    // request help
    const [openHelp, setOpenHelp] = useState(false)
    const [selectedHelp, setSelectedHelp] = useState("")
+   // request tech
+   const [openTech, setOpenTech] = useState(false)
+   const [listTech, setListTech] = useState<Employee[]>([])
+   const [selectedTech, setSelectedTech] = useState("")
+
+   const handleDelegationReasonChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setReason(event.target.value)
+   }
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      // Handle note change
       setNote(event.target.value)
    }
 
+
    const handleSaveNote = async () => {
-      // Handle save note
       await updateNote(phone, note)
       toast("Catatan berhasil disimpan")
    }
@@ -67,6 +75,21 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
       }
    }
 
+   const handleRequestTech = async (selectedAgent: string) => {
+      await assignTech(phone, selectedAgent)
+      if (selectedAgent !== "") {
+         toast("Berhasil meminta teknisi")
+      } else {
+         toast("Berhasil clear teknisi")
+      }
+   }
+
+   const handleDelegation = () => {
+      assignAgent(selectedAgent, job)
+      toast("Berhasil delegasi chat")
+   }
+
+   // set delegation list
    useEffect(() => {
       (async () => {
          setLoadingAgent(true)
@@ -76,6 +99,14 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
          setLoadingAgent(false)
       })()
    }, [conversation?.akses, job])
+
+   // set tech list
+   useEffect(() => {
+      (async () => {
+         const data = await getEmployeeByRole('tech')
+         setListTech(data)
+      })()
+   }, [])
 
    useEffect(() => {
       setJob(conversation?.role_penanggung_jawab || "sales")
@@ -144,9 +175,7 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                                           value={agent.id}
                                           onSelect={(currentValue) => {
                                              setOpen(false)
-                                             assignAgent(currentValue, job)
                                              setSelectedAgent(currentValue)
-                                             toast("Berhasil delegasi chat")
                                           }}
                                        >
                                           {agent.name}
@@ -161,6 +190,21 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                   </PopoverContent>
                </Popover>
             </div>
+            <Textarea
+               id="delegation_reason"
+               placeholder="Tambahkan alasan delegasi disini..."
+               onChange={handleDelegationReasonChange}
+               className="min-h-[100px] resize-none"
+            />
+            <Button
+               variant="default"
+               size="icon"
+               className="w-full"
+               onClick={handleDelegation}
+               disabled={selectedAgent === conversation?.akses}
+            >
+               Delegasi
+            </Button>
          </div>
 
          {/* request help */}
@@ -209,13 +253,72 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                variant="default"
                size="icon"
                className="w-full"
-               onClick={() => handleRequestHelp("")}
+               onClick={() => {
+                  setSelectedHelp("")
+                  handleRequestHelp("")
+               }}
                disabled={selectedHelp === ""}
             >
                Clear Help
             </Button>
          </div>
          
+         {/* request tech */}
+         <div className="space-y-4">
+            <Label className="text-md font-bold">Request Technician</Label>
+            <Popover open={openTech} onOpenChange={setOpenTech}>
+               <PopoverTrigger asChild>
+                  <Button
+                     variant="outline"
+                     role="combobox"
+                     aria-expanded={openTech}
+                     className="w-[290px] justify-between hover:text-black"
+                  >
+                     {selectedTech
+                        ? listTech.find((agent) => agent.id === selectedTech)?.name
+                        : "Pilih agent..."}
+                     <ChevronsUpDown className="opacity-50" />
+                  </Button>
+               </PopoverTrigger>
+               <PopoverContent className='w-[290px] p-0'>
+                  <Command>
+                     <CommandInput placeholder="Mencari agent..." className="h-10 outline-none" />
+                     <CommandList className="max-h-40 overflow-y-auto">
+                     <CommandEmpty className="p-2 text-center">Agent tidak ditemukan.</CommandEmpty>
+                     <CommandGroup>
+                        {listTech.map((tech) => (
+                           <CommandItem
+                              className="p-1 m-1"
+                              key={tech.id}
+                              value={tech.id}
+                              onSelect={(currentValue) => {
+                                 setOpenTech(false)
+                                 setSelectedTech(currentValue)
+                                 handleRequestTech(currentValue)
+                              }}
+                           >
+                              {tech.name}
+                           </CommandItem>
+                        ))}
+                     </CommandGroup>
+                     </CommandList>
+                  </Command>
+               </PopoverContent>
+            </Popover>
+            <Button
+               variant="default"
+               size="icon"
+               className="w-full"
+               onClick={() =>{
+                  setSelectedTech("") 
+                  handleRequestTech("")
+               }}
+               disabled={selectedTech === ""}
+            >
+               Clear Technician
+            </Button>
+         </div>
+
          {/* notes */}
          <div className="space-y-2">
             <Label htmlFor="note" className="text-md font-bold">
