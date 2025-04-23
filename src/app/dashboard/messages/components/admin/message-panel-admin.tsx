@@ -1,4 +1,4 @@
-import { Conversation, Employee, MessagePriority } from "@/lib/definitions";
+import { Conversation, Employee, MessageLabel, MessagePriority } from "@/lib/definitions";
 import { useEffect, useState } from "react";
 import { Button } from "@/ui/button"
 import { Label } from "@/ui/label";
@@ -23,8 +23,8 @@ import {
    PopoverContent,
    PopoverTrigger,
 } from "@/ui/popover"
-import { CalendarIcon, ChevronsUpDown, Flag } from "lucide-react";
-import { assignHelp, assignTech, updateDeadline, updateNote, updatePriority } from "@/lib/message";
+import { CalendarIcon, ChevronsUpDown, Flag, DollarSign, Flame, Snowflake } from "lucide-react";
+import { assignHelp, assignTech, updateDeadline, updateLabel, updateNote, updatePriority } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
 import { toast } from "sonner";
 import { createDelegationNotification } from "@/lib/delegation";
@@ -41,6 +41,8 @@ interface MessagePanelAdminProps {
 export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdminProps) {
    const initialNote = conversation?.catatan || ""
    const phone = conversation?.telepon || ""
+   // label
+   const [label, setLabel] = useState("")
    // priority
    const [priority, setPriority] = useState("")
    // deadline
@@ -68,6 +70,13 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setNote(event.target.value)
+   }
+
+   const handleLabelChange = async (newLabel: MessageLabel) => {
+      // Handle status change
+      setLabel(newLabel)
+      await updateLabel(phone, newLabel)
+      toast("Label berhasil diganti")
    }
 
    const handlePriorityChange = async (newPriority: MessagePriority) => {
@@ -141,12 +150,59 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
   // to update ui accordingly
    useEffect(() => {
       setNote(initialNote)
+      setLabel(conversation?.label || "")
+      setPriority(conversation?.prioritas || "")
+      setDeadline(new Date(conversation?.deadline || new Date()))
+      setSelectedTech(conversation?.tech || "")
       setSelectedHelp(conversation?.bala_bantuan || "")
       setSelectedAgent(conversation?.akses || "")
-   }, [conversation?.akses, conversation?.bala_bantuan, initialNote])
+   }, [conversation?.label, conversation?.prioritas, conversation?.deadline, conversation?.tech, conversation?.akses, conversation?.bala_bantuan, initialNote])
 
    return (
       <div className="p-4 space-y-6">
+         {/* label */}
+         <div className="space-y-4">
+            <Label className="text-md font-bold">Label</Label>
+            <div className="flex flex-col gap-2">
+               <Button
+                  variant={label === "hot" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleLabelChange("hot")}
+                  className={cn(
+                     "flex justify-start",
+                     label === "hot" && "bg-red-500 hover:bg-red-600"
+                  )}
+               >
+                  <Flame className="w-4 h-4 m-2" />
+                  Hot Lead
+               </Button>
+               <Button
+                  variant={label === "cold" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleLabelChange("cold")}
+                  className={cn(
+                     "flex justify-start",
+                     label === "cold" && "bg-blue-500 hover:bg-blue-600"
+                  )}
+               >
+                  <Snowflake className="w-4 h-4 m-2" />
+                  Cold Lead
+               </Button>
+               <Button
+                  variant={label === "deal" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleLabelChange("deal")}
+                  className={cn(
+                     "flex justify-start",
+                     label === "deal" && "bg-green-500 hover:bg-green-600"
+                  )}
+               >
+                  <DollarSign className="w-4 h-4 m-2" />
+                  Potential Deal
+               </Button>
+            </div>
+         </div>
+
          {/* priority level */}
          <div className="space-y-2">
             <Label htmlFor="priority" className="text-md font-bold">
