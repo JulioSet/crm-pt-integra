@@ -1,4 +1,4 @@
-import { Conversation, Employee } from "@/lib/definitions";
+import { Conversation, Employee, MessagePriority } from "@/lib/definitions";
 import { useEffect, useState } from "react";
 import { Button } from "@/ui/button"
 import { Label } from "@/ui/label";
@@ -23,11 +23,15 @@ import {
    PopoverContent,
    PopoverTrigger,
 } from "@/ui/popover"
-import { ChevronsUpDown } from "lucide-react";
-import { assignHelp, assignTech, updateNote } from "@/lib/message";
+import { CalendarIcon, ChevronsUpDown, Flag } from "lucide-react";
+import { assignHelp, assignTech, updateDeadline, updateNote, updatePriority } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
 import { toast } from "sonner";
 import { createDelegationNotification } from "@/lib/delegation";
+import { format } from "date-fns";
+import { cn } from "@/utils/class-merger";
+import { Calendar } from "@/ui/calendar";
+import { id } from "date-fns/locale";
 
 interface MessagePanelAdminProps {
    conversation: Conversation | null
@@ -37,6 +41,11 @@ interface MessagePanelAdminProps {
 export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdminProps) {
    const initialNote = conversation?.catatan || ""
    const phone = conversation?.telepon || ""
+   // priority
+   const [priority, setPriority] = useState("")
+   // deadline
+   const [openDeadline, setOpenDeadline] = useState(false)
+   const [deadline, setDeadline] = useState<Date>()
    // delegasi
    const [open, setOpen] = useState(false)
    const [job, setJob] = useState("sales")
@@ -61,6 +70,19 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
       setNote(event.target.value)
    }
 
+   const handlePriorityChange = async (newPriority: MessagePriority) => {
+      // Handle priotity change
+      setPriority(newPriority)
+      await updatePriority(phone, newPriority)
+      toast("Prioritas berhasil diganti")
+   }
+
+   const handleDeadline = async () => {
+      await updateDeadline(phone, deadline?.toString() || "")
+      toast("Deadline berhasil ditentukan", {
+         description: deadline?.toString()
+      })
+   }
 
    const handleSaveNote = async () => {
       await updateNote(phone, note)
@@ -125,6 +147,82 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
 
    return (
       <div className="p-4 space-y-6">
+         {/* priority level */}
+         <div className="space-y-2">
+            <Label htmlFor="priority" className="text-md font-bold">
+               Level Prioritas
+            </Label>
+            <Select value={priority} onValueChange={handlePriorityChange}>
+               <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Set priority" />
+               </SelectTrigger>
+               <SelectContent>
+                  <SelectItem value="high" className="pt-2 pb-2 mr-1 pr-32">
+                     <span className="flex items-center">
+                        <Flag className="w-4 h-4 mr-2 text-red-500" />
+                        High Priority
+                     </span>
+                  </SelectItem>
+                  <SelectItem value="medium" className="pt-2 pb-2 mr-1 pr-32">
+                     <span className="flex items-center">
+                        <Flag className="w-4 h-4 mr-2 text-yellow-500" />
+                        Medium Priority
+                     </span>
+                  </SelectItem>
+                  <SelectItem value="low" className="pt-2 pb-2 mr-1 pr-32">
+                     <span className="flex items-center">
+                        <Flag className="w-4 h-4 mr-2 text-green-500" />
+                        Low Priority
+                     </span>
+                  </SelectItem>
+               </SelectContent>
+            </Select>
+         </div>
+
+         {/* deadline */}
+         <div className="space-y-2">
+            <Label htmlFor="deadline" className="text-md font-bold">
+               Deadline
+            </Label>
+            <p className="text-md">
+               Tanggal : {conversation?.deadline ? format(conversation?.deadline, "dd MMMM yyyy") : <span>-</span>}
+            </p>
+            <Popover open={openDeadline} onOpenChange={setOpenDeadline}>
+               <PopoverTrigger asChild>
+                  <Button
+                     variant={"outline"}
+                     className={cn(
+                        "w-[280px] justify-start text-left font-normal hover:text-black",
+                        !deadline && "text-muted-foreground"
+                     )}
+                  >
+                     <CalendarIcon className="mr-2 h-4 w-4" />
+                     {deadline ? format(deadline, "dd MMMM yyyy") : <span>Pilih tanggal</span>}
+                  </Button>
+               </PopoverTrigger>
+               <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                     locale={id}
+                     mode="single"
+                     selected={deadline}
+                     onSelect={(date) => {
+                        setOpenDeadline(false)
+                        setDeadline(date)
+                     }}
+                     initialFocus
+                  />
+               </PopoverContent>
+            </Popover>
+            <Button
+               variant="default"
+               size="icon"
+               className="w-full"
+               onClick={handleDeadline}
+            >
+               Konfirmasi
+            </Button>
+         </div>
+
          {/* chat delegation */}
          <div className="space-y-4">
             <Label className="text-md font-bold">Delegasi Ke</Label>
