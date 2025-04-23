@@ -31,6 +31,7 @@ model message_header {
   role_penanggung_jawab           String?           @db.VarChar(50)
   akses                           String            @db.VarChar(50)
   bala_bantuan                    String?           @db.VarChar(50)
+  tech                            String?           @db.VarChar(50)
   deadline                        String?           @db.VarChar(50)
   baca                            Boolean           @default(false)
   waktu_admin_delegasi            String?           @db.VarChar(50)
@@ -71,4 +72,11 @@ model delegation_history {
   role    String  @db.VarChar(50)
   status  Int     @default(2) @db.TinyInt
   waktu   String  @db.VarChar(50)
+}
+
+model delegation_notification {
+  id      Int    @id @default(autoincrement())
+  telepon String @db.VarChar(50)
+  agen    String @db.VarChar(50)
+  alasan  String @db.Text
 }
