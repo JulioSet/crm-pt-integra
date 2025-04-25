@@ -172,7 +172,7 @@ export function MessagesSidebar({
                            </div>
                            <div className="flex items-center text-sm text-muted-foreground line-clamp-1">
                               {conversation.pesan_terbaru}
-                              {(conversation.bala_bantuan || conversation.bala_bantuan !== "") && (
+                              {(conversation.bala_bantuan || conversation.bala_bantuan !== "" || conversation.tech || conversation.tech !== "") && (
                                  <Users className='ml-auto h-4 w-4' />
                               )}
                            </div>
