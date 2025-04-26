@@ -24,7 +24,7 @@ import {
    PopoverTrigger,
 } from "@/ui/popover"
 import { CalendarIcon, ChevronsUpDown, Flag, DollarSign, Flame, Snowflake } from "lucide-react";
-import { assignHelp, assignTech, updateDeadline, updateLabel, updateNote, updatePriority } from "@/lib/message";
+import { assignHelp, assignTech, updateDeadline, updateLabel, updateName, updateNote, updatePriority } from "@/lib/message";
 import { getEmployeeByRole } from "@/lib/employee";
 import { toast } from "sonner";
 import { createDelegationNotification } from "@/lib/delegation";
@@ -32,6 +32,8 @@ import { format } from "date-fns";
 import { cn } from "@/utils/class-merger";
 import { Calendar } from "@/ui/calendar";
 import { id } from "date-fns/locale";
+import { createContact } from "@/lib/contact";
+import { customAlphabet } from "nanoid";
 
 interface MessagePanelAdminProps {
    conversation: Conversation | null
@@ -41,6 +43,8 @@ interface MessagePanelAdminProps {
 export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdminProps) {
    const initialNote = conversation?.catatan || ""
    const phone = conversation?.telepon || ""
+   // add contact
+   const [client, setClient] = useState('')
    // label
    const [label, setLabel] = useState("")
    // priority
@@ -64,12 +68,24 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
    const [listTech, setListTech] = useState<Employee[]>([])
    const [selectedTech, setSelectedTech] = useState("")
 
+   const handleClientChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      // Handle name change
+      setClient(event.target.value)
+   }
+   
    const handleDelegationReasonChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setReason(event.target.value)
    }
 
    const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setNote(event.target.value)
+   }
+
+   const handleAddContact = async () => {
+      const nanoid = customAlphabet('1234567890', 10) // id
+      await createContact(nanoid(), client, phone)
+      await updateName(phone, client)
+      toast("Kontak baru berhasil disimpan")
    }
 
    const handleLabelChange = async (newLabel: MessageLabel) => {
@@ -499,6 +515,29 @@ export function MessagePanelAdmin({ conversation, assignAgent }: MessagePanelAdm
                Simpan
             </Button>
          </div>
+
+         {/* add contact */}
+         {conversation?.nama === null && (
+            <div className="space-y-4">
+               <Label className="text-md font-bold">Add Contact</Label>
+               <Textarea
+                  id="client"
+                  placeholder="Isi dengan nama kontak klien..."
+                  value={client}
+                  onChange={handleClientChange}
+                  className="min-h-[10px] resize-none"
+               />
+               <Button
+                  variant="default"
+                  size="icon"
+                  className="w-full"
+                  onClick={handleAddContact}
+                  disabled={client === ''}
+               >
+                  Tambah Kontak
+               </Button>
+            </div>
+         )}
       </div>
    )
 }
