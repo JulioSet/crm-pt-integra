@@ -2,6 +2,10 @@ import { getSession } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-   const session = await getSession()
-   return NextResponse.json(session)
+   try {
+      const session = await getSession()
+      return NextResponse.json(session)
+   } catch (error) {
+      return NextResponse.json({ status: 404, msg: error })
+   }
 }
