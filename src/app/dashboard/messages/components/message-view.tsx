@@ -61,17 +61,18 @@ export function MessageView({ conversation, onClose }: MessageViewProps) {
     }
     
     // if there is a new chat
-    const newMessage = lastMessage !== conversation?.message_content.at(-1)?.pesan
-    const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
-    if ((newMessage || failedMessage) && isAtBottom) {
-      container.scrollTo({ top: container.scrollHeight });
-      setLastMessage(conversation?.message_content.at(-1)?.pesan ?? "")
-    }
-
-    if (isAtBottom) {
-      (async () => {
-        await updateRead(phone)
-      })()
+    if (conversation?.message_content) {
+      const newMessage = lastMessage !== conversation?.message_content.at(-1)?.pesan
+      const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
+      if ((newMessage || failedMessage) && isAtBottom) {
+        container.scrollTo({ top: container.scrollHeight });
+        setLastMessage(conversation?.message_content.at(-1)?.pesan ?? "")
+      }
+      if (isAtBottom) {
+        (async () => {
+          await updateRead(phone)
+        })()
+      }
     }
 
     setOpened(true)
