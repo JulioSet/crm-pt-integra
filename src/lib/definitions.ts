@@ -72,3 +72,18 @@ export interface DelegationNotification {
   agen_sebelum: string
   alasan: string
 }
+
+export interface RoomChat {
+  id: string
+  email: string
+  nama: string
+  keluhan: string
+  status_terkirim: boolean
+  room_chat_content: MessageRoomChat[]
+}
+
+export interface MessageRoomChat {
+  id: number
+  pesan: string
+  responder: string
+}

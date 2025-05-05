@@ -13,11 +13,11 @@ export async function middleware(req: NextRequest) {
    const pathname = req.nextUrl.pathname;
 
    const rolePermissions: Record<string, string[]> = {
-      admin: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/settings', '/dashboard/agent', '/dashboard/reports', '/dashboard/delegation_permission', '/dashboard/delegation_history'],
-      sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/delegation_history'],
-      cs: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/delegation_history'],
-      tech: ['/dashboard/messages', '/dashboard/notifications'],
-      resepsionis: ['/dashboard/messages', '/dashboard/notifications'],
+      admin: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/settings', '/dashboard/agent', '/dashboard/reports', '/dashboard/delegation_permission', '/dashboard/delegation_history', '/dashboard/email_complain'],
+      sales: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/contacts', '/dashboard/delegation_history', '/dashboard/email_complain'],
+      cs: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/delegation_history', '/dashboard/email_complain'],
+      tech: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/email_complain'],
+      resepsionis: ['/dashboard/messages', '/dashboard/notifications', '/dashboard/email_complain'],
    };
 
    // Get all allowed paths for the user role

@@ -82,3 +82,22 @@ model delegation_notification {
   agen_sebelum  String  @db.VarChar(50)
   alasan        String  @db.Text
 }
+
+model room_chat_content {
+  id               Int              @id @default(autoincrement())
+  room_chat_id     String           @db.VarChar(50)
+  pesan            String           @db.Text
+  responder        String           @db.VarChar(50)
+  room_chat_header room_chat_header @relation(fields: [room_chat_id], references: [id], onDelete: Cascade, map: "room_content")
+
+  @@index([room_chat_id], map: "room_content")
+}
+
+model room_chat_header {
+  id                String              @id @db.VarChar(50)
+  email             String              @db.Text
+  nama              String              @db.Text
+  keluhan           String              @db.Text
+  status_terkirim   Boolean             @default(false)
+  room_chat_content room_chat_content[]
+}
