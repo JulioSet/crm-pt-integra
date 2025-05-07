@@ -14,7 +14,6 @@ import { useEffect, useState } from "react"
 import { RoomChat } from "@/lib/definitions"
 import { cn } from "@/utils/class-merger"
 import { fetchComplains, sendRoomLink } from "@/lib/email_complain"
-import { redirect } from "next/navigation"
 
 export default function EmailComplainPage() {
    const [loading, setLoading] = useState(true)
