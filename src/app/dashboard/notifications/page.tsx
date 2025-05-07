@@ -174,7 +174,7 @@ export default function Notifications() {
                                  .filter(data => data.agen_sekarang === agent || data.agen_sebelum === agent)
                                  .map((data) => (
                                     <Card
-                                       key={data.telepon}
+                                       key={data.id}
                                        className="transition-colors bg-secondary/20"
                                     >
                                        <CardContent className="flex items-start space-x-4 p-4">
