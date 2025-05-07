@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 import { RoomChat } from "@/lib/definitions"
 import { cn } from "@/utils/class-merger"
 import { fetchComplains, sendRoomLink } from "@/lib/email_complain"
+import { redirect } from "next/navigation"
 
 export default function EmailComplainPage() {
    const [loading, setLoading] = useState(true)
@@ -21,31 +22,44 @@ export default function EmailComplainPage() {
    const [currentPage, setCurrentPage] = useState(1)
    const [pageSize, setPageSize] = useState(5)
    const [emailComplain, setEmailComplain] = useState<RoomChat[]>([])
+  //  Calculate pagination
+  const [totalPages, setTotalPages] = useState(0)
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(0)
+  const [paginatedAgents, setPaginatedAgents] = useState<RoomChat[]>([])
 
-   useEffect(() => {
+  useEffect(() => {
       setOrigin(window.location.origin)
       const fetchData = async () => {
-         const data = await fetchComplains()
-         if (data) {
-          setEmailComplain(data)
-         }
+        const data = await fetchComplains()
+        if (data) {
+        setEmailComplain(data)
+        }
       }
-      setInterval(fetchData, 1000)
+      fetchData()
+
+      const interval = setInterval(() => {
+        fetchData()
+      }, 1000)
+    
       setLoading(false)
-   }, [])
+    
+      return () => clearInterval(interval)
+  }, [])
 
-   // Send Email
-   const handleSendEmail = async (id: string, to: string) => {
-      const link = `${origin}/room/${id}`;
-      const text = `Terima kasih sudah mencapai kami untuk menyampaikan keluhan\nJoin dalam link ini untuk melakukan percakapan dengan layanan kami\nSilahkan klik link dibawah ini \n${link}`
-      await sendRoomLink(id, to, text)
-   }
+  useEffect(() => {
+    setTotalPages(Math.ceil(emailComplain.length / pageSize))
+    setStartIndex((currentPage - 1) * pageSize)
+    setEndIndex(startIndex + pageSize)
+    setPaginatedAgents(emailComplain.slice(startIndex, endIndex))
+  }, [currentPage, emailComplain, endIndex, pageSize, startIndex])
 
-   // Calculate pagination
-   const totalPages = Math.ceil(emailComplain.length / pageSize)
-   const startIndex = (currentPage - 1) * pageSize
-   const endIndex = startIndex + pageSize
-   const paginatedAgents = emailComplain.slice(startIndex, endIndex)
+  // Send Email
+  const handleSendEmail = async (id: string, to: string) => {
+    const link = `${origin}/room/${id}`;
+    const text = `Terima kasih sudah mencapai kami untuk menyampaikan keluhan\nJoin dalam link ini untuk melakukan percakapan dengan layanan kami\nSilahkan klik link dibawah ini \n${link}`
+    await sendRoomLink(id, to, text)
+  }
 
    // Handle page size change
    const handlePageSizeChange = (value: string) => {
@@ -103,32 +117,38 @@ export default function EmailComplainPage() {
                 <TableRow>
                   <TableHead>Nama</TableHead>
                   <TableHead>Keluhan</TableHead>
-                  <TableHead>Link</TableHead>
                   <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedAgents.map((complain) => {
-                  let status
-                  if (complain.status_terkirim) {
-                    status = 'Sudah Terkirim'
-                  } else {
-                    status = 'Belum Terkirim'
-                  }
-
                   return (
                     <TableRow key={complain.id} className="hover:bg-slate-100">
                       <TableCell>{complain.nama}</TableCell>
                       <TableCell>{complain.keluhan}</TableCell>
-                      <TableCell>{status}</TableCell>
                       <TableCell>
                         <div>
-                          <Button
-                            variant={"default"}
-                            onClick={() => {handleSendEmail(complain.id, complain.email)}}
-                          >
-                            Kirim Link
-                          </Button>
+                          {complain.status_terkirim ? (
+                            <a 
+                              href={`${origin}/room/${complain.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Button
+                                variant={"default"}
+                                className="bg-green-600 hover:bg-green-700"
+                              >
+                                Masuk Ruang Chat
+                              </Button>
+                            </a>
+                          ) : (
+                            <Button
+                              variant={"default"}
+                              onClick={() => {handleSendEmail(complain.id, complain.email)}}
+                            >
+                              Kirim Link
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

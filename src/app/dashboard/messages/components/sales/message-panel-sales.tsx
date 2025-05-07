@@ -280,7 +280,7 @@ export function MessagePanelSales({ conversation, listAgent, assignAgent }: Mess
                                     key={agent.id}
                                     value={agent.id}
                                     onSelect={(currentValue) => {
-                                       setOpenDelegasi(false)
+                                       setOpenHelp(false)
                                        setSelectedHelp(currentValue)
                                        handleRequestHelp(currentValue)
                                     }}

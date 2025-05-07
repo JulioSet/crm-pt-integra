@@ -40,8 +40,13 @@ export default function RoomPage({ params }: RoomPageProps) {
             setExist(false)
          }
       }
-      setInterval(fetch, 1000)
-      
+      fetch()
+
+      const interval = setInterval(() => {
+         fetch(); // Re-fetch every second
+      }, 1000);
+   
+      return () => clearInterval(interval)
    }, [id])
 
    useEffect (() => {
