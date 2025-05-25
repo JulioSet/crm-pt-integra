@@ -255,7 +255,7 @@ export default function Notifications() {
                               {
                                  listDelegationNotification.map((data) => (
                                     <Card
-                                       key={data.telepon}
+                                       key={data.id}
                                        className="transition-colors bg-secondary/20"
                                     >
                                        <CardContent className="flex items-start space-x-4 p-4">
